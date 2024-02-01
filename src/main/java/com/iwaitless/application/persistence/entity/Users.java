@@ -1,22 +1,23 @@
 package com.iwaitless.application.persistence.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Table(name = "USER")
+@Table(name = "USERS")
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class Users {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "MENU_ITEM_SEQ")
+    @Setter(AccessLevel.PRIVATE)
+    @Column(name = "ID")
+    private Long id;
 
     @NotNull
     private String username;

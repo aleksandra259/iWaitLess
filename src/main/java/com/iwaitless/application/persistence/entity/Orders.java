@@ -8,7 +8,7 @@ import lombok.*;
 
 import java.sql.Timestamp;
 
-@Table(name = "ORDER")
+@Table(name = "ORDERS")
 @Entity
 @Getter
 @Setter
@@ -26,7 +26,6 @@ public class Orders {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "TABLE_REL_ID")
-    @Column(name = "TABLE_REL_ID")
     private TableEmployeeRelation tableRelationId;
 
     @NotNull
@@ -34,13 +33,11 @@ public class Orders {
     private Timestamp orderedOn;
 
     @NotNull
-    @Column(name = "STATUS")
     @OneToOne
     @JoinColumn(name = "STATUS", referencedColumnName = "ID")
     private OrderStatus status;
 
     @NotNull
-    @Column(name = "PAYMENT_WAY")
     @OneToOne
     @JoinColumn(name = "PAYMENT_WAY", referencedColumnName = "ID")
     private PaymentWay paymentWay;

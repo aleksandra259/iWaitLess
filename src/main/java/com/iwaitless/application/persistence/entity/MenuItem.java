@@ -32,7 +32,6 @@ public class MenuItem {
     private String description;
 
     @NotNull
-    @Column(name = "CATEGORY")
     @ManyToOne
     @JoinColumn(name = "CATEGORY", referencedColumnName = "ID")
     private MenuCategory category;

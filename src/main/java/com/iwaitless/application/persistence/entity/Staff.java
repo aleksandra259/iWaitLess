@@ -23,6 +23,9 @@ public class Staff {
     @Column(name = "NAME")
     private String name;
 
+    @Column(name = "EMAIL")
+    private String email;
+
     @Column(name = "PHONE")
     private String phone;
 

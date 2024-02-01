@@ -29,8 +29,10 @@ public class OrderDetails {
     private MenuItem itemId;
 
     @NotNull
+    @Column(name = "QUANTITY")
     private Long quantity;
 
+    @Column(name = "COMMENT")
     private String comment;
 
     @ManyToOne
