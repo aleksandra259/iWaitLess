@@ -11,6 +11,7 @@ import java.util.List;
 public interface StaffRepository extends JpaRepository<Staff, Long> {
 
     @Query("select c from Staff c " +
-            "where lower(c.name) like lower(concat('%', :searchTerm, '%'))")
+            "where lower(c.firstName) like lower(concat('%', :searchTerm, '%'))" +
+            "or lower(c.lastName) like lower(concat('%', :searchTerm, '%'))")
     List<Staff> search(@Param("searchTerm") String searchTerm);
 }

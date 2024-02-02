@@ -20,12 +20,18 @@ public class Users {
     private Long id;
 
     @NotNull
+    @Column(name = "USERNAME")
     private String username;
 
     @NotNull
+    @Column(name = "PASSWORD")
     private String password;
 
     @OneToOne
     @JoinColumn(name = "EMPLOYEE_ID")
     private Staff employeeId;
+
+    @NotNull
+    @Column(name = "ROLE")
+    private String role;
 }

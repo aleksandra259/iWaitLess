@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.Date;
+
 @Table(name = "STAFF")
 @Entity
 @Getter
@@ -20,8 +22,11 @@ public class Staff {
     @Column(name = "EMPLOYEE_ID")
     private Long employeeId;
 
-    @Column(name = "NAME")
-    private String name;
+    @Column(name = "FIRST_NAME")
+    private String firstName;
+
+    @Column(name = "LAST_NAME")
+    private String lastName;
 
     @Column(name = "EMAIL")
     private String email;
@@ -31,6 +36,9 @@ public class Staff {
 
     @Column(name = "ADDRESS")
     private String address;
+
+    @Column(name = "BIRTHDATE")
+    private Date birthdate;
 
     @NotNull
     @ManyToOne

@@ -1,6 +1,7 @@
 package com.iwaitless.application.views.list;
 
 import com.iwaitless.application.persistence.entity.Staff;
+import com.iwaitless.application.persistence.entity.Users;
 import com.iwaitless.application.services.StaffService;
 import com.iwaitless.application.views.MainLayout;
 import com.iwaitless.application.views.forms.EmployeeForm;
@@ -10,16 +11,20 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.renderer.LitRenderer;
+import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 
+import java.text.SimpleDateFormat;
+
 @PageTitle("StaffList")
 @Route(value="", layout = MainLayout.class)
 @PermitAll
 public class ListStaffView extends VerticalLayout {
-    Grid<Staff> grid = new Grid<>(Staff.class);
+    Grid<Staff> grid = new Grid<>(Staff.class, false);
     TextField filterText = new TextField();
     EmployeeForm form;
     StaffService service;
@@ -39,12 +44,40 @@ public class ListStaffView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassNames("staff-grid");
         grid.setSizeFull();
-        grid.setColumns("employeeId", "name", "email", "phone", "address");
-        grid.addColumn(employee -> employee.getRole().getName()).setHeader("Role");
+
+        grid.addColumn(createEmployeeRenderer()).setHeader("Employee");
+        grid.addColumns("email", "phone", "address");
+        grid.addColumn(employee -> {
+                    SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+                    return formatter.format(employee.getBirthdate());
+                })
+                .setHeader("Birthdate");
+        grid.addColumn(employee -> {
+                    Users user = service.finsUserByEmployeeId(employee.getEmployeeId());
+                    if (user != null)
+                        return user.getUsername();
+
+                    return null;
+                })
+                .setHeader("Username");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         grid.asSingleSelect().addValueChangeListener(event ->
                 editEmployee(event.getValue()));
+    }
+
+    private static Renderer<Staff> createEmployeeRenderer() {
+        return LitRenderer.<Staff> of(
+                        "<vaadin-horizontal-layout style=\"align-items: center;\" theme=\"spacing\">"
+                                + "<vaadin-avatar name=\"${item.name}\" alt=\"User avatar\"></vaadin-avatar>"
+                                + "  <vaadin-vertical-layout style=\"line-height: var(--lumo-line-height-m);\">"
+                                + "    <span> ${item.name} </span>"
+                                + "    <span style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">"
+                                + "      ${item.role}" + "    </span>"
+                                + "  </vaadin-vertical-layout>"
+                                + "</vaadin-horizontal-layout>")
+                .withProperty("name", employee -> employee.getFirstName() + " " + employee.getLastName())
+                .withProperty("role", employee -> employee.getRole().getName());
     }
 
     private HorizontalLayout getToolbar() {
@@ -76,7 +109,7 @@ public class ListStaffView extends VerticalLayout {
 
     private void configureForm() {
         form = new EmployeeForm(service.findAllRoles());
-        form.setWidth("25em");
+        form.setWidth("35em");
         form.addSaveListener(this::saveEmployee);
         form.addDeleteListener(this::deleteEmployee);
         form.addCloseListener(e -> closeEditor());

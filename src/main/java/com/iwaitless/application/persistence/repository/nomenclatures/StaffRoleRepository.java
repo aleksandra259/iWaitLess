@@ -1,4 +1,4 @@
-package com.iwaitless.application.persistence.repository;
+package com.iwaitless.application.persistence.repository.nomenclatures;
 
 
 import com.iwaitless.application.persistence.entity.nomenclatures.StaffRole;

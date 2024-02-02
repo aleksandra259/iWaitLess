@@ -9,6 +9,7 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
@@ -19,10 +20,12 @@ import com.vaadin.flow.shared.Registration;
 import java.util.List;
 
 public class EmployeeForm extends FormLayout {
-    TextField name = new TextField("Name");
+    TextField firstName = new TextField("First Name");
+    TextField lastName = new TextField("Last Name");
     EmailField email = new EmailField("Email");
     TextField phone = new TextField("Phone number");
     TextField address = new TextField("Address");
+    DatePicker birthdate = new DatePicker("Birthdate");
     ComboBox<StaffRole> role = new ComboBox<>("Role");
     BeanValidationBinder<Staff> binder = new BeanValidationBinder<>(Staff.class);
 
@@ -37,7 +40,7 @@ public class EmployeeForm extends FormLayout {
         role.setItems(roles);
         role.setItemLabelGenerator(StaffRole::getName);
 
-        add(name, email, phone, address, role, createButtonsLayout());
+        add(firstName, lastName, email, phone, address, birthdate, role, createButtonsLayout());
     }
 
     private Component createButtonsLayout() {
