@@ -1,13 +1,14 @@
 package com.iwaitless.application.services;
 
+import com.iwaitless.application.persistence.entity.Authorities;
 import com.iwaitless.application.persistence.entity.Staff;
 import com.iwaitless.application.persistence.entity.UserStaffRelation;
+import com.iwaitless.application.persistence.entity.Users;
 import com.iwaitless.application.persistence.entity.nomenclatures.StaffRole;
 import com.iwaitless.application.persistence.repository.StaffRepository;
 import com.iwaitless.application.persistence.repository.UserStaffRelationRepository;
 import com.iwaitless.application.persistence.repository.nomenclatures.StaffRoleRepository;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,9 @@ public class StaffService {
     private final StaffRepository staffRepository;
     private final StaffRoleRepository staffRoleRepository;
     private final UserStaffRelationRepository userStaffRepository;
+
+    @Autowired
+    private UserService userService;
 
     public StaffService(StaffRepository staffRepository,
                         StaffRoleRepository staffRoleRepository,
@@ -64,31 +68,33 @@ public class StaffService {
             userStaffRelation.setEmployeeId(staff);
 
             SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+            int num0 = Integer.parseInt(formatter.format(staff.getBirthdate()).substring(7));
+            if (num0 == 0)
+                num0 = 1;
             int num1 = (Integer.parseInt(formatter.format(staff.getBirthdate()).substring(0,2))
                     + Integer.parseInt(formatter.format(staff.getBirthdate()).substring(3,5))
-                    / Integer.parseInt(formatter.format(staff.getBirthdate()).substring(7)));
+                    / num0);
             //day + month / year in order to give unique digit
 
-            int num2 = Integer.parseInt(formatter.format(staff.getBirthdate()).substring(1,2));
+            num0 = Integer.parseInt(formatter.format(staff.getBirthdate()).substring(1,2));
             //to ensure username is unique
 
-            String username = staff.getLastName().substring(0,(staff.getLastName().length()-1))
-                    + staff.getFirstName().charAt(0) + num1 + num2;
+            String username = staff.getLastName().charAt(0)
+                    + staff.getFirstName()
+                    + num0 + num1;
             username = username.toLowerCase();
             userStaffRelation.setUsername(username);
             userStaffRepository.save(userStaffRelation);
 
             BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-            String bCryptPassword = bCryptPasswordEncoder.encode(username);
+            String bCryptPassword = "{bcrypt}"+bCryptPasswordEncoder.encode(username);
 
-//            User user = new User(username, "{bcrypt}" + bCryptPassword,
-//                                 List.of(new SimpleGrantedAuthority("USER")));
-//            userRepository.save(user);
-            UserDetails admin = User.builder()
-                    .username("admin")
-                    .password("{bcrypt}$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW")
-                    .roles("USER", "ADMIN")
-                    .build();
+            Users user = new Users(username, bCryptPassword, true);
+            Authorities authority = new Authorities();
+            authority.setUsername(user);
+            authority.setAuthority("USER");
+
+            userService.saveUser(user, authority);
         }
     }
 

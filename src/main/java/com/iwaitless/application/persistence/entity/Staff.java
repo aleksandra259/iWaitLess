@@ -3,7 +3,11 @@ package com.iwaitless.application.persistence.entity;
 import com.iwaitless.application.persistence.entity.nomenclatures.StaffRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.Date;
 
@@ -16,10 +20,9 @@ import java.util.Date;
 public class Staff {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @SequenceGenerator(name = "EMPLOYEE_SEQ")
-    @Setter(AccessLevel.PRIVATE)
-    @Column(name = "EMPLOYEE_ID")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID")
+    @Column(name = "EMPLOYEE_ID", updatable = false, nullable = false, insertable = false, unique = true)
     private Long employeeId;
 
     @Column(name = "FIRST_NAME")

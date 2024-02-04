@@ -5,6 +5,7 @@ import com.iwaitless.application.persistence.entity.nomenclatures.PaymentWay;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.sql.Timestamp;
 
@@ -17,10 +18,9 @@ import java.sql.Timestamp;
 public class Orders {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @SequenceGenerator(name = "ORDER_NO_SEQ")
-    @Setter(AccessLevel.PRIVATE)
-    @Column(name = "ORDER_NO")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID")
+    @Column(name = "ORDER_NO", updatable = false, nullable = false, insertable = false, unique = true)
     private Long orderNo;
 
     @NotNull

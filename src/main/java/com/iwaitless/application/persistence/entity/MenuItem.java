@@ -5,6 +5,7 @@ import com.vaadin.flow.component.html.Image;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.Currency;
 
@@ -17,10 +18,9 @@ import java.util.Currency;
 public class MenuItem {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @SequenceGenerator(name = "MENU_ITEM_SEQ")
-    @Setter(AccessLevel.PRIVATE)
-    @Column(name = "ITEM_ID")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID")
+    @Column(name = "ITEM_ID", updatable = false, nullable = false, insertable = false, unique = true)
     private Long itemId;
 
     @NotNull

@@ -3,7 +3,11 @@ package com.iwaitless.application.persistence.entity;
 import com.iwaitless.application.persistence.entity.nomenclatures.IngredientCategory;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 @Table(name = "INGREDIENTS")
 @Entity
@@ -14,10 +18,8 @@ import lombok.*;
 public class Ingredients {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @SequenceGenerator(name = "INGREDIENTS_SEQ")
-    @Setter(AccessLevel.PRIVATE)
-    @Column(name = "ID")
+    @GenericGenerator(name = "Incremental")
+    @Column(name = "ID", updatable = false, nullable = false, insertable = false, unique = true)
     private String ingredientId;
 
     @NotNull

@@ -15,7 +15,9 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 public class MainLayout extends AppLayout {
     private final SecurityService securityService;
 
-    public MainLayout(SecurityService securityService) {
+    public MainLayout(
+            SecurityService securityService
+           ) {
         this.securityService = securityService;
         createHeader();
         createDrawer();

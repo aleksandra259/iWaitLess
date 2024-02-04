@@ -4,6 +4,7 @@ import com.iwaitless.application.persistence.entity.nomenclatures.OrderStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 @Table(name = "ORDER_DETAILS")
 @Entity
@@ -14,10 +15,9 @@ import lombok.*;
 public class OrderDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @SequenceGenerator(name = "ORDER_DTL_SEQ")
-    @Setter(AccessLevel.PRIVATE)
-    @Column(name = "DETAIL_ID")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID")
+    @Column(name = "DETAIL_ID", updatable = false, nullable = false, insertable = false, unique = true)
     private Long detailId;
 
     @ManyToOne

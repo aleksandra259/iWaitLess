@@ -2,6 +2,7 @@ package com.iwaitless.application.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.List;
 
@@ -14,10 +15,9 @@ import java.util.List;
 public class IngredientsRelation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @SequenceGenerator(name = "INGREDIENT_RELATION_SEQ")
-    @Setter(AccessLevel.PRIVATE)
-    @Column(name = "INGREDIENT_RELATION_ID")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID")
+    @Column(name = "INGREDIENT_RELATION_ID", updatable = false, nullable = false, insertable = false, unique = true)
     private Long id;
 
     @ManyToMany

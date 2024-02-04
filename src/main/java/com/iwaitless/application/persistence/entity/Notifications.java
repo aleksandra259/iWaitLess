@@ -4,6 +4,7 @@ import com.iwaitless.application.persistence.entity.nomenclatures.NotificationSt
 import com.iwaitless.application.persistence.entity.nomenclatures.NotificationTypes;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 @Table(name = "NOTIFICATIONS")
 @Entity
@@ -14,10 +15,9 @@ import lombok.*;
 public class Notifications {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @SequenceGenerator(name = "NOTIFICATION_SEQ")
-    @Setter(AccessLevel.PRIVATE)
-    @Column(name = "ID")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID")
+    @Column(name = "ID", updatable = false, nullable = false, insertable = false, unique = true)
     private Long id;
 
     @ManyToOne

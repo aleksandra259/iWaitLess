@@ -4,6 +4,7 @@ package com.iwaitless.application.persistence.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 @Table(name = "TABLE_EMPLOYEE_RELATION")
 @Entity
@@ -14,10 +15,9 @@ import lombok.*;
 public class TableEmployeeRelation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @SequenceGenerator(name = "TABLE_EMPLOYEE_REL_SEQ")
-    @Setter(AccessLevel.PRIVATE)
-    @Column(name = "TABLE_RELATION_ID")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID")
+    @Column(name = "TABLE_RELATION_ID", updatable = false, nullable = false, insertable = false, unique = true)
     private Long id;
 
     @ManyToOne

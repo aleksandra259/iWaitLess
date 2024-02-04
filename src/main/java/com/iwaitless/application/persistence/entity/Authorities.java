@@ -1,17 +1,16 @@
 package com.iwaitless.application.persistence.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
-@Table(name = "USER_STAFF_RELATION")
+@Table(name = "AUTHORITIES")
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class UserStaffRelation {
+public class Authorities {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -19,11 +18,10 @@ public class UserStaffRelation {
     @Column(name = "ID", updatable = false, nullable = false, insertable = false, unique = true)
     private Long id;
 
-    @NotNull
-    @Column(name = "USERNAME")
-    private String username;
-
     @OneToOne
-    @JoinColumn(name = "EMPLOYEE_ID")
-    private Staff employeeId;
+    @JoinColumn(name = "USERNAME", referencedColumnName = "USERNAME")
+    private Users username;
+
+    @Column(name = "AUTHORITY")
+    private String authority;
 }

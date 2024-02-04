@@ -2,6 +2,7 @@ package com.iwaitless.application.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 
 @Table(name = "RESTAURANT_TABLE")
@@ -13,10 +14,9 @@ import lombok.*;
 public class RestaurantTable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @SequenceGenerator(name = "RESTAURANT_TABLE_SEQ")
-    @Setter(AccessLevel.PRIVATE)
-    @Column(name = "TABLE_ID")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID")
+    @Column(name = "TABLE_ID", updatable = false, nullable = false, insertable = false, unique = true)
     private Long tableId;
 
     @Column(name = "DESCRIPTION")
