@@ -1,11 +1,13 @@
 package com.iwaitless.application.services;
 
 import com.iwaitless.application.persistence.entity.Staff;
-import com.iwaitless.application.persistence.entity.Users;
+import com.iwaitless.application.persistence.entity.UserStaffRelation;
 import com.iwaitless.application.persistence.entity.nomenclatures.StaffRole;
 import com.iwaitless.application.persistence.repository.StaffRepository;
-import com.iwaitless.application.persistence.repository.UserRepository;
+import com.iwaitless.application.persistence.repository.UserStaffRelationRepository;
 import com.iwaitless.application.persistence.repository.nomenclatures.StaffRoleRepository;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +19,14 @@ public class StaffService {
 
     private final StaffRepository staffRepository;
     private final StaffRoleRepository staffRoleRepository;
-    private final UserRepository userRepository;
+    private final UserStaffRelationRepository userStaffRepository;
 
     public StaffService(StaffRepository staffRepository,
                         StaffRoleRepository staffRoleRepository,
-                        UserRepository userRepository) {
+                        UserStaffRelationRepository userStaffRepository) {
         this.staffRepository = staffRepository;
         this.staffRoleRepository = staffRoleRepository;
-        this.userRepository = userRepository;
+        this.userStaffRepository = userStaffRepository;
     }
 
     public List<Staff> findAllEmployees(String stringFilter) {
@@ -49,17 +51,17 @@ public class StaffService {
             return;
         }
         staffRepository.save(contact);
-        saveUser(contact);
+        saveUserRelation(contact);
     }
 
-    private void saveUser(Staff staff) {
-        long userCounter = userRepository
+    private void saveUserRelation(Staff staff) {
+        long userCounter = userStaffRepository
                 .findAll()
                 .stream()
                 .filter(users -> users.getEmployeeId().getEmployeeId().equals(staff.getEmployeeId())).count();
         if(userCounter == 0) {
-            Users user = new Users();
-            user.setEmployeeId(staff);
+            UserStaffRelation userStaffRelation = new UserStaffRelation();
+            userStaffRelation.setEmployeeId(staff);
 
             SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
             int num1 = (Integer.parseInt(formatter.format(staff.getBirthdate()).substring(0,2))
@@ -73,13 +75,20 @@ public class StaffService {
             String username = staff.getLastName().substring(0,(staff.getLastName().length()-1))
                     + staff.getFirstName().charAt(0) + num1 + num2;
             username = username.toLowerCase();
-            user.setUsername(username);
+            userStaffRelation.setUsername(username);
+            userStaffRepository.save(userStaffRelation);
 
             BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
             String bCryptPassword = bCryptPasswordEncoder.encode(username);
-            user.setPassword(bCryptPassword);
-            user.setRole("USER");
-            userRepository.save(user);
+
+//            User user = new User(username, "{bcrypt}" + bCryptPassword,
+//                                 List.of(new SimpleGrantedAuthority("USER")));
+//            userRepository.save(user);
+            UserDetails admin = User.builder()
+                    .username("admin")
+                    .password("{bcrypt}$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW")
+                    .roles("USER", "ADMIN")
+                    .build();
         }
     }
 
@@ -87,11 +96,11 @@ public class StaffService {
         return staffRoleRepository.findAll();
     }
 
-    public List<Users> finsAllUsers() {
-        return userRepository.findAll();
+    public List<UserStaffRelation> finsAllUsers() {
+        return userStaffRepository.findAll();
     }
 
-    public Users finsUserByEmployeeId(Long id) {
+    public UserStaffRelation finsUserByEmployeeId(Long id) {
         return finsAllUsers()
                 .stream()
                 .filter(user ->

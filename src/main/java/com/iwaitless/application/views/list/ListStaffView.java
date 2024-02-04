@@ -1,7 +1,7 @@
 package com.iwaitless.application.views.list;
 
 import com.iwaitless.application.persistence.entity.Staff;
-import com.iwaitless.application.persistence.entity.Users;
+import com.iwaitless.application.persistence.entity.UserStaffRelation;
 import com.iwaitless.application.services.StaffService;
 import com.iwaitless.application.views.MainLayout;
 import com.iwaitless.application.views.forms.EmployeeForm;
@@ -53,7 +53,7 @@ public class ListStaffView extends VerticalLayout {
                 })
                 .setHeader("Birthdate");
         grid.addColumn(employee -> {
-                    Users user = service.finsUserByEmployeeId(employee.getEmployeeId());
+                    UserStaffRelation user = service.finsUserByEmployeeId(employee.getEmployeeId());
                     if (user != null)
                         return user.getUsername();
 

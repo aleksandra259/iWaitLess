@@ -4,17 +4,17 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-@Table(name = "USERS")
+@Table(name = "USER_STAFF_RELATION")
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class Users {
+public class UserStaffRelation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @SequenceGenerator(name = "MENU_ITEM_SEQ")
+    @SequenceGenerator(name = "USER_STAFF_RELATION_SEQ")
     @Setter(AccessLevel.PRIVATE)
     @Column(name = "ID")
     private Long id;
@@ -23,15 +23,7 @@ public class Users {
     @Column(name = "USERNAME")
     private String username;
 
-    @NotNull
-    @Column(name = "PASSWORD")
-    private String password;
-
     @OneToOne
     @JoinColumn(name = "EMPLOYEE_ID")
     private Staff employeeId;
-
-    @NotNull
-    @Column(name = "ROLE")
-    private String role;
 }

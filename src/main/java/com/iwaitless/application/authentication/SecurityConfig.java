@@ -1,29 +1,25 @@
 package com.iwaitless.application.authentication;
 
-import com.iwaitless.application.persistence.repository.UserRepository;
 import com.iwaitless.application.views.LoginView;
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.sql.DataSource;
+
+import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.H2;
 
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig extends VaadinWebSecurity {
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -35,27 +31,15 @@ public class SecurityConfig extends VaadinWebSecurity {
     }
 
     @Bean
-    public UserDetailsService users() {
-        List<UserDetails> userDetails = new ArrayList<>(userRepository
-                .findAll()
-                .stream()
-                .map(user -> {
-                    return User.builder()
-                            .username(user.getUsername())
-                            .password(user.getPassword())
-                            .roles(user.getRole())
-                            .build();
-                }).toList());
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password("{bcrypt}$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW")
-                .roles("USER", "ADMIN")
+    DataSource dataSource() {
+        return new EmbeddedDatabaseBuilder()
+                .setType(H2)
+                .addScript(JdbcDaoImpl.DEFAULT_USER_SCHEMA_DDL_LOCATION)
                 .build();
-        userDetails.add(admin);
+    }
 
-        userDetails.forEach(System.out::println);
-        userRepository.findAll().forEach(System.out::println);
-
-        return new InMemoryUserDetailsManager(userDetails);
+    @Bean
+    public UserDetailsService users(DataSource dataSource) {
+        return new JdbcUserDetailsManager(dataSource);
     }
 }
