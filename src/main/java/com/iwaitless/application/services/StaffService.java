@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class StaffService {
@@ -45,8 +46,15 @@ public class StaffService {
         return staffRepository.count();
     }
 
-    public void deleteEmployee(Staff contact) {
-        staffRepository.delete(contact);
+    public void deleteEmployee(Staff staff) {
+        UserStaffRelation userStaffRelation = userStaffRepository
+                .findAll()
+                .stream()
+                .filter(rel -> rel.getEmployeeId().getEmployeeId().equals(staff.getEmployeeId()))
+                .findFirst()
+                .orElse(null);
+        userStaffRepository.delete(Objects.requireNonNull(userStaffRelation));
+        staffRepository.delete(staff);
     }
 
     public void saveEmployee(Staff contact) {

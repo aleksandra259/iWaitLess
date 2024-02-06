@@ -11,8 +11,10 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.shared.Registration;
@@ -24,7 +26,7 @@ public class EmployeeForm extends FormLayout {
     TextField lastName = new TextField("Last Name");
     EmailField email = new EmailField("Email");
     TextField phone = new TextField("Phone number");
-    TextField address = new TextField("Address");
+    TextArea address = new TextArea("Address");
     DatePicker birthdate = new DatePicker("Birthdate");
     ComboBox<StaffRole> role = new ComboBox<>("Role");
     BeanValidationBinder<Staff> binder = new BeanValidationBinder<>(Staff.class);
@@ -39,8 +41,17 @@ public class EmployeeForm extends FormLayout {
 
         role.setItems(roles);
         role.setItemLabelGenerator(StaffRole::getName);
+        address.setWidthFull();
 
         add(firstName, lastName, email, phone, address, birthdate, role, createButtonsLayout());
+        setResponsiveSteps(
+                // Use one column by default
+                new ResponsiveStep("0", 1),
+                // Use two columns, if the layout's width exceeds 320px
+                new ResponsiveStep("320px", 2),
+                // Use three columns, if the layout's width exceeds 500px
+                new ResponsiveStep("500px", 3));
+        setColspan(address, 2);
     }
 
     private Component createButtonsLayout() {
@@ -56,7 +67,16 @@ public class EmployeeForm extends FormLayout {
         close.addClickListener(event -> fireEvent(new CloseEvent(this)));
 
         binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
-        return new HorizontalLayout(save, delete, close);
+
+        delete.getStyle().set("margin-inline-end", "auto");
+        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        HorizontalLayout buttonLayout = new HorizontalLayout(save, delete, close);
+        buttonLayout.getStyle().set("flex-wrap", "wrap");
+        buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+        setColspan(buttonLayout, 2);
+
+        return buttonLayout;
     }
 
     private void validateAndSave() {
