@@ -28,6 +28,11 @@ public class MenuCategoryService {
                 .findFirst()
                 .orElse(null);
     }
+    public MenuCategory findCategoryById(String id) {
+        return menuCategoryRepository
+                .findById(id)
+                .orElse(null);
+    }
 
     public void deleteCategory(MenuCategory category) {
         menuCategoryRepository.delete(category);

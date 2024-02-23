@@ -108,6 +108,11 @@
             <artifactId>spring-boot-starter-security</artifactId>
             <version>3.2.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.vaadin.addons</groupId>
+            <artifactId>interactiveimage</artifactId>
+            <version>0.1.0</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -58,7 +58,7 @@ public class MenuItemsView extends VerticalLayout {
                         Notification notification = new Notification();
                         notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
 
-                        Div text = new Div(new Text("To be able to create item you shout select category first."));
+                        Div text = new Div(new Text("To be able to create item you should select category first."));
 
                         Button closeButton = new Button(new Icon("lumo", "cross"));
                         closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
@@ -155,7 +155,11 @@ public class MenuItemsView extends VerticalLayout {
     private void createMenuItem (MenuItem item) {
         Dialog dialog = new Dialog();
 
-        dialog.setHeaderTitle("New item");
+        String header = item.getName();
+        if (header.isEmpty())
+            dialog.setHeaderTitle("New item");
+        else
+            dialog.setHeaderTitle(item.getCategory().getName() + " - " + header);
 
         FormLayout dialogLayout = createDialogLayout(item);
         dialog.add(dialogLayout);
@@ -178,40 +182,34 @@ public class MenuItemsView extends VerticalLayout {
         size.setSuffixComponent(new Span("grams"));
         NumberField timeToProcess = new NumberField("Time to process");
         timeToProcess.setSuffixComponent(new Span("minutes"));
-        UploadImage image = new UploadImage();
+        UploadImage image = new UploadImage(item);
 
         NumberField price = new NumberField();
-        price.setWidth("10.4em");
         Select<Currency> currency = new Select<>();
         currency.setItems(Currency.getInstance("BGN"),
                 Currency.getInstance("EUR"));
-        currency.setWidth("6em");
         currency.getElement().executeJs(
                 "this.focusElement.setAttribute('title', 'Currency')");
 
         HorizontalLayout priceAndCurrency = new HorizontalLayout(price, currency);
-        priceAndCurrency.setSpacing(false);
         priceAndCurrency.getThemeList().add("spacing-s");
 
         HorizontalLayout sizeAndTime = new HorizontalLayout(size, timeToProcess);
         sizeAndTime.getThemeList().add("spacing-s");
 
         FormLayout formLayout = new FormLayout();
-        formLayout.add(itemNameField, description, sizeAndTime);
+        formLayout.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("0", 1, FormLayout.ResponsiveStep.LabelsPosition.TOP));
+
+        formLayout.add(itemNameField, description, sizeAndTime, priceAndCurrency);
         formLayout.addFormItem(priceAndCurrency, "Price");
         formLayout.addFormItem(image, "Image");
-
-        formLayout.setResponsiveSteps(
-                new FormLayout.ResponsiveStep("0", 1),
-                new FormLayout.ResponsiveStep("500px", 2));
-
         formLayout.getStyle().set("width", "25rem").set("max-width", "100%");
 
         binder.bind(itemNameField, MenuItem::getName, MenuItem::setName);
         binder.bind(description, MenuItem::getDescription, MenuItem::setDescription);
         binder.bind(size, MenuItem::getSize, MenuItem::setSize);
         binder.bind(timeToProcess, MenuItem::getTimeToProcess, MenuItem::setTimeToProcess);
-//        binder.forField(image).bind(MenuItem::getImage, MenuItem::setImage);
         binder.bind(price, MenuItem::getPrice, MenuItem::setPrice);
         binder.forField(currency).bind(MenuItem::getCurrency, MenuItem::setCurrency);
         setItem(item);
