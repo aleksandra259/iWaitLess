@@ -2,6 +2,8 @@ package com.iwaitless.application.views;
 
 import com.iwaitless.application.services.MenuCategoryService;
 import com.iwaitless.application.services.MenuItemService;
+import com.iwaitless.application.views.list.MenuCategoriesView;
+import com.iwaitless.application.views.list.MenuItemsView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;

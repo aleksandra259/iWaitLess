@@ -15,12 +15,9 @@ create table authorities (
 );
 create unique index ix_auth_username on authorities (username,authority);
 
-create table HT_INGREDIENT_CATEGORY (
-id varchar(50) not null,
-name varchar(100) not null
-);
 create table HT_MENU_CATEGORY (
 id varchar(50) not null,
+order_no int,
 name varchar(100) not null
 );
 create table HT_NOTIFICATION_STATUS (
@@ -44,13 +41,6 @@ id varchar(50) not null,
 name varchar(100) not null
 );
 
-CREATE TABLE INGREDIENTS (
-  id varchar(20) NOT NULL primary key,
-  name VARCHAR(50),
-  category VARCHAR(50),
-  constraint fk_ingredient_category foreign key(category) references HT_INGREDIENT_CATEGORY(id)
-);
-
 CREATE TABLE MENU_ITEM (
   item_id int NOT NULL primary key,
   name VARCHAR(50),
@@ -60,16 +50,8 @@ CREATE TABLE MENU_ITEM (
   currency VARCHAR(3),
   size double,
   time_to_process double,
-  image VARCHAR(250),
+  available boolean DEFAULT true,
   constraint fk_menu_category foreign key(category) references HT_MENU_CATEGORY(id)
-);
-
-CREATE TABLE INGREDIENT_RELATION (
-  id int NOT NULL primary key,
-  item_id int,
-  ingredient_id int,
-  constraint fk_ingredient_item foreign key(item_id) references menu_item(item_id),  
-  constraint fk_ingredient_rel foreign key(ingredient_id) references INGREDIENTS(ingredient_id)
 );
 
 CREATE TABLE STAFF (

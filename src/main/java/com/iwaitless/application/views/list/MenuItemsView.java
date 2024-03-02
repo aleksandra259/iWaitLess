@@ -1,44 +1,39 @@
-package com.iwaitless.application.views;
+package com.iwaitless.application.views.list;
 
 import com.iwaitless.application.persistence.entity.MenuItem;
 import com.iwaitless.application.persistence.entity.nomenclatures.MenuCategory;
 import com.iwaitless.application.services.MenuItemService;
+import com.iwaitless.application.views.forms.MenuItemForm;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.select.Select;
-import com.vaadin.flow.component.textfield.NumberField;
-import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.renderer.LitRenderer;
+import com.vaadin.flow.data.renderer.Renderer;
 
 import java.io.File;
-import java.util.Currency;
 
 public class MenuItemsView extends VerticalLayout {
     Grid<MenuItem> grid = new Grid<>(MenuItem.class, false);
-    BeanValidationBinder<MenuItem> binder = new BeanValidationBinder<>(MenuItem.class);
     Button newFood = new Button();
     H2 foodListHeader = new H2();
 
     MenuItemService menuItem;
     MenuCategory category;
+    MenuItemForm form;
 
 
     public MenuItemsView(MenuItemService menuItem) {
@@ -100,13 +95,14 @@ public class MenuItemsView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassNames("menu-item-grid");
         grid.setSizeFull();
+        grid.setAllRowsVisible(true);
+        getThemeList().add("spacing-xs");
 
-        grid.addComponentColumn(MenuItemsView::returnImage);
-        grid.addColumn(MenuItem::getName);
-        grid.addColumn(MenuItem::getDescription).setResizable(true);
-        grid.addColumn(item -> item.getPrice() + " " + item.getCurrency()).setWidth("1em");
-        grid.addColumn(item -> item.getSize() + " gram").setWidth("1em");
-//        grid.getColumns().forEach(col -> col.setAutoWidth(true));
+        grid.addComponentColumn(MenuItemsView::returnImage).setWidth("7.5em").setFlexGrow(0);
+        grid.addColumn(createItemRenderer()).setWidth("13em");
+        grid.addColumn(item -> item.getPrice() + " " + item.getCurrency()).setWidth("2.5em");
+        grid.addColumn(item -> item.getSize() + " gram").setWidth("2.5em");
+        grid.addColumn(item -> item.isAvailable() ? "Available" : "Not Available").setWidth("4em");
 
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, item) -> {
@@ -116,7 +112,7 @@ public class MenuItemsView extends VerticalLayout {
                     button.addClickListener(e ->
                             createMenuItem(item));
                     button.setIcon(new Icon(VaadinIcon.EDIT));
-                })).setWidth("0.5em");
+                })).setWidth("1em");
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, item) -> {
                     button.addThemeVariants(ButtonVariant.LUMO_ICON,
@@ -126,12 +122,22 @@ public class MenuItemsView extends VerticalLayout {
                     button.setIcon(new Icon(VaadinIcon.TRASH));
                     button.addClickListener(e ->
                         deleteMenuItem(item));
-                })).setWidth("0.5em");
+                })).setWidth("1em");
 
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
+    }
 
-        getThemeList().clear();
-        getThemeList().add("spacing-xs");
+    private static Renderer<MenuItem> createItemRenderer() {
+        return LitRenderer.<MenuItem> of(
+                        "<vaadin-horizontal-layout style=\"align-items: center;\" theme=\"spacing\">"
+                                + "  <vaadin-vertical-layout style=\"line-height: var(--lumo-line-height-m);\">"
+                                + "    <span> ${item.name} </span>"
+                                + "    <span style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">"
+                                + "      ${item.description}" + "    </span>"
+                                + "  </vaadin-vertical-layout>"
+                                + "</vaadin-horizontal-layout>")
+                .withProperty("name", MenuItem::getName)
+                .withProperty("description", MenuItem::getDescription);
     }
 
     private void deleteMenuItem (MenuItem item) {
@@ -159,87 +165,22 @@ public class MenuItemsView extends VerticalLayout {
     }
 
     private void createMenuItem (MenuItem item) {
-        Dialog dialog = new Dialog();
+        form = new MenuItemForm(item);
+        form.addSaveListener(this::saveMenuItem);
+        form.addCloseListener(e -> closeEditor());
 
-        String header = item.getName();
-        if (header.isEmpty())
-            dialog.setHeaderTitle("New item");
-        else
-            dialog.setHeaderTitle(item.getCategory().getName() + " - " + header);
-
-        FormLayout dialogLayout = createDialogLayout(item);
-        dialog.add(dialogLayout);
-
-        Button saveButton = createSaveButton(dialog, item);
-        Button cancelButton = new Button("Cancel", e -> dialog.close());
-        dialog.getFooter().add(cancelButton);
-        dialog.getFooter().add(saveButton);
-
-        add(dialog);
-        dialog.open();
-
-        menuItem.saveItem(item);
+        setMenuItemData(category);
     }
 
-    private FormLayout createDialogLayout(MenuItem item) {
-        TextField itemNameField = new TextField("Name");
-        TextArea description = new TextArea("Description");
-        NumberField size = new NumberField("Size");
-        size.setSuffixComponent(new Span("grams"));
-        NumberField timeToProcess = new NumberField("Time to process");
-        timeToProcess.setSuffixComponent(new Span("minutes"));
-        UploadImage image = new UploadImage(item);
-
-        NumberField price = new NumberField();
-        Select<Currency> currency = new Select<>();
-        currency.setItems(Currency.getInstance("BGN"),
-                Currency.getInstance("EUR"));
-        currency.getElement().executeJs(
-                "this.focusElement.setAttribute('title', 'Currency')");
-
-        HorizontalLayout priceAndCurrency = new HorizontalLayout(price, currency);
-        priceAndCurrency.getThemeList().add("spacing-s");
-
-        HorizontalLayout sizeAndTime = new HorizontalLayout(size, timeToProcess);
-        sizeAndTime.getThemeList().add("spacing-s");
-
-        FormLayout formLayout = new FormLayout();
-        formLayout.setResponsiveSteps(
-                new FormLayout.ResponsiveStep("0", 1, FormLayout.ResponsiveStep.LabelsPosition.TOP));
-
-        formLayout.add(itemNameField, description, sizeAndTime, priceAndCurrency);
-        formLayout.addFormItem(priceAndCurrency, "Price");
-        formLayout.addFormItem(image, "Image");
-        formLayout.getStyle().set("width", "25rem").set("max-width", "100%");
-
-        binder.bind(itemNameField, MenuItem::getName, MenuItem::setName);
-        binder.bind(description, MenuItem::getDescription, MenuItem::setDescription);
-        binder.bind(size, MenuItem::getSize, MenuItem::setSize);
-        binder.bind(timeToProcess, MenuItem::getTimeToProcess, MenuItem::setTimeToProcess);
-        binder.bind(price, MenuItem::getPrice, MenuItem::setPrice);
-        binder.forField(currency).bind(MenuItem::getCurrency, MenuItem::setCurrency);
-        setItem(item);
-
-        return formLayout;
+    private void saveMenuItem(MenuItemForm.SaveEvent event) {
+        menuItem.saveItem(event.getMenuItem());
+        setMenuItemData(category);
+        closeEditor();
     }
 
-    private Button createSaveButton(Dialog dialog,
-                                    MenuItem item) {
-        Button saveButton = new Button("Save");
-        saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        saveButton.addClickListener(e -> {
-            if (binder.isValid()) {
-                menuItem.saveItem(item);
-                setMenuItemData(category);
-                dialog.close();
-            }
-        });
-
-        return saveButton;
-    }
-
-    public void setItem(MenuItem item) {
-        binder.setBean(item);
+    private void closeEditor() {
+        form.setItem(null);
+        form.setVisible(false);
     }
 
     private static Image returnImage (MenuItem item) {
@@ -250,8 +191,8 @@ public class MenuItemsView extends VerticalLayout {
         File[] listOfFiles = folder.listFiles();
 
         Image image = new Image();
-        image.setWidth(120, Unit.PIXELS);
-        image.setHeight(75, Unit.PIXELS);
+        image.setWidth(130, Unit.PIXELS);
+        image.setHeight(80, Unit.PIXELS);
 
         if (listOfFiles != null) {
             for (File currentFile : listOfFiles) {

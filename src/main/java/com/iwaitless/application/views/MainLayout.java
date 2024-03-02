@@ -2,6 +2,7 @@ package com.iwaitless.application.views;
 
 import com.iwaitless.application.authentication.SecurityService;
 import com.iwaitless.application.views.list.ListStaffView;
+import com.iwaitless.application.views.list.RestaurantTablesConfigurationView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -46,8 +47,9 @@ public class MainLayout extends AppLayout {
 
     private void createDrawer() {
         addToDrawer(new VerticalLayout(
-                new RouterLink("List", ListStaffView.class),
-                new RouterLink("Menu Configuration", MenuConfigurationView.class)
+                new RouterLink("Staff List", ListStaffView.class),
+                new RouterLink("Menu Configuration", MenuConfigurationView.class),
+                new RouterLink("Tables Configuration", RestaurantTablesConfigurationView.class)
         ));
     }
 }

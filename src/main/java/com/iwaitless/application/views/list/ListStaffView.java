@@ -5,12 +5,16 @@ import com.iwaitless.application.persistence.entity.UserStaffRelation;
 import com.iwaitless.application.services.StaffService;
 import com.iwaitless.application.views.MainLayout;
 import com.iwaitless.application.views.forms.EmployeeForm;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
@@ -20,7 +24,7 @@ import jakarta.annotation.security.PermitAll;
 
 import java.text.SimpleDateFormat;
 
-@PageTitle("StaffList")
+@PageTitle("Staff List")
 @Route(value="", layout = MainLayout.class)
 @PermitAll
 public class ListStaffView extends VerticalLayout {
@@ -31,14 +35,13 @@ public class ListStaffView extends VerticalLayout {
 
     public ListStaffView(StaffService service) {
         this.service = service;
+
         addClassName("list-employee-view");
         setSizeFull();
         configureGrid();
-        configureForm();
+        setEmployeeData();
 
-        add(getToolbar(), getContent());
-        updateList();
-        closeEditor();
+        add(getToolbar(), grid);
     }
 
     private void configureGrid() {
@@ -60,10 +63,18 @@ public class ListStaffView extends VerticalLayout {
                     return null;
                 })
                 .setHeader("Username");
-        grid.getColumns().forEach(col -> col.setAutoWidth(true));
+        grid.addColumn(
+                new ComponentRenderer<>(Button::new, (button, employee) -> {
+                    button.addThemeVariants(ButtonVariant.LUMO_ICON,
+                            ButtonVariant.LUMO_SMALL);
+                    button.getElement().setAttribute("aria-label", "Edit employee");
+                    button.addClickListener(e ->
+                            createEmployee(employee));
+                    button.setIcon(new Icon(VaadinIcon.EDIT));
+                })).setWidth("1em");
 
-        grid.asSingleSelect().addValueChangeListener(event ->
-                editEmployee(event.getValue()));
+        grid.getColumns().forEach(col -> col.setAutoWidth(true));
+        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
     }
 
     private static Renderer<Staff> createEmployeeRenderer() {
@@ -84,67 +95,36 @@ public class ListStaffView extends VerticalLayout {
         filterText.setPlaceholder("Filter by name...");
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
-        filterText.addValueChangeListener(e -> updateList());
+        filterText.addValueChangeListener(e -> setEmployeeData());
 
         Button addContactButton = new Button("Add employee");
-        addContactButton.addClickListener(click -> addEmployee());
+        addContactButton.addClickListener(click -> createEmployee(new Staff()));
 
         var toolbar = new HorizontalLayout(filterText, addContactButton);
         toolbar.addClassName("toolbar");
         return toolbar;
     }
 
-    private void updateList() {
+    private void setEmployeeData() {
         grid.setItems(service.findAllEmployees(filterText.getValue()));
     }
 
-    private Component getContent() {
-        HorizontalLayout content = new HorizontalLayout(grid, form);
-        content.setFlexGrow(2, grid);
-        content.setFlexGrow(1, form);
-        content.addClassNames("content");
-        content.setSizeFull();
-        return content;
-    }
-
-    private void configureForm() {
-        form = new EmployeeForm(service.findAllRoles());
-        form.setWidth("35em");
+    private void createEmployee(Staff staff) {
+        form = new EmployeeForm(staff, service.findAllRoles());
         form.addSaveListener(this::saveEmployee);
-        form.addDeleteListener(this::deleteEmployee);
         form.addCloseListener(e -> closeEditor());
+
+        setEmployeeData();
     }
 
-    public void editEmployee(Staff staff) {
-        if (staff == null) {
-            closeEditor();
-        } else {
-            form.setContact(staff);
-            form.setVisible(true);
-            addClassName("editing");
-        }
+    private void saveEmployee(EmployeeForm.SaveEvent event) {
+        service.saveEmployee(event.getEmployee());
+        setEmployeeData();
+        closeEditor();
     }
 
     private void closeEditor() {
         form.setContact(null);
         form.setVisible(false);
-        removeClassName("editing");
-    }
-
-    private void addEmployee() {
-        grid.asSingleSelect().clear();
-        editEmployee(new Staff());
-    }
-
-    private void saveEmployee(EmployeeForm.SaveEvent event) {
-        service.saveEmployee(event.getEmployee());
-        updateList();
-        closeEditor();
-    }
-
-    private void deleteEmployee(EmployeeForm.DeleteEvent event) {
-        service.deleteEmployee(event.getEmployee());
-        updateList();
-        closeEditor();
     }
 }

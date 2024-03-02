@@ -1,65 +1,41 @@
 package com.iwaitless.application.views.forms;
 
-import com.iwaitless.application.persistence.entity.Staff;
-import com.iwaitless.application.persistence.entity.nomenclatures.StaffRole;
+import com.iwaitless.application.persistence.entity.RestaurantTable;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.EmailField;
-import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 
-import java.util.List;
+public class TablesForm extends FormLayout {
+    TextField id = new TextField("ID");
+    TextField description = new TextField("Description");
 
-public class EmployeeForm extends FormLayout {
-    TextField firstName = new TextField("First Name");
-    TextField lastName = new TextField("Last Name");
-    EmailField email = new EmailField("Email");
-    TextField phone = new TextField("Phone number");
-    TextArea address = new TextArea("Address");
-    DatePicker birthdate = new DatePicker("Birthdate");
-    ComboBox<StaffRole> role = new ComboBox<>("Role");
-
-    BeanValidationBinder<Staff> binder = new BeanValidationBinder<>(Staff.class);
+    BeanValidationBinder<RestaurantTable> binder = new BeanValidationBinder<>(RestaurantTable.class);
     Dialog dialog = new Dialog();
 
     Button save = new Button("Save");
     Button delete = new Button("Delete");
     Button close = new Button("Cancel");
 
-    public EmployeeForm(Staff staff,
-                        List<StaffRole> roles) {
-        String header = staff.getFirstName();
+    public TablesForm(RestaurantTable table) {
+        String header = String.valueOf(table.getTableId());
         if (header == null || header.trim().isEmpty())
-            dialog.setHeaderTitle("New employee");
+            dialog.setHeaderTitle("Create new table");
         else
-            dialog.setHeaderTitle("Edit employee profile for " + header + " " + staff.getLastName());
+            dialog.setHeaderTitle("Edit table number " + header);
 
-        role.setItems(roles);
-        role.setItemLabelGenerator(StaffRole::getName);
 
         binder.bindInstanceFields(this);
-        setContact(staff);
-        address.setWidthFull();
+        setTable(table);
 
-        add(firstName, lastName, email, phone, address, birthdate, role);
-        setResponsiveSteps(
-                // Use one column by default
-                new ResponsiveStep("0", 1),
-                // Use two columns, if the layout's width exceeds 320px
-                new ResponsiveStep("320px", 2),
-                // Use three columns, if the layout's width exceeds 500px
-                new ResponsiveStep("500px", 3));
-        setColspan(address, 2);
+        add(id, description);
         getStyle().set("width", "25rem").set("max-width", "100%");
 
         dialog.add(this);
@@ -104,39 +80,39 @@ public class EmployeeForm extends FormLayout {
         }
     }
 
-    public void setContact(Staff employee) {
-        binder.setBean(employee);
+    public void setTable(RestaurantTable table) {
+        binder.setBean(table);
     }
 
     // Events
-    public static abstract class EmployeeFormEvent extends ComponentEvent<EmployeeForm> {
-        private final Staff staff;
+    public static abstract class TablesFormEvent extends ComponentEvent<TablesForm> {
+        private final RestaurantTable table;
 
-        protected EmployeeFormEvent(EmployeeForm source, Staff staff) {
+        protected TablesFormEvent(TablesForm source, RestaurantTable table) {
             super(source, false);
-            this.staff = staff;
+            this.table = table;
         }
 
-        public Staff getEmployee() {
-            return staff;
-        }
-    }
-
-    public static class SaveEvent extends EmployeeFormEvent {
-        SaveEvent(EmployeeForm source, Staff staff) {
-            super(source, staff);
+        public RestaurantTable getRestaurantTable() {
+            return table;
         }
     }
 
-    public static class DeleteEvent extends EmployeeFormEvent {
-        DeleteEvent(EmployeeForm source, Staff staff) {
-            super(source, staff);
+    public static class SaveEvent extends TablesFormEvent {
+        SaveEvent(TablesForm source, RestaurantTable table) {
+            super(source, table);
+        }
+    }
+
+    public static class DeleteEvent extends TablesFormEvent {
+        DeleteEvent(TablesForm source, RestaurantTable table) {
+            super(source, table);
         }
 
     }
 
-    public static class CloseEvent extends EmployeeFormEvent {
-        CloseEvent(EmployeeForm source) {
+    public static class CloseEvent extends TablesFormEvent {
+        CloseEvent(TablesForm source) {
             super(source, null);
         }
     }

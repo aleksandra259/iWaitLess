@@ -1,10 +1,12 @@
 package com.iwaitless.application.persistence.entity;
 
 import com.iwaitless.application.persistence.entity.nomenclatures.MenuCategory;
-import com.vaadin.flow.component.html.Image;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.Currency;
@@ -50,6 +52,6 @@ public class MenuItem {
     @Column(name = "TIME_TO_PROCESS")
     private Double timeToProcess;
 
-    @Column(name = "IMAGE")
-    private Image image;
+    @Column(name = "AVAILABLE")
+    private boolean available;
 }
