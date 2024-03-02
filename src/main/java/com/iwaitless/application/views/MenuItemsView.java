@@ -4,6 +4,7 @@ import com.iwaitless.application.persistence.entity.MenuItem;
 import com.iwaitless.application.persistence.entity.nomenclatures.MenuCategory;
 import com.iwaitless.application.services.MenuItemService;
 import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -12,6 +13,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -26,6 +28,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
+import java.io.File;
 import java.util.Currency;
 
 public class MenuItemsView extends VerticalLayout {
@@ -44,6 +47,7 @@ public class MenuItemsView extends VerticalLayout {
 
         addClassName("items-view");
         setSizeFull();
+        configureGrid();
 
         newFood.setText("New");
         newFood.setWidth("min-content");
@@ -77,8 +81,6 @@ public class MenuItemsView extends VerticalLayout {
         foodListHeader.setWidth("max-content");
         foodListHeader.setMaxWidth("150px");
 
-        configureGrid();
-
         HorizontalLayout categories = new HorizontalLayout(foodListHeader, newFood);
         add(categories, grid);
     }
@@ -99,16 +101,17 @@ public class MenuItemsView extends VerticalLayout {
         grid.addClassNames("menu-item-grid");
         grid.setSizeFull();
 
+        grid.addComponentColumn(MenuItemsView::returnImage);
         grid.addColumn(MenuItem::getName);
-        grid.addColumn(MenuItem::getDescription);
-        grid.addColumn(item -> item.getPrice() + " " + item.getCurrency());
-        grid.addColumn(item -> item.getSize() + " gram");
-        grid.getColumns().forEach(col -> col.setAutoWidth(true));
+        grid.addColumn(MenuItem::getDescription).setResizable(true);
+        grid.addColumn(item -> item.getPrice() + " " + item.getCurrency()).setWidth("1em");
+        grid.addColumn(item -> item.getSize() + " gram").setWidth("1em");
+//        grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, item) -> {
                     button.addThemeVariants(ButtonVariant.LUMO_ICON,
-                            ButtonVariant.LUMO_TERTIARY);
+                            ButtonVariant.LUMO_SMALL);
                     button.getElement().setAttribute("aria-label", "Edit item");
                     button.addClickListener(e ->
                             createMenuItem(item));
@@ -118,7 +121,7 @@ public class MenuItemsView extends VerticalLayout {
                 new ComponentRenderer<>(Button::new, (button, item) -> {
                     button.addThemeVariants(ButtonVariant.LUMO_ICON,
                             ButtonVariant.LUMO_ERROR,
-                            ButtonVariant.LUMO_TERTIARY);
+                            ButtonVariant.LUMO_SMALL);
                     button.getElement().setAttribute("aria-label", "Delete item");
                     button.setIcon(new Icon(VaadinIcon.TRASH));
                     button.addClickListener(e ->
@@ -126,6 +129,9 @@ public class MenuItemsView extends VerticalLayout {
                 })).setWidth("0.5em");
 
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
+
+        getThemeList().clear();
+        getThemeList().add("spacing-xs");
     }
 
     private void deleteMenuItem (MenuItem item) {
@@ -234,5 +240,35 @@ public class MenuItemsView extends VerticalLayout {
 
     public void setItem(MenuItem item) {
         binder.setBean(item);
+    }
+
+    private static Image returnImage (MenuItem item) {
+        File folder = new File("src/main/resources/META-INF/resources/menu-items/"
+                + item.getCategory().getId()
+                + "/"
+                + item.getItemId());
+        File[] listOfFiles = folder.listFiles();
+
+        Image image = new Image();
+        image.setWidth(120, Unit.PIXELS);
+        image.setHeight(75, Unit.PIXELS);
+
+        if (listOfFiles != null) {
+            for (File currentFile : listOfFiles) {
+                if (currentFile.isFile()) {
+                    image.setSrc("menu-items/"
+                            + item.getCategory().getId()
+                            + "/"
+                            + item.getItemId()
+                            + "/"
+                            + currentFile.getName());
+
+                    return image;
+                }
+            }
+        }
+
+        image.setSrc("menu-items/picture-not-available.jpg");
+        return image;
     }
 }

@@ -7,6 +7,7 @@ import com.iwaitless.application.services.MenuItemService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.editor.Editor;
@@ -17,6 +18,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import java.util.List;
@@ -30,6 +32,7 @@ public class MenuCategoriesView extends VerticalLayout {
     H2 categoriesHeader = new H2();
     Button newCategory = new Button();
     Grid<MenuCategory> grid = new Grid<>(MenuCategory.class, false);
+    ListDataProvider<MenuCategory> dp;
     MenuCategory currentCategory = new MenuCategory();
     Editor<MenuCategory> editor = grid.getEditor();
 
@@ -39,6 +42,7 @@ public class MenuCategoriesView extends VerticalLayout {
         this.menuCategory = menuCategory;
         this.menuItem = menuItem;
         this.items = items;
+
 
         addClassName("categories-view");
         setSizeFull();
@@ -63,9 +67,11 @@ public class MenuCategoriesView extends VerticalLayout {
             menuCategory.saveCategory(category);
             setMenuCategoryData();
 
-//            if (editor.isOpen())
-//                editor.cancel();
+
+//            grid.getDataCommunicator().getKeyMapper().key(category);
 //            grid.getEditor().editItem(category);
+//            grid.getColumnByKey("DeleteCategory").setVisible(false);
+//            grid.getColumnByKey("EditCategory").setVisible(false);
         });
 
         categoriesHeader.setText("Categories");
@@ -85,19 +91,29 @@ public class MenuCategoriesView extends VerticalLayout {
         Grid.Column<MenuCategory> name = grid
                 .addColumn(MenuCategory::getName);
         Grid.Column<MenuCategory> editColumn = grid.addComponentColumn(category -> {
-            Button editButton = new Button();
-            editButton.addThemeVariants(ButtonVariant.LUMO_ICON,
-                    ButtonVariant.LUMO_TERTIARY);
-            editButton.setIcon(new Icon(VaadinIcon.EDIT));
-            editButton.getElement().setAttribute("aria-label", "Edit category");
-            editButton.addClickListener(e -> {
-                if (editor.isOpen())
-                    editor.cancel();
-                grid.getEditor().editItem(category);
-                currentCategory = category;
-            });
-            return editButton;
-        }).setWidth("0.5em");
+                Button editButton = new Button();
+                editButton.addThemeVariants(ButtonVariant.LUMO_ICON,
+                        ButtonVariant.LUMO_SMALL);
+                editButton.setIcon(new Icon(VaadinIcon.EDIT));
+                editButton.getElement().setAttribute("aria-label", "Edit category");
+                editButton.addClickListener(e -> {
+                    if (editor.isOpen())
+                        editor.cancel();
+                    grid.getEditor().editItem(category);
+                    currentCategory = category;
+                });
+                return editButton;
+            }).setWidth("25px").setTextAlign(ColumnTextAlign.END);
+        grid.addColumn(
+            new ComponentRenderer<>(Button::new, (button, category) -> {
+                button.addThemeVariants(ButtonVariant.LUMO_ICON,
+                        ButtonVariant.LUMO_ERROR,
+                        ButtonVariant.LUMO_SMALL);
+                button.getElement().setAttribute("aria-label", "Delete category");
+                button.setIcon(new Icon(VaadinIcon.TRASH));
+                button.addClickListener(e -> deleteMenuCategory(category));
+            })).setWidth("25px").setTextAlign(ColumnTextAlign.END);
+
         Binder<MenuCategory> binder = new Binder<>(MenuCategory.class);
         editor.setBinder(binder);
         editor.setBuffered(true);
@@ -109,34 +125,32 @@ public class MenuCategoriesView extends VerticalLayout {
                 .bind(MenuCategory::getName, MenuCategory::setName);
         name.setEditorComponent(nameField);
 
-        Button saveButton = new Button("Save", e -> {
+        Button saveButton = new Button(VaadinIcon.CHECK.create(), e -> {
             currentCategory.setName(nameField.getValue());
             menuCategory.saveCategory(currentCategory);
             editor.save();
         });
-        Button cancelButton = new Button(VaadinIcon.CLOSE.create(),
-                e -> editor.cancel());
+        saveButton.setWidth("25px");
+        saveButton.addThemeVariants(ButtonVariant.LUMO_ICON,
+                ButtonVariant.LUMO_SUCCESS,
+                ButtonVariant.LUMO_SMALL);
+
+        Button cancelButton = new Button(VaadinIcon.CLOSE.create(), e -> {
+            editor.cancel();
+        });
+        cancelButton.setWidth("25px");
         cancelButton.addThemeVariants(ButtonVariant.LUMO_ICON,
-                ButtonVariant.LUMO_ERROR);
+                ButtonVariant.LUMO_ERROR,
+                ButtonVariant.LUMO_SMALL);
+
         HorizontalLayout actions = new HorizontalLayout(saveButton,
                 cancelButton);
         actions.setPadding(false);
         editColumn.setEditorComponent(actions);
 
-        grid.addColumn(
-                new ComponentRenderer<>(Button::new, (button, category) -> {
-                    button.addThemeVariants(ButtonVariant.LUMO_ICON,
-                            ButtonVariant.LUMO_ERROR,
-                            ButtonVariant.LUMO_TERTIARY);
-                    button.getElement().setAttribute("aria-label", "Delete category");
-                    button.setIcon(new Icon(VaadinIcon.TRASH));
-                    button.addClickListener(e ->
-                            deleteMenuCategory(category));
-                })).setWidth("0.5em");
-
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
         getThemeList().clear();
-        getThemeList().add("spacing-s");
+        getThemeList().add("spacing-xs");
     }
 
     public void setMenuCategoryData() {

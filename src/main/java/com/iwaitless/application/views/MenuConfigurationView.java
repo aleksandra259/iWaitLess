@@ -43,10 +43,12 @@ public class MenuConfigurationView extends VerticalLayout {
 
     private void configureMenuItems() {
         items = new MenuItemsView(menuItem);
+        items.setSizeFull();
         items.setWidth("50em");
     }
     private void configureMenuCategories() {
         categories = new MenuCategoriesView(menuCategory, menuItem, items);
+        categories.setSizeFull();
         categories.setWidth("20em");
     }
 

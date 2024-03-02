@@ -55,7 +55,7 @@ public class UploadImage extends VerticalLayout {
     private File getUploadFolder() {
         if (item.getCategory().getId() != null
                 && item.getItemId() != null) {
-            folder = new File("frontend/menu-items/"
+            folder = new File("src/main/resources/META-INF/resources/menu-items/"
                     + item.getCategory().getId()
                     + "/"
                     + item.getItemId());
