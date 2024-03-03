@@ -7,6 +7,7 @@ import com.iwaitless.application.views.MainLayout;
 import com.iwaitless.application.views.forms.EmployeeForm;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
@@ -72,6 +73,16 @@ public class ListStaffView extends VerticalLayout {
                             createEmployee(employee));
                     button.setIcon(new Icon(VaadinIcon.EDIT));
                 })).setWidth("1em");
+        grid.addColumn(
+                new ComponentRenderer<>(Button::new, (button, employee) -> {
+                    button.addThemeVariants(ButtonVariant.LUMO_ICON,
+                            ButtonVariant.LUMO_ERROR,
+                            ButtonVariant.LUMO_SMALL);
+                    button.getElement().setAttribute("aria-label", "Delete employee");
+                    button.setIcon(new Icon(VaadinIcon.TRASH));
+                    button.addClickListener(e ->
+                            deleteEmployee(employee));
+                })).setWidth("1em");
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
@@ -121,6 +132,30 @@ public class ListStaffView extends VerticalLayout {
         service.saveEmployee(event.getEmployee());
         setEmployeeData();
         closeEditor();
+    }
+
+    private void deleteEmployee (Staff staff) {
+        Dialog dialog = new Dialog();
+
+        dialog.setHeaderTitle(
+                String.format("Delete employee \"%s\"?",
+                        staff.getFirstName() + " " + staff.getLastName()));
+        dialog.add("Are you sure you want to delete this employee permanently?");
+
+        Button deleteButton = new Button("Delete", (e) -> dialog.close());
+        deleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY,
+                ButtonVariant.LUMO_ERROR);
+        deleteButton.getStyle().set("margin-right", "auto");
+        dialog.getFooter().add(deleteButton);
+        deleteButton.addClickListener(e -> {
+            service.deleteEmployee(staff);
+            setEmployeeData();
+        });
+
+        Button cancelButton = new Button("Cancel", (e) -> dialog.close());
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        dialog.getFooter().add(cancelButton);
+        dialog.open();
     }
 
     private void closeEditor() {

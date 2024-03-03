@@ -36,6 +36,7 @@ public class MenuCategoryForm extends FormLayout {
         orderNo.setHelperText("Order of categories in the menu");
         orderNo.setValue(1);
         orderNo.setStepButtonsVisible(true);
+        nameField.setRequired(true);
 
         binder.bind(nameField, MenuCategory::getName, MenuCategory::setName);
         binder.bind(orderNo, MenuCategory::getOrderNo, MenuCategory::setOrderNo);

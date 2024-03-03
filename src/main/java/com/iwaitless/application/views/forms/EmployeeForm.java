@@ -38,14 +38,19 @@ public class EmployeeForm extends FormLayout {
 
     public EmployeeForm(Staff staff,
                         List<StaffRole> roles) {
-        String header = staff.getFirstName();
-        if (header == null || header.trim().isEmpty())
+        String name = staff.getFirstName();
+        if (name == null || name.trim().isEmpty())
             dialog.setHeaderTitle("New employee");
         else
-            dialog.setHeaderTitle("Edit employee profile for " + header + " " + staff.getLastName());
+            dialog.setHeaderTitle("Edit " + name +"'s profile");
 
         role.setItems(roles);
         role.setItemLabelGenerator(StaffRole::getName);
+
+        firstName.setRequired(true);
+        lastName.setRequired(true);
+        email.setRequired(true);
+        role.setRequired(true);
 
         binder.bindInstanceFields(this);
         setContact(staff);
@@ -139,10 +144,6 @@ public class EmployeeForm extends FormLayout {
         CloseEvent(EmployeeForm source) {
             super(source, null);
         }
-    }
-
-    public void addDeleteListener(ComponentEventListener<DeleteEvent> listener) {
-        addListener(DeleteEvent.class, listener);
     }
 
     public void addSaveListener(ComponentEventListener<SaveEvent> listener) {

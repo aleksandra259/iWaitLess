@@ -9,8 +9,10 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.MultiFileReceiver;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.StreamResource;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
@@ -55,7 +57,7 @@ public class UploadImage extends VerticalLayout {
     private File getUploadFolder() {
         if (item.getCategory().getId() != null
                 && item.getItemId() != null) {
-            folder = new File("src/main/resources/META-INF/resources/menu-items/"
+            folder = new File("D:/iwaitless/menu-items/"
                     + item.getCategory().getId()
                     + "/"
                     + item.getItemId());
@@ -75,12 +77,20 @@ public class UploadImage extends VerticalLayout {
             if (listOfFiles != null) {
                 for (File currentFile : listOfFiles) {
                     if (currentFile.isFile()) {
-                    Image image = new Image("menu-items/"
-                            + item.getCategory().getId()
-                            + "/"
-                            + item.getItemId()
-                            + "/"
-                            + currentFile.getName(), "");
+                        StreamResource imageResource = new StreamResource(currentFile.getName(), () -> {
+                            try {
+                                return new FileInputStream("D:\\iwaitless\\menu-items\\" + item.getCategory().getId()
+                                        + "\\"
+                                        + item.getItemId()
+                                        + "\\"
+                                        + currentFile.getName());
+                            } catch(final FileNotFoundException e) {
+                                output.add(new TextField("Failed to load image"));
+                                return null;
+                            }
+                        });
+
+                        Image image = new Image(imageResource, currentFile.getName());
 
                         image.setWidth(380, Unit.PIXELS);
                         image.setHeight(220, Unit.PIXELS);

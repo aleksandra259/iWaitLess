@@ -1,8 +1,13 @@
 package com.iwaitless.application.persistence.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 
 @Table(name = "RESTAURANT_TABLE")
@@ -14,10 +19,11 @@ import org.hibernate.annotations.GenericGenerator;
 public class RestaurantTable {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID")
     @Column(name = "TABLE_ID", updatable = false, nullable = false, insertable = false, unique = true)
-    private Long tableId;
+    private String tableId;
+
+    @Column(name = "TABLE_NO")
+    private String tableNo;
 
     @Column(name = "DESCRIPTION")
     private String description;

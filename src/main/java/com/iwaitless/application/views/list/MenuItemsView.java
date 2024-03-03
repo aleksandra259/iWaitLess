@@ -23,8 +23,11 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
+import com.vaadin.flow.server.StreamResource;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class MenuItemsView extends VerticalLayout {
     Grid<MenuItem> grid = new Grid<>(MenuItem.class, false);
@@ -98,7 +101,7 @@ public class MenuItemsView extends VerticalLayout {
         grid.setAllRowsVisible(true);
         getThemeList().add("spacing-xs");
 
-        grid.addComponentColumn(MenuItemsView::returnImage).setWidth("7.5em").setFlexGrow(0);
+        grid.addComponentColumn(MenuItemsView::returnImage).setWidth("8.5em").setFlexGrow(0);
         grid.addColumn(createItemRenderer()).setWidth("13em");
         grid.addColumn(item -> item.getPrice() + " " + item.getCurrency()).setWidth("2.5em");
         grid.addColumn(item -> item.getSize() + " gram").setWidth("2.5em");
@@ -184,32 +187,44 @@ public class MenuItemsView extends VerticalLayout {
     }
 
     private static Image returnImage (MenuItem item) {
-        File folder = new File("src/main/resources/META-INF/resources/menu-items/"
+        File folder = new File("D:/iwaitless/menu-items/"
                 + item.getCategory().getId()
                 + "/"
                 + item.getItemId());
         File[] listOfFiles = folder.listFiles();
 
-        Image image = new Image();
-        image.setWidth(130, Unit.PIXELS);
-        image.setHeight(80, Unit.PIXELS);
-
         if (listOfFiles != null) {
             for (File currentFile : listOfFiles) {
                 if (currentFile.isFile()) {
-                    image.setSrc("menu-items/"
-                            + item.getCategory().getId()
-                            + "/"
-                            + item.getItemId()
-                            + "/"
-                            + currentFile.getName());
+                    Image image = getImage(item, currentFile);
+                    image.setWidth(125, Unit.PIXELS);
+                    image.setHeight(80, Unit.PIXELS);
 
                     return image;
                 }
             }
         }
 
-        image.setSrc("menu-items/picture-not-available.jpg");
+        Image image = new Image("images/picture-not-available.jpg", "");
+        image.setWidth(125, Unit.PIXELS);
+        image.setHeight(80, Unit.PIXELS);
+
         return image;
+    }
+
+    private static Image getImage(MenuItem item, File currentFile) {
+        StreamResource imageResource = new StreamResource(currentFile.getName(), () -> {
+            try {
+                return new FileInputStream("D:\\iwaitless\\menu-items\\" + item.getCategory().getId()
+                        + "\\"
+                        + item.getItemId()
+                        + "\\"
+                        + currentFile.getName());
+            } catch (final FileNotFoundException e) {
+                return null;
+            }
+        });
+
+        return new Image(imageResource, currentFile.getName());
     }
 }

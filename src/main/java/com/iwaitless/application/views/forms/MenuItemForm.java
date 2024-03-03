@@ -49,6 +49,9 @@ public class MenuItemForm extends FormLayout {
 
         dialog.add(new H4(item.getCategory().getName()));
 
+        itemNameField.setRequired(true);
+        description.setRequired(true);
+        price.setRequired(true);
         size.setSuffixComponent(new Span("grams"));
         available.setLabel("Is item available?");
         timeToProcess.setSuffixComponent(new Span("minutes"));

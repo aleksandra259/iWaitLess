@@ -75,6 +75,7 @@ CREATE TABLE USER_STAFF_RELATION (
 
 CREATE TABLE RESTAURANT_TABLE (
   table_id int NOT NULL primary key,
+  table_no varchar(50) not null,
   description varchar(250),
   qr_code varchar(250)
 );
