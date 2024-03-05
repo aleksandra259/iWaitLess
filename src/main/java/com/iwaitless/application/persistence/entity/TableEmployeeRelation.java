@@ -17,7 +17,7 @@ public class TableEmployeeRelation {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID")
-    @Column(name = "TABLE_RELATION_ID", updatable = false, nullable = false, insertable = false, unique = true)
+    @Column(name = "ID", updatable = false, nullable = false, insertable = false, unique = true)
     private Long id;
 
     @ManyToOne

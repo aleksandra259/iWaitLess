@@ -27,14 +27,12 @@ import jakarta.annotation.security.PermitAll;
 public class RestaurantTablesConfigurationView extends VerticalLayout {
 
     RestaurantTableService restaurantTable;
-    static RestaurantTable table;
     TextField filterText = new TextField();
     Grid<RestaurantTable> grid = new Grid<>(RestaurantTable.class, false);
     TablesForm form;
 
     public RestaurantTablesConfigurationView(RestaurantTableService restaurantTable) {
         this.restaurantTable = restaurantTable;
-        table = new RestaurantTable();
 
         addClassName("list-tables-view");
         setSizeFull();
@@ -50,7 +48,7 @@ public class RestaurantTablesConfigurationView extends VerticalLayout {
         grid.setSizeFull();
         grid.setAllRowsVisible(true);
 
-        grid.addColumn(RestaurantTable::getTableId).setHeader("Table No").setWidth("5em");
+        grid.addColumn(RestaurantTable::getTableNo).setHeader("Table No").setWidth("5em");
         grid.addColumn(RestaurantTable::getDescription).setHeader("Description").setWidth("30em");
         grid.addColumn(table ->
                 (table.getQrCode() != null && !table.getQrCode().trim().isEmpty())

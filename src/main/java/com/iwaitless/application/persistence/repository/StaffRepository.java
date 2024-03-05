@@ -14,4 +14,8 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
             "where lower(c.firstName) like lower(concat('%', :searchTerm, '%'))" +
             "or lower(c.lastName) like lower(concat('%', :searchTerm, '%'))")
     List<Staff> search(@Param("searchTerm") String searchTerm);
+
+    @Query("select c from Staff c " +
+            "where lower(c.username) = lower(:username)")
+    Staff findStaff(@Param("username") String username);
 }

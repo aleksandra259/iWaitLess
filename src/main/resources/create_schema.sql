@@ -63,6 +63,7 @@ CREATE TABLE STAFF (
   address varchar(250),
   birthdate Date,
   role varchar(50),
+  username varchar(50),
   constraint fk_staff_role foreign key(role) references ht_staff_role(item_id)
 );
 

@@ -32,9 +32,4 @@ public class UserService {
         userRepository.save(user);
         authorityRepository.save(authorities);
     }
-
-//    public Users finsUserByUsername(String username) {
-//        return userRepository.findByUsername(username);
-//    }
-
 }

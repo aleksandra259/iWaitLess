@@ -60,7 +60,9 @@ public class TablesForm extends FormLayout {
         }
 
         generateQR.addClickListener(event -> {
-            if (header != null && !header.trim().isEmpty()) {
+            String tableId = String.valueOf(table.getTableId());
+            if (tableId != null && !tableId.trim().isEmpty()
+                && !tableId.equals("null")) {
                 CreateQR qr = new CreateQR("\\table\\" + table.getTableId(),
                         "D:\\iwaitless\\QRCodes\\"
                                 + "table_" + table.getTableId()
@@ -77,7 +79,8 @@ public class TablesForm extends FormLayout {
                     throw new RuntimeException(e);
                 }
             } else {
-                output.add(new Text("To be able to generate QR code you should first populate table ID."));
+                output.add(new Text("To be able to generate QR code you should first create the table."));
+                output.getStyle().set("color","red");
             }
         });
 

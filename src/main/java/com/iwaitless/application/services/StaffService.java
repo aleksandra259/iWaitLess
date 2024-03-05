@@ -42,8 +42,8 @@ public class StaffService {
         }
     }
 
-    public long countEmployees() {
-        return staffRepository.count();
+    public Staff findEmployeeByUsername(String username) {
+        return staffRepository.findStaff(username);
     }
 
     public void deleteEmployee(Staff staff) {
@@ -100,7 +100,13 @@ public class StaffService {
             Users user = new Users(username, bCryptPassword, true);
             Authorities authority = new Authorities();
             authority.setUsername(user);
-            authority.setAuthority("USER");
+
+            if ("KT".equals(staff.getRole().getId()))
+                authority.setAuthority("USER_KT");
+            else if ("MG".equals(staff.getRole().getId()))
+                authority.setAuthority("ADMIN");
+            else
+                authority.setAuthority("USER_ST");
 
             userService.saveUser(user, authority);
         }
