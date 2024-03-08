@@ -1,7 +1,7 @@
 package com.iwaitless.application.views.forms;
 
 import com.google.zxing.WriterException;
-import com.iwaitless.application.QRcode.CreateQR;
+import com.iwaitless.application.views.utility.CreateQR;
 import com.iwaitless.application.persistence.entity.RestaurantTable;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;

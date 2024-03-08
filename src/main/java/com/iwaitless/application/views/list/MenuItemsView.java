@@ -101,7 +101,13 @@ public class MenuItemsView extends VerticalLayout {
         grid.setAllRowsVisible(true);
         getThemeList().add("spacing-xs");
 
-        grid.addComponentColumn(MenuItemsView::returnImage).setWidth("8.5em").setFlexGrow(0);
+        grid.addComponentColumn(item -> {
+            Image image = MenuItemsView.returnImage(item);
+            image.setWidth(125, Unit.PIXELS);
+            image.setHeight(80, Unit.PIXELS);
+
+            return image;
+        }).setWidth("8.5em").setFlexGrow(0);
         grid.addColumn(createItemRenderer()).setWidth("13em");
         grid.addColumn(item -> item.getPrice() + " " + item.getCurrency()).setWidth("2.5em");
         grid.addColumn(item -> item.getSize() + " gram").setWidth("2.5em");
@@ -186,7 +192,7 @@ public class MenuItemsView extends VerticalLayout {
         form.setVisible(false);
     }
 
-    private static Image returnImage (MenuItem item) {
+    public static Image returnImage (MenuItem item) {
         File folder = new File("D:/iwaitless/menu-items/"
                 + item.getCategory().getId()
                 + "/"
@@ -196,20 +202,12 @@ public class MenuItemsView extends VerticalLayout {
         if (listOfFiles != null) {
             for (File currentFile : listOfFiles) {
                 if (currentFile.isFile()) {
-                    Image image = getImage(item, currentFile);
-                    image.setWidth(125, Unit.PIXELS);
-                    image.setHeight(80, Unit.PIXELS);
-
-                    return image;
+                    return getImage(item, currentFile);
                 }
             }
         }
 
-        Image image = new Image("images/picture-not-available.jpg", "");
-        image.setWidth(125, Unit.PIXELS);
-        image.setHeight(80, Unit.PIXELS);
-
-        return image;
+        return new Image("images/picture-not-available.jpg", "");
     }
 
     private static Image getImage(MenuItem item, File currentFile) {

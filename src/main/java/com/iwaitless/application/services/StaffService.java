@@ -102,11 +102,11 @@ public class StaffService {
             authority.setUsername(user);
 
             if ("KT".equals(staff.getRole().getId()))
-                authority.setAuthority("USER_KT");
+                authority.setAuthority("ROLE_USER_KT");
             else if ("MG".equals(staff.getRole().getId()))
-                authority.setAuthority("ADMIN");
+                authority.setAuthority("ROLE_ADMIN");
             else
-                authority.setAuthority("USER_ST");
+                authority.setAuthority("ROLE_USER_ST");
 
             userService.saveUser(user, authority);
         }

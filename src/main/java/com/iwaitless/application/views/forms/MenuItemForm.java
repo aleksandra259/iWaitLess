@@ -1,7 +1,7 @@
 package com.iwaitless.application.views.forms;
 
 import com.iwaitless.application.persistence.entity.MenuItem;
-import com.iwaitless.application.views.UploadImage;
+import com.iwaitless.application.views.utility.UploadImage;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;

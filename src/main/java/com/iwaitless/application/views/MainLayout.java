@@ -18,9 +18,12 @@ import jakarta.annotation.security.PermitAll;
 @PermitAll
 public class MainLayout extends AppLayout {
     private final SecurityService securityService;
+    String authorities;
 
     public MainLayout(SecurityService securityService) {
         this.securityService = securityService;
+        authorities = securityService.getAuthenticatedUser().getAuthorities().toString();
+
         createHeader();
         createDrawer();
     }
@@ -33,7 +36,7 @@ public class MainLayout extends AppLayout {
 
         Button logout = new Button("Log out", e -> securityService.logout());
 
-        var header = new HorizontalLayout(new DrawerToggle(), logo, logout);
+        var header = new HorizontalLayout(new DrawerToggle(), logo);
 
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         header.expand(logo);
@@ -42,29 +45,34 @@ public class MainLayout extends AppLayout {
                 LumoUtility.Padding.Vertical.NONE,
                 LumoUtility.Padding.Horizontal.MEDIUM);
 
-        addToNavbar(header);
+        if (authorities.contains("ROLE_ADMIN")) {
+            RouterLink menuPreview = new RouterLink("Menu Preview", MenuPreviewView.class);
+            getUI().ifPresent(ui -> ui.getPage().open(menuPreview.getHref()));
+            header.add(menuPreview);
+        }
 
+        header.add(logout);
+        addToNavbar(header);
     }
 
     private void createDrawer() {
-        addToDrawer(new VerticalLayout(
-                new RouterLink("Home Page", HomePageView.class),
-                new RouterLink("Staff List", ListStaffView.class),
-                new RouterLink("Menu Configuration", MenuConfigurationView.class),
-                new RouterLink("Tables Configuration", RestaurantTablesConfigurationView.class),
-                new RouterLink("Tables Assignment", RestaurantTablesAssignView.class)
-        ));
-
-        System.out.println("roles: "+securityService.getAuthenticatedUser().getAuthorities());
-//        if (securityService.getAuthenticatedUser().getAuthorities().equals("ADMIN")) {
-//            addToDrawer(new VerticalLayout(
-//                    new RouterLink("Home Page", HomePageView.class),
-//                    new RouterLink("Tables Assignment", RestaurantTablesAssignView.class)
-//            ));
-//        } else if (securityService.getAuthenticatedUser().getAuthorities().equals("ADMIN")) {
-//            addToDrawer(new VerticalLayout(
-//                    new RouterLink("Tables Assignment", RestaurantTablesAssignView.class)
-//            ));
-//        }
+        if (authorities.contains("ROLE_ADMIN")) {
+            addToDrawer(new VerticalLayout(
+                    new RouterLink("Home Page", HomePageView.class),
+                    new RouterLink("Staff List", ListStaffView.class),
+                    new RouterLink("Menu Configuration", MenuConfigurationView.class),
+                    new RouterLink("Tables Configuration", RestaurantTablesConfigurationView.class)
+            ));
+        } else if (authorities.contains("ROLE_USER_ST")) {
+            addToDrawer(new VerticalLayout(
+                    new RouterLink("Home Page", HomePageView.class),
+                    new RouterLink("Tables Assignment", RestaurantTablesAssignView.class),
+                    new RouterLink("Menu Preview", MenuPreviewView.class)
+            ));
+        } else if (authorities.contains("ROLE_USER_KT")) {
+            addToDrawer(new VerticalLayout(
+                    new RouterLink("Home Page", HomePageView.class)
+            ));
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.iwaitless.application.QRcode;
+package com.iwaitless.application.views.utility;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;

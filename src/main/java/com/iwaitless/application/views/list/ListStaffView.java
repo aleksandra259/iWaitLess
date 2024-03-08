@@ -21,13 +21,13 @@ import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 
 import java.text.SimpleDateFormat;
 
 @PageTitle("Staff List")
-@Route(value="", layout = MainLayout.class)
-@PermitAll
+@Route(value="staff", layout = MainLayout.class)
+@RolesAllowed("ROLE_ADMIN")
 public class ListStaffView extends VerticalLayout {
     Grid<Staff> grid = new Grid<>(Staff.class, false);
     TextField filterText = new TextField();

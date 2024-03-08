@@ -19,7 +19,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -28,7 +28,7 @@ import java.util.Objects;
 
 @PageTitle("Tables Assignment")
 @Route(value = "tables-assignment", layout = MainLayout.class)
-@PermitAll
+@RolesAllowed("ROLE_USER_KT")
 public class RestaurantTablesAssignView extends VerticalLayout {
 
     RestaurantTableService restaurantTable;

@@ -1,3 +1,4 @@
+@import "theme-editor.css";
 a[highlight] {
     font-weight: bold;
     text-decoration: underline;
@@ -8,3 +9,22 @@ a[highlight] {
      display: none;
    }
  }
+
+ .image-gallery-view ol {
+   grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
+ }
+
+ .image-gallery-view li {
+   transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+   transition-property: background-color, box-shadow;
+ }
+
+ .image-gallery-view li:hover {
+   background-color: var(--lumo-base-color);
+   box-shadow: var(--lumo-box-shadow-s);
+ }
+
+.max-width-image {
+    max-width: 100%;
+    height: auto;
+}

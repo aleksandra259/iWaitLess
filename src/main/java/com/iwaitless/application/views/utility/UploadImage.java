@@ -1,20 +1,18 @@
-package com.iwaitless.application.views;
+package com.iwaitless.application.views.utility;
 
 import com.iwaitless.application.persistence.entity.MenuItem;
-import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.MultiFileReceiver;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.StreamResource;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 @Route("upload-image-to-file")
 public class UploadImage extends VerticalLayout {
@@ -74,31 +72,22 @@ public class UploadImage extends VerticalLayout {
     private void showImagesInFolder () {
         if (folder != null) {
             File[] listOfFiles = folder.listFiles();
-            if (listOfFiles != null) {
-                for (File currentFile : listOfFiles) {
-                    if (currentFile.isFile()) {
-                        StreamResource imageResource = new StreamResource(currentFile.getName(), () -> {
-                            try {
-                                return new FileInputStream("D:\\iwaitless\\menu-items\\" + item.getCategory().getId()
+            List<String> imageUrls = new ArrayList<>();
+
+            if (listOfFiles != null)
+                for (File currentFile : listOfFiles)
+                    if (currentFile.isFile())
+                        imageUrls.add("D:\\iwaitless\\menu-items\\" + item.getCategory().getId()
                                         + "\\"
                                         + item.getItemId()
                                         + "\\"
                                         + currentFile.getName());
-                            } catch(final FileNotFoundException e) {
-                                output.add(new TextField("Failed to load image"));
-                                return null;
-                            }
-                        });
 
-                        Image image = new Image(imageResource, currentFile.getName());
-
-                        image.setWidth(380, Unit.PIXELS);
-                        image.setHeight(220, Unit.PIXELS);
-
-                        output.add(image);
-                    }
-                }
+            if (!imageUrls.isEmpty()) {
+                ImageSlideshow imageSlideshow = new ImageSlideshow(imageUrls, output);
+                output.add(imageSlideshow);
             }
         }
     }
+
 }
