@@ -26,7 +26,7 @@ public class OrderDetails {
 
     @ManyToOne
     @JoinColumn(name = "ITEM_ID")
-    private MenuItem itemId;
+    private MenuItems itemId;
 
     @NotNull
     @Column(name = "QUANTITY")

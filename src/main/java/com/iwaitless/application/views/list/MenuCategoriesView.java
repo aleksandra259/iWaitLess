@@ -1,6 +1,6 @@
 package com.iwaitless.application.views.list;
 
-import com.iwaitless.application.persistence.entity.MenuItem;
+import com.iwaitless.application.persistence.entity.MenuItems;
 import com.iwaitless.application.persistence.entity.nomenclatures.MenuCategory;
 import com.iwaitless.application.services.MenuCategoryService;
 import com.iwaitless.application.services.MenuItemService;
@@ -50,9 +50,7 @@ public class MenuCategoriesView extends VerticalLayout {
         newCategory.setText("New");
         newCategory.setWidth("min-content");
         newCategory.setMaxWidth("100px");
-        newCategory.addClickListener(e -> {
-            createMenuCategory(getCategory());
-        });
+        newCategory.addClickListener(e -> createMenuCategory(getCategory()));
 
         categoriesHeader.setText("Categories");
         categoriesHeader.setWidth("max-content");
@@ -151,7 +149,7 @@ public class MenuCategoriesView extends VerticalLayout {
         deleteButton.getStyle().set("margin-right", "auto");
         dialog.getFooter().add(deleteButton);
         deleteButton.addClickListener(e -> {
-            List<MenuItem> items = menuItem.findItemsByCategory(category);
+            List<MenuItems> items = menuItem.findItemsByCategory(category, null);
             items.forEach(menuItem::deleteItem);
             menuCategory.deleteCategory(category);
 

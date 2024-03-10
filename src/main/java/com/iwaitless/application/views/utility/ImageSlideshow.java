@@ -1,8 +1,12 @@
 package com.iwaitless.application.views.utility;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -17,8 +21,8 @@ public class ImageSlideshow extends VerticalLayout {
     private final List<String> imageUrls;
     private final Div output;
     private int currentIndex;
-    Button nextButton = new Button("Next");
-    Button previousButton = new Button("Previous");
+    Button nextButton = new Button(new Icon(VaadinIcon.ANGLE_RIGHT));
+    Button previousButton = new Button(new Icon(VaadinIcon.ANGLE_LEFT));
 
     public ImageSlideshow(List<String> imageUrls,
                           Div output) {
@@ -59,11 +63,17 @@ public class ImageSlideshow extends VerticalLayout {
         Image image = new Image(imageResource, imageUrls.get(currentIndex).substring(startIndex));
         image.addClassName("max-width-image");
 
+        setAlignItems(Alignment.CENTER);
         add(image);
         createButtonsLayout();
     }
 
     private void createButtonsLayout() {
+        nextButton.addThemeVariants(ButtonVariant.LUMO_ICON);
+        nextButton.setAriaLabel("Next item");
+        previousButton.addThemeVariants(ButtonVariant.LUMO_ICON);
+        previousButton.setAriaLabel("Previous item");
+
         if (imageUrls.size() == 1){
             nextButton.setEnabled(false);
             previousButton.setEnabled(false);
@@ -79,6 +89,7 @@ public class ImageSlideshow extends VerticalLayout {
         }
 
         HorizontalLayout buttons = new HorizontalLayout(previousButton, nextButton);
+        buttons.setAlignItems(FlexComponent.Alignment.CENTER);
         add(buttons);
     }
 }

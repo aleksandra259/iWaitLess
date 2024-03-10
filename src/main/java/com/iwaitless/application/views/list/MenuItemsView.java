@@ -1,6 +1,6 @@
 package com.iwaitless.application.views.list;
 
-import com.iwaitless.application.persistence.entity.MenuItem;
+import com.iwaitless.application.persistence.entity.MenuItems;
 import com.iwaitless.application.persistence.entity.nomenclatures.MenuCategory;
 import com.iwaitless.application.services.MenuItemService;
 import com.iwaitless.application.views.forms.MenuItemForm;
@@ -30,7 +30,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class MenuItemsView extends VerticalLayout {
-    Grid<MenuItem> grid = new Grid<>(MenuItem.class, false);
+    Grid<MenuItems> grid = new Grid<>(MenuItems.class, false);
     Button newFood = new Button();
     H2 foodListHeader = new H2();
 
@@ -52,7 +52,7 @@ public class MenuItemsView extends VerticalLayout {
         newFood.setMaxWidth("100px");
         newFood.addClickListener(e -> {
                     if (category.getId() != null) {
-                        MenuItem item = new MenuItem();
+                        MenuItems item = new MenuItems();
                         item.setCategory(category);
                         createMenuItem(item);
                     }
@@ -87,11 +87,11 @@ public class MenuItemsView extends VerticalLayout {
         this.category = menuCategory;
 
         if (category != null)
-            grid.setItems(menuItem.findItemsByCategory(category));
+            grid.setItems(menuItem.findItemsByCategory(category, null));
         else {
             MenuCategory dummy = new MenuCategory();
             dummy.setId("-1");
-            grid.setItems(menuItem.findItemsByCategory(dummy));
+            grid.setItems(menuItem.findItemsByCategory(dummy, null));
         }
     }
 
@@ -136,8 +136,8 @@ public class MenuItemsView extends VerticalLayout {
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
     }
 
-    private static Renderer<MenuItem> createItemRenderer() {
-        return LitRenderer.<MenuItem> of(
+    private static Renderer<MenuItems> createItemRenderer() {
+        return LitRenderer.<MenuItems> of(
                         "<vaadin-horizontal-layout style=\"align-items: center;\" theme=\"spacing\">"
                                 + "  <vaadin-vertical-layout style=\"line-height: var(--lumo-line-height-m);\">"
                                 + "    <span> ${item.name} </span>"
@@ -145,11 +145,11 @@ public class MenuItemsView extends VerticalLayout {
                                 + "      ${item.description}" + "    </span>"
                                 + "  </vaadin-vertical-layout>"
                                 + "</vaadin-horizontal-layout>")
-                .withProperty("name", MenuItem::getName)
-                .withProperty("description", MenuItem::getDescription);
+                .withProperty("name", MenuItems::getName)
+                .withProperty("description", MenuItems::getDescription);
     }
 
-    private void deleteMenuItem (MenuItem item) {
+    private void deleteMenuItem (MenuItems item) {
         Dialog dialog = new Dialog();
 
         dialog.setHeaderTitle(
@@ -173,7 +173,7 @@ public class MenuItemsView extends VerticalLayout {
         dialog.open();
     }
 
-    private void createMenuItem (MenuItem item) {
+    private void createMenuItem (MenuItems item) {
         form = new MenuItemForm(item);
         form.addSaveListener(this::saveMenuItem);
         form.addCloseListener(e -> closeEditor());
@@ -192,7 +192,7 @@ public class MenuItemsView extends VerticalLayout {
         form.setVisible(false);
     }
 
-    public static Image returnImage (MenuItem item) {
+    public static Image returnImage (MenuItems item) {
         File folder = new File("D:/iwaitless/menu-items/"
                 + item.getCategory().getId()
                 + "/"
@@ -210,7 +210,7 @@ public class MenuItemsView extends VerticalLayout {
         return new Image("images/picture-not-available.jpg", "");
     }
 
-    private static Image getImage(MenuItem item, File currentFile) {
+    private static Image getImage(MenuItems item, File currentFile) {
         StreamResource imageResource = new StreamResource(currentFile.getName(), () -> {
             try {
                 return new FileInputStream("D:\\iwaitless\\menu-items\\" + item.getCategory().getId()

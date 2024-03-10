@@ -1,6 +1,6 @@
 package com.iwaitless.application.views.utility;
 
-import com.iwaitless.application.persistence.entity.MenuItem;
+import com.iwaitless.application.persistence.entity.MenuItems;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -18,10 +18,10 @@ import java.util.List;
 public class UploadImage extends VerticalLayout {
 
     private File folder;
-    private final MenuItem item;
+    private final MenuItems item;
     private final Div output = new Div();
 
-    public UploadImage(MenuItem item) {
+    public UploadImage(MenuItems item) {
         this.item = item;
         this.folder = getUploadFolder();
         setSizeFull();
@@ -82,6 +82,34 @@ public class UploadImage extends VerticalLayout {
                                         + item.getItemId()
                                         + "\\"
                                         + currentFile.getName());
+
+            if (!imageUrls.isEmpty()) {
+                ImageSlideshow imageSlideshow = new ImageSlideshow(imageUrls, output);
+                output.add(imageSlideshow);
+            }
+        }
+    }
+
+    public static void showImagesByItem (MenuItems item, Div output) {
+        if (item.getCategory().getId() != null
+                && item.getItemId() != null) {
+            File folder = new File("D:/iwaitless/menu-items/"
+                    + item.getCategory().getId()
+                    + "/"
+                    + item.getItemId());
+
+
+            File[] listOfFiles = folder.listFiles();
+            List<String> imageUrls = new ArrayList<>();
+
+            if (listOfFiles != null)
+                for (File currentFile : listOfFiles)
+                    if (currentFile.isFile())
+                        imageUrls.add("D:\\iwaitless\\menu-items\\" + item.getCategory().getId()
+                                + "\\"
+                                + item.getItemId()
+                                + "\\"
+                                + currentFile.getName());
 
             if (!imageUrls.isEmpty()) {
                 ImageSlideshow imageSlideshow = new ImageSlideshow(imageUrls, output);

@@ -1,7 +1,7 @@
 package com.iwaitless.application.views;
 
-import com.iwaitless.application.persistence.entity.MenuItem;
-import com.iwaitless.application.views.list.MenuItemsView;
+import com.iwaitless.application.persistence.entity.MenuItems;
+import com.iwaitless.application.views.utility.UploadImage;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
@@ -9,7 +9,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -22,14 +22,14 @@ public class MenuItemPopup extends FormLayout {
 
     Button close = new Button("Close");
 
-    public MenuItemPopup(MenuItem item) {
+    public MenuItemPopup(MenuItems item) {
         addClassName("menu-item-popup");
         addClassNames(LumoUtility.Background.CONTRAST_5, LumoUtility.Display.FLEX,
                 LumoUtility.FlexDirection.COLUMN, LumoUtility.AlignItems.START,
                 LumoUtility.Padding.XSMALL, LumoUtility.BorderRadius.NONE);
 
-        Image image = MenuItemsView.returnImage(item);
-        image.setWidth("100%");
+        Div output = new Div();
+        UploadImage.showImagesByItem(item, output);
 
         Span header = new Span();
         header.addClassNames(LumoUtility.FontSize.XLARGE, LumoUtility.FontWeight.SEMIBOLD,
@@ -55,7 +55,7 @@ public class MenuItemPopup extends FormLayout {
 
 
         VerticalLayout verticalLayout =
-                new VerticalLayout(header, description, size, image, comments);
+                new VerticalLayout(header, description, size, output, comments);
         verticalLayout.setWidthFull();
         add(verticalLayout);
 
@@ -82,14 +82,14 @@ public class MenuItemPopup extends FormLayout {
 
     // Events
     public static abstract class MenuItemPopupEvent extends ComponentEvent<MenuItemPopup> {
-        private final MenuItem item;
+        private final MenuItems item;
 
-        protected MenuItemPopupEvent(MenuItemPopup source, MenuItem item) {
+        protected MenuItemPopupEvent(MenuItemPopup source, MenuItems item) {
             super(source, false);
             this.item = item;
         }
 
-        public MenuItem getMenuItem() {
+        public MenuItems getMenuItem() {
             return item;
         }
     }

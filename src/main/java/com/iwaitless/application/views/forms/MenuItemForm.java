@@ -1,6 +1,6 @@
 package com.iwaitless.application.views.forms;
 
-import com.iwaitless.application.persistence.entity.MenuItem;
+import com.iwaitless.application.persistence.entity.MenuItems;
 import com.iwaitless.application.views.utility.UploadImage;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -32,13 +32,13 @@ public class MenuItemForm extends FormLayout {
     Select<Currency> currency = new Select<>();
     Checkbox available = new Checkbox();
 
-    BeanValidationBinder<MenuItem> binder = new BeanValidationBinder<>(MenuItem.class);
+    BeanValidationBinder<MenuItems> binder = new BeanValidationBinder<>(MenuItems.class);
     Dialog dialog = new Dialog();
 
     Button save = new Button("Save");
     Button close = new Button("Cancel");
 
-    public MenuItemForm(MenuItem item) {
+    public MenuItemForm(MenuItems item) {
         addClassName("menu-item-form");
 
         String header = item.getName();
@@ -70,13 +70,13 @@ public class MenuItemForm extends FormLayout {
 
         setResponsiveSteps(new ResponsiveStep("0", 1, ResponsiveStep.LabelsPosition.TOP));
 
-        binder.bind(itemNameField, MenuItem::getName, MenuItem::setName);
-        binder.bind(description, MenuItem::getDescription, MenuItem::setDescription);
-        binder.bind(size, MenuItem::getSize, MenuItem::setSize);
-        binder.bind(timeToProcess, MenuItem::getTimeToProcess, MenuItem::setTimeToProcess);
-        binder.bind(price, MenuItem::getPrice, MenuItem::setPrice);
-        binder.forField(currency).bind(MenuItem::getCurrency, MenuItem::setCurrency);
-        binder.forField(available).bind(MenuItem::isAvailable, MenuItem::setAvailable);
+        binder.bind(itemNameField, MenuItems::getName, MenuItems::setName);
+        binder.bind(description, MenuItems::getDescription, MenuItems::setDescription);
+        binder.bind(size, MenuItems::getSize, MenuItems::setSize);
+        binder.bind(timeToProcess, MenuItems::getTimeToProcess, MenuItems::setTimeToProcess);
+        binder.bind(price, MenuItems::getPrice, MenuItems::setPrice);
+        binder.forField(currency).bind(MenuItems::getCurrency, MenuItems::setCurrency);
+        binder.forField(available).bind(MenuItems::isAvailable, MenuItems::setAvailable);
         setItem(item);
 
         add(itemNameField, description, available, sizeAndTime, priceAndCurrency);
@@ -94,7 +94,7 @@ public class MenuItemForm extends FormLayout {
         dialog.open();
     }
 
-    public void setItem(MenuItem item) {
+    public void setItem(MenuItems item) {
         binder.setBean(item);
     }
 
@@ -128,26 +128,26 @@ public class MenuItemForm extends FormLayout {
         }
     }
 
-    public void setMenuItem(MenuItem item) {
+    public void setMenuItem(MenuItems item) {
         binder.setBean(item);
     }
 
     // Events
     public static abstract class MenuItemFormEvent extends ComponentEvent<MenuItemForm> {
-        private final MenuItem item;
+        private final MenuItems item;
 
-        protected MenuItemFormEvent(MenuItemForm source, MenuItem item) {
+        protected MenuItemFormEvent(MenuItemForm source, MenuItems item) {
             super(source, false);
             this.item = item;
         }
 
-        public MenuItem getMenuItem() {
+        public MenuItems getMenuItem() {
             return item;
         }
     }
 
     public static class SaveEvent extends MenuItemFormEvent {
-        SaveEvent(MenuItemForm source, MenuItem item) {
+        SaveEvent(MenuItemForm source, MenuItems item) {
             super(source, item);
         }
     }

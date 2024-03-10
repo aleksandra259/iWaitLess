@@ -17,7 +17,7 @@ import java.util.Currency;
 @Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class MenuItem {
+public class MenuItems {
 
     @Id
     @GeneratedValue(generator = "UUID")

@@ -1,6 +1,6 @@
 package com.iwaitless.application.views;
 
-import com.iwaitless.application.persistence.entity.MenuItem;
+import com.iwaitless.application.persistence.entity.MenuItems;
 import com.iwaitless.application.views.list.MenuItemsView;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -9,7 +9,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.*;
 
 public class MenuItemViewCard extends ListItem {
 
-    public MenuItemViewCard(MenuItem item) {
+    public MenuItemViewCard(MenuItems item) {
         addClassNames(Background.CONTRAST_5, Display.FLEX, FlexDirection.COLUMN,
                 AlignItems.START, Padding.SMALL, BorderRadius.LARGE);
 
