@@ -8,6 +8,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
@@ -22,7 +24,8 @@ public class MenuCategoryForm extends FormLayout {
     Dialog dialog = new Dialog();
 
     Button save = new Button("Save");
-    Button close = new Button("Cancel");
+    Button cancel = new Button("Cancel");
+    Button close = new Button(new Icon(VaadinIcon.CLOSE));
 
     public MenuCategoryForm(MenuCategory category) {
         addClassName("menu-category-form");
@@ -49,8 +52,14 @@ public class MenuCategoryForm extends FormLayout {
         dialog.add(this);
 
         createButtonsLayout();
-        dialog.getFooter().add(close);
+        dialog.getFooter().add(cancel);
         dialog.getFooter().add(save);
+
+        HorizontalLayout dialogHeader = new HorizontalLayout();
+        dialogHeader.add(close);
+        dialogHeader.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+        dialogHeader.setWidthFull();
+        dialog.getHeader().add(dialogHeader);
 
         dialog.open();
     }
@@ -61,14 +70,19 @@ public class MenuCategoryForm extends FormLayout {
 
     private void createButtonsLayout() {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-
-        save.addClickShortcut(Key.ENTER);
-        close.addClickShortcut(Key.ESCAPE);
-
         save.addClickListener(event -> validateAndSave());
-        close.addClickListener(event -> {
+        save.addClickShortcut(Key.ENTER);
+
+        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        cancel.addClickShortcut(Key.ESCAPE);
+        cancel.addClickListener(event -> {
             fireEvent(new MenuCategoryForm.CloseEvent(this));
+            dialog.close();
+        });
+
+        close.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        close.addClickListener(event -> {
+            fireEvent(new CloseEvent(this));
             dialog.close();
         });
 
@@ -76,7 +90,7 @@ public class MenuCategoryForm extends FormLayout {
 
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        HorizontalLayout buttonLayout = new HorizontalLayout(save, close);
+        HorizontalLayout buttonLayout = new HorizontalLayout(save, cancel);
         buttonLayout.getStyle().set("flex-wrap", "wrap");
         buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
         setColspan(buttonLayout, 2);

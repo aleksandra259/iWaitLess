@@ -15,6 +15,7 @@ import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 import com.vaadin.flow.theme.lumo.LumoUtility.FontSize;
 import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
 import jakarta.annotation.security.RolesAllowed;
@@ -44,6 +45,7 @@ public class MenuPreviewView extends VerticalLayout implements HasComponents, Ha
 
         menuLayout.setWidthFull();
         menuLayout.addClassName("fixed-menu-bar");
+        menuLayout.addClassNames(LumoUtility.Background.CONTRAST_5);
 
         categorySorted = menuCategory.findAllCategories();
         categorySorted.sort(Comparator.comparing(MenuCategory::getOrderNo));
@@ -62,7 +64,7 @@ public class MenuPreviewView extends VerticalLayout implements HasComponents, Ha
         menuLayout.add(header, splitLayout);
         setMenuData();
 
-        searchField.setValue("Search by name or ingredient...");
+        searchField.setPlaceholder("Search by name or ingredient...");
         searchField.addValueChangeListener(event -> setMenuData());
     }
 

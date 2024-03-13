@@ -1,6 +1,7 @@
 package com.iwaitless.application.views;
 
 import com.iwaitless.application.persistence.entity.MenuItems;
+import com.iwaitless.application.views.forms.MenuItemPopup;
 import com.iwaitless.application.views.list.MenuItemsView;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -25,11 +26,11 @@ public class MenuItemViewCard extends ListItem {
         div.add(image);
 
         Span header = new Span();
-        header.addClassNames(FontSize.LARGE, FontWeight.SEMIBOLD, Padding.Bottom.NONE);
+        header.addClassNames(FontSize.LARGE, FontWeight.SEMIBOLD, Margin.Bottom.NONE);
         header.setText(item.getName());
 
         Paragraph description = new Paragraph(item.getDescription());
-        description.addClassNames(Margin.Vertical.SMALL, Padding.XSMALL);
+        description.addClassNames(Margin.Top.NONE, Padding.XSMALL);
 
         Span size = new Span();
         size.getElement().setAttribute("theme", "size");

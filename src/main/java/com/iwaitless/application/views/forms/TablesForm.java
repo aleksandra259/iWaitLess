@@ -13,6 +13,8 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -32,7 +34,8 @@ public class TablesForm extends FormLayout {
     Dialog dialog = new Dialog();
 
     Button save = new Button("Save");
-    Button close = new Button("Cancel");
+    Button cancel = new Button("Cancel");
+    Button close = new Button(new Icon(VaadinIcon.CLOSE));
     Button generateQR = new Button("Generate QR Code");
     private final Div output = new Div();
 
@@ -91,20 +94,31 @@ public class TablesForm extends FormLayout {
         dialog.add(this);
 
         createButtonsLayout();
-        dialog.getFooter().add(close);
+        dialog.getFooter().add(cancel);
         dialog.getFooter().add(save);
+
+        HorizontalLayout dialogHeader = new HorizontalLayout();
+        dialogHeader.add(close);
+        dialogHeader.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+        dialogHeader.setWidthFull();
+        dialog.getHeader().add(dialogHeader);
 
         dialog.open();
     }
 
     private void createButtonsLayout() {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-
         save.addClickShortcut(Key.ENTER);
-        close.addClickShortcut(Key.ESCAPE);
-
         save.addClickListener(event -> validateAndSave());
+
+        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        cancel.addClickShortcut(Key.ESCAPE);
+        cancel.addClickListener(event -> {
+            fireEvent(new CloseEvent(this));
+            dialog.close();
+        });
+
+        close.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
         close.addClickListener(event -> {
             fireEvent(new CloseEvent(this));
             dialog.close();
@@ -114,7 +128,7 @@ public class TablesForm extends FormLayout {
 
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        HorizontalLayout buttonLayout = new HorizontalLayout(save, close);
+        HorizontalLayout buttonLayout = new HorizontalLayout(save, cancel);
         buttonLayout.getStyle().set("flex-wrap", "wrap");
         buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
         setColspan(buttonLayout, 2);

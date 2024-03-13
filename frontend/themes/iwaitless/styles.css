@@ -25,7 +25,7 @@ a[highlight] {
 }
 
 .max-width-image {
-  max-width: 420px;
+  max-width: 425px;
   height: auto;
 }
 
@@ -55,3 +55,8 @@ a[highlight] {
   margin-top: 100px;
 }
 
+.menu-item-popup-layout {
+    margin: 0.1em;
+    margin-top: 0em;
+    margin-bottom: 0em;
+}

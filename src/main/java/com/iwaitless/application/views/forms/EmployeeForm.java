@@ -11,6 +11,8 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
@@ -34,7 +36,8 @@ public class EmployeeForm extends FormLayout {
 
     Button save = new Button("Save");
     Button delete = new Button("Delete");
-    Button close = new Button("Cancel");
+    Button cancel = new Button("Cancel");
+    Button close = new Button(new Icon(VaadinIcon.CLOSE));
 
     public EmployeeForm(Staff staff,
                         List<StaffRole> roles) {
@@ -70,8 +73,14 @@ public class EmployeeForm extends FormLayout {
         dialog.add(this);
 
         createButtonsLayout();
-        dialog.getFooter().add(close);
+        dialog.getFooter().add(cancel);
         dialog.getFooter().add(save);
+
+        HorizontalLayout dialogHeader = new HorizontalLayout();
+        dialogHeader.add(close);
+        dialogHeader.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+        dialogHeader.setWidthFull();
+        dialog.getHeader().add(dialogHeader);
 
         dialog.open();
     }
@@ -79,13 +88,18 @@ public class EmployeeForm extends FormLayout {
     private void createButtonsLayout() {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
-        close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        close.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
 
         save.addClickShortcut(Key.ENTER);
-        close.addClickShortcut(Key.ESCAPE);
+        cancel.addClickShortcut(Key.ESCAPE);
 
         save.addClickListener(event -> validateAndSave());
         delete.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
+        cancel.addClickListener(event -> {
+            fireEvent(new CloseEvent(this));
+            dialog.close();
+        });
         close.addClickListener(event -> {
             fireEvent(new CloseEvent(this));
             dialog.close();
@@ -96,7 +110,7 @@ public class EmployeeForm extends FormLayout {
         delete.getStyle().set("margin-inline-end", "auto");
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        HorizontalLayout buttonLayout = new HorizontalLayout(save, delete, close);
+        HorizontalLayout buttonLayout = new HorizontalLayout(save, delete, cancel);
         buttonLayout.getStyle().set("flex-wrap", "wrap");
         buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
         setColspan(buttonLayout, 2);

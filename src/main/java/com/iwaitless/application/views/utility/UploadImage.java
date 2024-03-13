@@ -1,7 +1,9 @@
 package com.iwaitless.application.views.utility;
 
 import com.iwaitless.application.persistence.entity.MenuItems;
+import com.iwaitless.application.views.list.MenuItemsView;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.MultiFileReceiver;
@@ -91,6 +93,7 @@ public class UploadImage extends VerticalLayout {
     }
 
     public static void showImagesByItem (MenuItems item, Div output) {
+        int counter = 0;
         if (item.getCategory().getId() != null
                 && item.getItemId() != null) {
             File folder = new File("D:/iwaitless/menu-items/"
@@ -114,7 +117,14 @@ public class UploadImage extends VerticalLayout {
             if (!imageUrls.isEmpty()) {
                 ImageSlideshow imageSlideshow = new ImageSlideshow(imageUrls, output);
                 output.add(imageSlideshow);
+                counter++;
             }
+        }
+
+        if (counter == 0) {
+            Image image = MenuItemsView.returnImage(item);
+            image.addClassName("max-width-image");
+            output.add(image);
         }
     }
 
