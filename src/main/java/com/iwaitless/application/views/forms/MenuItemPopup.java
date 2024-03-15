@@ -1,6 +1,7 @@
 package com.iwaitless.application.views.forms;
 
 import com.iwaitless.application.persistence.entity.MenuItems;
+import com.iwaitless.application.persistence.entity.RestaurantTable;
 import com.iwaitless.application.views.utility.UploadImage;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -29,9 +30,13 @@ public class MenuItemPopup extends FormLayout {
     IntegerField quantity = new IntegerField();
 
     MenuItems item;
+    RestaurantTable table;
 
-    public MenuItemPopup(MenuItems item) {
+    public MenuItemPopup(MenuItems item,
+                         RestaurantTable table) {
         this.item = item;
+        this.table = table;
+
         addClassName("menu-item-popup");
         addClassNames(LumoUtility.Background.CONTRAST_5, LumoUtility.Display.FLEX,
                 LumoUtility.AlignItems.START, LumoUtility.BorderRadius.NONE,
@@ -40,8 +45,6 @@ public class MenuItemPopup extends FormLayout {
         Div output = new Div();
         UploadImage.showImagesByItem(item, output);
 
-//        Span header = new Span(item.getName());
-//        header.addClassNames(LumoUtility.FontSize.XLARGE, LumoUtility.FontWeight.SEMIBOLD);
         dialog.setHeaderTitle(item.getName());
 
         Paragraph description = new Paragraph(item.getDescription());
@@ -110,6 +113,11 @@ public class MenuItemPopup extends FormLayout {
         priceButton.setText(item.getPrice() + " " + item.getCurrency());
         priceButton.setWidth("6.5rem");
         priceButton.getStyle().set("border-radius", "0px");
+
+        if (table == null || table.getTableId() == null) {
+            addToCart.setEnabled(false);
+            priceButton.setEnabled(false);
+        }
 
         buttonLayout = new HorizontalLayout(addToCart, priceButton, spareSpace);
         buttonLayout.setSpacing(false);

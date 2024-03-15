@@ -66,7 +66,7 @@ public class TablesForm extends FormLayout {
             String tableId = String.valueOf(table.getTableId());
             if (tableId != null && !tableId.trim().isEmpty()
                 && !tableId.equals("null")) {
-                CreateQR qr = new CreateQR("\\table\\" + table.getTableId(),
+                CreateQR qr = new CreateQR("http://localhost:8080/menu-preview?table=" + table.getTableId(),
                         "D:\\iwaitless\\QRCodes\\"
                                 + "table_" + table.getTableId()
                                 + ".png");

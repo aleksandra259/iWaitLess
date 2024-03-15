@@ -32,10 +32,16 @@ public class RestaurantTableService {
                 .findFirst()
                 .orElse(null);
     }
+
     public RestaurantTable findTableById(Long id) {
         return restaurantTableRepository
                 .findById(id)
                 .orElse(null);
+    }
+
+    public RestaurantTable findTableByTableNo(String tableNo) {
+        return restaurantTableRepository
+                .findByTableNo(tableNo);
     }
 
     public void deleteTable(RestaurantTable table) {

@@ -1,6 +1,7 @@
 package com.iwaitless.application.views;
 
 import com.iwaitless.application.persistence.entity.MenuItems;
+import com.iwaitless.application.persistence.entity.RestaurantTable;
 import com.iwaitless.application.views.forms.MenuItemPopup;
 import com.iwaitless.application.views.list.MenuItemsView;
 import com.vaadin.flow.component.html.*;
@@ -10,7 +11,8 @@ import com.vaadin.flow.theme.lumo.LumoUtility.*;
 
 public class MenuItemViewCard extends ListItem {
 
-    public MenuItemViewCard(MenuItems item) {
+    public MenuItemViewCard(MenuItems item,
+                            RestaurantTable table) {
         addClassNames(Background.CONTRAST_5, Display.FLEX, FlexDirection.COLUMN,
                 AlignItems.START, Padding.SMALL, BorderRadius.LARGE);
 
@@ -48,7 +50,7 @@ public class MenuItemViewCard extends ListItem {
 
         add(div, header, description, horizontalLayout);
 
-        addClickListener(e -> new MenuItemPopup(item));
+        addClickListener(e -> new MenuItemPopup(item, table));
 
     }
 }

@@ -1,6 +1,7 @@
 package com.iwaitless.application.views;
 
 import com.iwaitless.application.persistence.entity.MenuItems;
+import com.iwaitless.application.persistence.entity.RestaurantTable;
 import com.iwaitless.application.persistence.entity.nomenclatures.MenuCategory;
 import com.iwaitless.application.services.MenuItemService;
 import com.vaadin.flow.component.HasComponents;
@@ -13,11 +14,13 @@ import com.vaadin.flow.theme.lumo.LumoUtility.*;
 
 import java.util.List;
 
-public class MenuItemsPreviewView extends Main implements HasComponents, HasStyle {
+public class MenuItemsPreviewView extends Main
+        implements HasComponents, HasStyle {
 
     public MenuItemsPreviewView(MenuItemService menuItem,
                                 List<MenuCategory> categorySorted,
-                                String searchField) {
+                                String searchField,
+                                RestaurantTable table) {
 
         addClassNames("image-gallery-view");
         addClassNames(MaxWidth.SCREEN_LARGE, Margin.Horizontal.AUTO,
@@ -42,7 +45,7 @@ public class MenuItemsPreviewView extends Main implements HasComponents, HasStyl
 
                 items.forEach(item -> {
                     if (item.isAvailable())
-                        imageContainer.add(new MenuItemViewCard(item));
+                        imageContainer.add(new MenuItemViewCard(item, table));
                 });
 
                 categorySection.add(imageContainer);
