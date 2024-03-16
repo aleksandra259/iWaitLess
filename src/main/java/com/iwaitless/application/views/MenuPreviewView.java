@@ -48,11 +48,9 @@ public class MenuPreviewView extends VerticalLayout
         List<String> values = parametersMap.get("table");
         if (values != null) {
             RestaurantTable table = restaurantTable.findTableByTableNo(values.get(0));
-            menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable, table);
+            menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable, table, new VerticalLayout(), false);
         } else {
-            // Key not found in the map
-            System.out.println("Key 'table' not found in the map.");
-            menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable, null);
+            menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable, null, new VerticalLayout(), false);
         }
 
         add(menuLoad);

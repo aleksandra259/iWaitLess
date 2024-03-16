@@ -26,8 +26,6 @@ public class MenuItemPopup extends FormLayout {
 
     Dialog dialog = new Dialog();
     Button close = new Button(new Icon(VaadinIcon.CLOSE));
-    HorizontalLayout buttonLayout;
-    IntegerField quantity = new IntegerField();
 
     MenuItems item;
     RestaurantTable table;
@@ -76,10 +74,8 @@ public class MenuItemPopup extends FormLayout {
         add(verticalLayout);
 
         dialog.add(this);
-
         getStyle().set("width", "30rem").set("max-width", "100%");
-        createButtonsLayout();
-        dialog.getFooter().add(quantity, buttonLayout);
+        dialog.getFooter().add(createButtonsLayout());
 
         HorizontalLayout dialogHeader = new HorizontalLayout();
         dialogHeader.add(close);
@@ -91,7 +87,7 @@ public class MenuItemPopup extends FormLayout {
     }
 
 
-    private void createButtonsLayout() {
+    private HorizontalLayout createButtonsLayout() {
         close.addClickShortcut(Key.ESCAPE);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
         close.addClickListener(event -> {
@@ -102,16 +98,13 @@ public class MenuItemPopup extends FormLayout {
         Button addToCart = new Button( "Add to Cart",
                 new Icon(VaadinIcon.CART));
         addToCart.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        addToCart.setWidth("17rem");
+        addToCart.setWidth("50%");
         addToCart.getStyle().set("border-radius", "0px");
-
-        Span spareSpace = new Span();
-        spareSpace.setWidth("1rem");
 
         Button priceButton = new Button();
         priceButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         priceButton.setText(item.getPrice() + " " + item.getCurrency());
-        priceButton.setWidth("6.5rem");
+        priceButton.setWidth("20%");
         priceButton.getStyle().set("border-radius", "0px");
 
         if (table == null || table.getTableId() == null) {
@@ -119,14 +112,19 @@ public class MenuItemPopup extends FormLayout {
             priceButton.setEnabled(false);
         }
 
-        buttonLayout = new HorizontalLayout(addToCart, priceButton, spareSpace);
-        buttonLayout.setSpacing(false);
-
+        IntegerField quantity = new IntegerField();
         quantity.setValue(1);
         quantity.setStepButtonsVisible(true);
         quantity.setMin(0);
         quantity.setMax(9);
-        quantity.setWidth("5rem");
+        quantity.setWidth("25%");
+
+        HorizontalLayout buttonLayout
+                = new HorizontalLayout(quantity, addToCart, priceButton);
+        buttonLayout.setSpacing(false);
+        buttonLayout.setWidthFull();
+
+        return buttonLayout;
     }
 
     // Events

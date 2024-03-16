@@ -18,9 +18,9 @@ public class MenuItemViewCard extends ListItem {
 
         Div div = new Div();
         div.addClassNames(Background.CONTRAST, Display.FLEX, AlignItems.CENTER,
-                JustifyContent.CENTER, Margin.Bottom.SMALL, Overflow.HIDDEN,
+                JustifyContent.CENTER, Margin.Bottom.NONE, Overflow.HIDDEN,
                 BorderRadius.MEDIUM, Width.FULL);
-        div.setHeight("160px");
+        div.setHeight("80px");
 
         Image image = MenuItemsView.returnImage(item);
         image.setWidth("100%");
@@ -28,19 +28,21 @@ public class MenuItemViewCard extends ListItem {
         div.add(image);
 
         Span header = new Span();
-        header.addClassNames(FontSize.LARGE, FontWeight.SEMIBOLD, Margin.Bottom.NONE);
+        header.addClassNames(FontSize.SMALL, FontWeight.SEMIBOLD, Margin.Bottom.NONE);
         header.setText(item.getName());
 
         Paragraph description = new Paragraph(item.getDescription());
-        description.addClassNames(Margin.Top.NONE, Padding.XSMALL);
+        description.addClassNames(FontSize.XSMALL, Margin.Top.NONE, Padding.XSMALL);
 
         Span size = new Span();
         size.getElement().setAttribute("theme", "size");
         size.setText(item.getSize() + " grams");
+        size.addClassNames(FontSize.XXSMALL);
 
         Span price = new Span();
         price.getElement().setAttribute("theme", "price");
         price.setText(item.getPrice() + " " + item.getCurrency());
+        price.addClassNames(FontSize.XXSMALL);
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setWidthFull();

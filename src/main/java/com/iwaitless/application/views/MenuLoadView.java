@@ -10,6 +10,7 @@ import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -35,43 +36,63 @@ public class MenuLoadView extends VerticalLayout
 
     TextField searchField = new TextField();
     VerticalLayout menuLayout = new VerticalLayout();
+    boolean tableExists;
+    boolean showSearch = false;
 
     public MenuLoadView(MenuCategoryService menuCategory,
                         MenuItemService menuItem,
                         RestaurantTableService restaurantTable,
-                        RestaurantTable table) {
+                        RestaurantTable table,
+                        VerticalLayout categories,
+                        boolean search) {
         this.menuCategory = menuCategory;
         this.menuItem = menuItem;
         this.restaurantTable = restaurantTable;
         this.table = table;
-
-        HorizontalLayout menuBar = new HorizontalLayout();
-        H2 header = new H2("Menu");
-        header.addClassNames(Margin.Bottom.NONE, Margin.Top.SMALL, FontSize.XXLARGE);
+        this.showSearch = search;
 
         menuLayout.setWidthFull();
-        menuLayout.addClassName("fixed-menu-bar");
-        menuLayout.addClassNames(LumoUtility.Background.CONTRAST_5);
+
+        tableExists = (table != null && table.getTableId() != null);
+        HorizontalLayout menuBar = new HorizontalLayout();
+
+        searchField.setPlaceholder("Search by name or ingredient...");
+        searchField.addValueChangeListener(event -> setMenuData());
+        searchField.setWidthFull();
+        if (showSearch && tableExists) {
+            H1 title = new H1("iWaitLess | Menu");
+            title.getStyle().set("font-size", "var(--lumo-font-size-l)")
+                    .set("margin", "var(--lumo-space-m) var(--lumo-space-l)");
+            menuLayout.add(title, searchField);
+        }
 
         categorySorted = menuCategory.findAllCategories();
         categorySorted.sort(Comparator.comparing(MenuCategory::getOrderNo));
         categorySorted.forEach(category -> {
-            if (!menuItem.findItemsByCategory(category, searchField.getValue()).isEmpty()) {
+            if (!menuItem.findAvailableItemsByCategory
+                    (category, searchField.getValue()).isEmpty()) {
                 String anchorLink = createAnchorLink(category.getId());
                 Button button = new Button(category.getName(), event ->
                         UI.getCurrent().getPage().executeJs("window.location.hash = $0", anchorLink));
                 button.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 
-                menuBar.add(button);
+                if (!tableExists) {
+                    menuBar.add(button);
+                } else {
+                    categories.add(button);
+                }
             }
         });
 
-        SplitLayout splitLayout = new SplitLayout(searchField, menuBar);
-        menuLayout.add(header, splitLayout);
-        setMenuData();
+        if (!tableExists) {
+            H2 header = new H2("Menu");
+            header.addClassNames(Margin.Bottom.NONE, Margin.Top.SMALL, FontSize.XXLARGE);
 
-        searchField.setPlaceholder("Search by name or ingredient...");
-        searchField.addValueChangeListener(event -> setMenuData());
+            SplitLayout splitLayout = new SplitLayout(searchField, menuBar);
+            menuLayout.add(header, splitLayout);
+        }
+
+        setMenuData();
     }
 
     private void setMenuData () {
@@ -81,7 +102,13 @@ public class MenuLoadView extends VerticalLayout
                 = new MenuItemsPreviewView(menuItem, categorySorted,
                                            searchField.getValue(),
                                            table);
-        itemsPreview.addClassName("menu-categories-page");
-        add(menuLayout, itemsPreview);
+        if (!tableExists || showSearch) {
+            itemsPreview.addClassName("menu-categories-page");
+            menuLayout.addClassName("fixed-menu-bar");
+            menuLayout.addClassNames(LumoUtility.Background.CONTRAST_5);
+            add(menuLayout);
+        }
+
+        add(itemsPreview);
     }
 }

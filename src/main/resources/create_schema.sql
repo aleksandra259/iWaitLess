@@ -44,7 +44,7 @@ name varchar(100) not null
 CREATE TABLE MENU_ITEM (
   item_id int NOT NULL primary key,
   name VARCHAR(50),
-  description VARCHAR(50),
+  description VARCHAR(4000),
   category VARCHAR(50),
   price double,
   currency VARCHAR(3),

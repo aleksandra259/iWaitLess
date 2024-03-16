@@ -43,6 +43,30 @@ public class MenuItemService {
         }
     }
 
+    public List<MenuItems> findAvailableItemsByCategory(MenuCategory menuCategory,
+                                                        String stringFilter) {
+        if (menuCategory == null)
+            return null;
+        if (menuCategory.getId() == null)
+            return null;
+
+        if (stringFilter == null || stringFilter.isEmpty()) {
+            return menuItemRepository
+                    .findAll()
+                    .stream()
+                    .filter(item -> menuCategory.getId().equals(item.getCategory().getId()))
+                    .filter(MenuItems::isAvailable)
+                    .collect(Collectors.toList());
+        } else {
+            return menuItemRepository
+                    .search(stringFilter)
+                    .stream()
+                    .filter(item -> menuCategory.getId().equals(item.getCategory().getId()))
+                    .filter(MenuItems::isAvailable)
+                    .collect(Collectors.toList());
+        }
+    }
+
     public void deleteItem(MenuItems item) {
         menuItemRepository.delete(item);
     }

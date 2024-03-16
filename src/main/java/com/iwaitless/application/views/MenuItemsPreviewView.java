@@ -6,10 +6,7 @@ import com.iwaitless.application.persistence.entity.nomenclatures.MenuCategory;
 import com.iwaitless.application.services.MenuItemService;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasStyle;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.html.Main;
-import com.vaadin.flow.component.html.OrderedList;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.theme.lumo.LumoUtility.*;
 
 import java.util.List;
@@ -24,23 +21,23 @@ public class MenuItemsPreviewView extends Main
 
         addClassNames("image-gallery-view");
         addClassNames(MaxWidth.SCREEN_LARGE, Margin.Horizontal.AUTO,
-                Padding.Bottom.LARGE, Padding.Horizontal.LARGE);
+                Margin.Bottom.LARGE, Padding.Horizontal.LARGE);
 
         categorySorted.forEach(category -> {
             List<MenuItems> items = menuItem
-                    .findItemsByCategory(category, searchField);
+                    .findAvailableItemsByCategory(category, searchField);
 
             // Create a section with a corresponding ID
             Div categorySection = new Div();
             categorySection.setId(MenuPreviewView.createAnchorLink(category.getId()));
-            H3 description = new H3(category.getName());
+            H1 description = new H1(category.getName());
             description.addClassNames(Margin.Bottom.XSMALL, Margin.Top.XLARGE,
-                    TextColor.HEADER, FontSize.XLARGE);
+                    TextColor.HEADER, FontSize.LARGE);
             categorySection.add(description);
 
             if (!items.isEmpty()) {
                 OrderedList imageContainer = new OrderedList();
-                imageContainer.addClassNames(Gap.LARGE, Display.GRID,
+                imageContainer.addClassNames(Gap.SMALL, Display.GRID,
                         ListStyleType.NONE, Margin.NONE, Padding.NONE);
 
                 items.forEach(item -> {

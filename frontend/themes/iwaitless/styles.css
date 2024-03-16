@@ -11,7 +11,7 @@ a[highlight] {
  }
 
 .image-gallery-view ol {
-  grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
 }
 
 .image-gallery-view li {
@@ -25,7 +25,7 @@ a[highlight] {
 }
 
 .max-width-image {
-  max-width: 425px;
+  max-width: 100%;
   height: auto;
 }
 
