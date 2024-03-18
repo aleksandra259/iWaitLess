@@ -4,9 +4,11 @@ import com.iwaitless.application.persistence.entity.RestaurantTable;
 import com.iwaitless.application.services.MenuCategoryService;
 import com.iwaitless.application.services.MenuItemService;
 import com.iwaitless.application.services.RestaurantTableService;
+import com.iwaitless.application.views.forms.CallWaiterPopup;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -20,7 +22,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 import java.util.HashMap;
 import java.util.Map;
 
-@Route("test")
+@Route("menu-catalogue")
 @AnonymousAllowed
 public class MenuPreviewLayout extends AppLayout implements HasUrlParameter<String> {
 
@@ -65,14 +67,14 @@ public class MenuPreviewLayout extends AppLayout implements HasUrlParameter<Stri
         RouterLink link = new RouterLink();
 
         switch (viewName) {
-            case "Search", "Home":
+            case "Home":
                 if (table != null && table.getTableId() != null) {
                     link = new RouterLink("", MenuPreviewLayout.class,
                             "table=" + table.getTableNo());
                 }
                 break;
             case "Call Waitress":
-//                link.setRoute(viewClass.java);
+                link.setRoute(CallWaiterPopup.class);
                 break;
             case "Orders":
 //                link.setRoute(viewClass.java);
@@ -113,7 +115,9 @@ public class MenuPreviewLayout extends AppLayout implements HasUrlParameter<Stri
         String tableNo = paramMap.get("table");
         if (!tableNo.isEmpty()) {
             table = restaurantTable.findTableByTableNo(tableNo);
-            menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable, table, categories, true);
+            menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable,
+                    table, categories, true);
+            addToDrawer(new H3("Categories"));
             addToDrawer(categories);
         } else {
             System.out.println("table not provided");
