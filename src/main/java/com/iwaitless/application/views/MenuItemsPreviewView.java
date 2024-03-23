@@ -21,7 +21,7 @@ public class MenuItemsPreviewView extends Main
 
         addClassNames("image-gallery-view");
         addClassNames(MaxWidth.SCREEN_LARGE, Margin.Horizontal.AUTO,
-                Margin.Bottom.LARGE, Padding.Horizontal.LARGE);
+                Margin.Bottom.LARGE, Padding.Horizontal.SMALL);
 
         categorySorted.forEach(category -> {
             List<MenuItems> items = menuItem

@@ -13,16 +13,16 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
+@PageTitle("iWaitLess|Call Waiter")
 @Route("call-waiter-popup")
 @AnonymousAllowed
 public class CallWaiterPopup extends VerticalLayout {
 
     Dialog dialog;
-    RouterLink link = new RouterLink();
     Button close = new Button(new Icon(VaadinIcon.CLOSE));
 
     Select<String> paymentMethodSelect = new Select<>();

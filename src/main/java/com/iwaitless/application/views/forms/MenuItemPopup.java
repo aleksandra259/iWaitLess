@@ -49,18 +49,30 @@ public class MenuItemPopup extends FormLayout {
         description.addClassNames(LumoUtility.FontSize.LARGE);
 
         Span size = new Span();
+        Span sizeHeader = new Span("Size:" );
+        sizeHeader.getStyle().set("font-size", "13.5px");
         size.getElement().setAttribute("theme", "size");
         size.setText(item.getSize() + " grams");
+        VerticalLayout sizeLayout = new VerticalLayout(sizeHeader, size);
+        sizeLayout.setSpacing(false);
+
         Span timeToProcess = new Span();
+        Span timeToProcessHeader = new Span();
+        timeToProcessHeader.getStyle().set("font-size", "13.5px");
         timeToProcess.getElement().setAttribute("theme", "time");
-        if (item.getTimeToProcess() != null )
+        if (item.getTimeToProcess() != null ) {
+            timeToProcessHeader.setText("Time to process:");
             timeToProcess.setText(item.getTimeToProcess() + " minutes");
+        }
+        VerticalLayout timeToProcessLayout = new VerticalLayout(timeToProcessHeader, timeToProcess);
+        timeToProcessLayout.setSpacing(false);
+        timeToProcessLayout.setAlignItems(FlexComponent.Alignment.END);
 
         HorizontalLayout timeAndSize = new HorizontalLayout();
         timeAndSize.setWidthFull();
-        timeAndSize.add(size, timeToProcess);
-        timeAndSize.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
-        timeAndSize.setAlignItems(FlexComponent.Alignment.STRETCH);
+        timeAndSize.add(sizeLayout, timeToProcessLayout);
+        timeAndSize.setJustifyContentMode(FlexComponent.JustifyContentMode.AROUND);
+        timeAndSize.setAlignItems(FlexComponent.Alignment.BASELINE);
 
         TextArea comments = new TextArea("Comments");
         comments.setWidthFull();
@@ -98,13 +110,13 @@ public class MenuItemPopup extends FormLayout {
         Button addToCart = new Button( "Add to Cart",
                 new Icon(VaadinIcon.CART));
         addToCart.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        addToCart.setWidth("50%");
+        addToCart.setWidth("45%");
         addToCart.getStyle().set("border-radius", "0px");
 
         Button priceButton = new Button();
         priceButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         priceButton.setText(item.getPrice() + " " + item.getCurrency());
-        priceButton.setWidth("20%");
+        priceButton.setWidth("30%");
         priceButton.getStyle().set("border-radius", "0px");
 
         if (table == null || table.getTableId() == null) {

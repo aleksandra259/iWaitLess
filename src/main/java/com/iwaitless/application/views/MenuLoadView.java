@@ -62,7 +62,8 @@ public class MenuLoadView extends VerticalLayout
         if (showSearch && tableExists) {
             H1 title = new H1("iWaitLess | Menu");
             title.getStyle().set("font-size", "var(--lumo-font-size-l)")
-                    .set("margin", "var(--lumo-space-m) var(--lumo-space-l)");
+                    .set("margin", "var(--lumo-space-xs) var(--lumo-space-xs)")
+                    .set("padding", "var(--lumo-space-xs) var(--lumo-space-xs)");
             menuLayout.add(title, searchField);
         }
 

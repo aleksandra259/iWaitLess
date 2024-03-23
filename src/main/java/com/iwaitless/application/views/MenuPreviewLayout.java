@@ -12,16 +12,14 @@ import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.BeforeEvent;
-import com.vaadin.flow.router.HasUrlParameter;
-import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@PageTitle("iWaitLess|Menu")
 @Route("menu-catalogue")
 @AnonymousAllowed
 public class MenuPreviewLayout extends AppLayout implements HasUrlParameter<String> {
@@ -52,7 +50,8 @@ public class MenuPreviewLayout extends AppLayout implements HasUrlParameter<Stri
 
         navigation.addClassNames(LumoUtility.Width.FULL,
                 LumoUtility.JustifyContent.EVENLY,
-                LumoUtility.AlignSelf.STRETCH);
+                LumoUtility.AlignSelf.STRETCH,
+                LumoUtility.Position.FIXED);
         navigation.setPadding(false);
         navigation.setSpacing(false);
         navigation.add(subMenu,
@@ -77,7 +76,7 @@ public class MenuPreviewLayout extends AppLayout implements HasUrlParameter<Stri
                 link.setRoute(CallWaiterPopup.class);
                 break;
             case "Orders":
-//                link.setRoute(viewClass.java);
+                link.setRoute(CartView.class);
                 break;
             default:
         }
@@ -100,6 +99,27 @@ public class MenuPreviewLayout extends AppLayout implements HasUrlParameter<Stri
         if (menuLoad != null)
             menuLoad.removeAll();
 
+        H3 header = new H3("Categories");
+        header.getStyle().set("margin-top", "20px"); // Adjust margin-top as needed
+        String tableNo = getTableNo(parameter);
+        if (!tableNo.isEmpty()) {
+            table = restaurantTable.findTableByTableNo(tableNo);
+            categories.add(header);
+
+            menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable,
+                    table, categories, true);
+            categories.getStyle().set("padding-top", "20px");
+
+            addToDrawer(categories);
+        } else {
+            System.out.println("table not provided");
+        }
+
+        addToNavbar(true, getNavigation());
+        content.add(menuLoad);
+    }
+
+    public static String getTableNo (String parameter) {
         Map<String, String> paramMap = new HashMap<>();
         String[] keyValuePairs = parameter.split("&");
         for (String pair : keyValuePairs) {
@@ -112,18 +132,7 @@ public class MenuPreviewLayout extends AppLayout implements HasUrlParameter<Stri
             }
         }
 
-        String tableNo = paramMap.get("table");
-        if (!tableNo.isEmpty()) {
-            table = restaurantTable.findTableByTableNo(tableNo);
-            menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable,
-                    table, categories, true);
-            addToDrawer(new H3("Categories"));
-            addToDrawer(categories);
-        } else {
-            System.out.println("table not provided");
-        }
-
-        addToNavbar(true, getNavigation());
-        content.add(menuLoad);
+        return paramMap.get("table");
     }
+
 }

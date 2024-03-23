@@ -3,15 +3,27 @@ a[highlight] {
     font-weight: bold;
     text-decoration: underline;
 }
-@media all and (max-width: 1100px) {
+@media (min-width: 801px) {
    .list-view.editing .toolbar,
    .list-view.editing .contact-grid {
      display: none;
    }
- }
+   .image-gallery-view ol {
+     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+   }
+   .menu-item-card {
+     font-size: 12pt;
+   }
 
-.image-gallery-view ol {
-  grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+ }
+@media (max-width: 800px) {
+   .image-gallery-view ol {
+     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+   }
+   .menu-item-card {
+     max-height: 60px;
+     font-size: 9pt;
+   }
 }
 
 .image-gallery-view li {
@@ -55,8 +67,8 @@ a[highlight] {
   margin-top: 100px;
 }
 
-.menu-item-popup-layout {
-    margin: 0.1em;
-    margin-top: 0em;
-    margin-bottom: 0em;
+.menu-item-popup {
+  margin: 0.1em;
+  margin-top: 0em;
+  margin-bottom: 0em;
 }
