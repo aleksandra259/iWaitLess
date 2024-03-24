@@ -37,13 +37,12 @@ public class MenuLoadView extends VerticalLayout
     TextField searchField = new TextField();
     VerticalLayout menuLayout = new VerticalLayout();
     boolean tableExists;
-    boolean showSearch = false;
+    boolean showSearch;
 
     public MenuLoadView(MenuCategoryService menuCategory,
                         MenuItemService menuItem,
                         RestaurantTableService restaurantTable,
                         RestaurantTable table,
-                        VerticalLayout categories,
                         boolean search) {
         this.menuCategory = menuCategory;
         this.menuItem = menuItem;
@@ -69,21 +68,19 @@ public class MenuLoadView extends VerticalLayout
 
         categorySorted = menuCategory.findAllCategories();
         categorySorted.sort(Comparator.comparing(MenuCategory::getOrderNo));
-        categorySorted.forEach(category -> {
-            if (!menuItem.findAvailableItemsByCategory
-                    (category, searchField.getValue()).isEmpty()) {
-                String anchorLink = createAnchorLink(category.getId());
-                Button button = new Button(category.getName(), event ->
-                        UI.getCurrent().getPage().executeJs("window.location.hash = $0", anchorLink));
-                button.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        if (!tableExists) {
+            categorySorted.forEach(category -> {
+                if (!menuItem.findAvailableItemsByCategory
+                        (category, searchField.getValue()).isEmpty()) {
+                    String anchorLink = createAnchorLink(category.getId());
+                    Button button = new Button(category.getName(), event ->
+                            UI.getCurrent().getPage().executeJs("window.location.hash = $0", anchorLink));
+                    button.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 
-                if (!tableExists) {
                     menuBar.add(button);
-                } else {
-                    categories.add(button);
                 }
-            }
-        });
+            });
+        }
 
         if (!tableExists) {
             H2 header = new H2("Menu");

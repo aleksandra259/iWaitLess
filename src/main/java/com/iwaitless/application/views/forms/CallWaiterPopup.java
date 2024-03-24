@@ -1,5 +1,6 @@
 package com.iwaitless.application.views.forms;
 
+import com.iwaitless.application.views.MenuPreviewLayout;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -13,6 +14,8 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.router.BeforeEvent;
+import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -20,12 +23,13 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 @PageTitle("iWaitLess|Call Waiter")
 @Route("call-waiter-popup")
 @AnonymousAllowed
-public class CallWaiterPopup extends VerticalLayout {
+public class CallWaiterPopup extends VerticalLayout implements HasUrlParameter<String> {
 
     Dialog dialog;
     Button close = new Button(new Icon(VaadinIcon.CLOSE));
 
     Select<String> paymentMethodSelect = new Select<>();
+    String tableNo;
 
     public CallWaiterPopup() {
         Dialog dialog = createDialog();
@@ -43,6 +47,7 @@ public class CallWaiterPopup extends VerticalLayout {
         dialog.setHeaderTitle("Choose an option:");
 
         VerticalLayout dialogLayout = createButtonsLayout();
+        dialogLayout.setSpacing(false);
         dialog.add(dialogLayout);
 
         HorizontalLayout dialogHeader = new HorizontalLayout();
@@ -86,14 +91,19 @@ public class CallWaiterPopup extends VerticalLayout {
         });
 
         HorizontalLayout payWay = new HorizontalLayout(paymentMethodSelect, askBillButton);
-        payWay.getThemeList().add("spacing-xs");
         payWay.setAlignItems(Alignment.BASELINE);
+        payWay.setSpacing(false);
 
         return new VerticalLayout(callWaitressButton, payWay);
     }
 
     private void navigateBack() {
         UI.getCurrent().getPage().executeJs("history.back()");
+    }
+
+    @Override
+    public void setParameter(BeforeEvent event, String parameter) {
+        tableNo = MenuPreviewLayout.getTableNo(parameter);
     }
 }
 

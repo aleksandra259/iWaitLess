@@ -48,9 +48,9 @@ public class MenuPreviewView extends VerticalLayout
         List<String> values = parametersMap.get("table");
         if (values != null) {
             RestaurantTable table = restaurantTable.findTableByTableNo(values.get(0));
-            menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable, table, new VerticalLayout(), false);
+            menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable, table, false);
         } else {
-            menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable, null, new VerticalLayout(), false);
+            menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable, null, false);
         }
 
         add(menuLoad);

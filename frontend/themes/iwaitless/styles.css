@@ -4,25 +4,34 @@ a[highlight] {
     text-decoration: underline;
 }
 @media (min-width: 801px) {
-   .list-view.editing .toolbar,
-   .list-view.editing .contact-grid {
-     display: none;
-   }
    .image-gallery-view ol {
      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
    }
    .menu-item-card {
      font-size: 12pt;
    }
-
+   .menu-categories-page {
+      margin-top: 25px;
+    }
  }
 @media (max-width: 800px) {
+   .list-view.editing .toolbar,
+   .list-view.editing .contact-grid {
+     display: none;
+   }
    .image-gallery-view ol {
      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
    }
    .menu-item-card {
      max-height: 60px;
      font-size: 9pt;
+   }
+   .menu-categories-page {
+     margin-top: 5px;
+   }
+   .quantity-integer-field {
+     font-size: 9pt;
+     width: 60px;
    }
 }
 
@@ -63,12 +72,6 @@ a[highlight] {
   width: 70%;
 }
 
-.menu-categories-page {
-  margin-top: 100px;
-}
-
 .menu-item-popup {
-  margin: 0.1em;
-  margin-top: 0em;
-  margin-bottom: 0em;
+  margin: 0em;
 }

@@ -21,6 +21,9 @@ public class MenuItemService {
     public List<MenuItems> findAllItems() {
         return menuItemRepository.findAll();
     }
+    public MenuItems findItemById(Long itemId) {
+        return menuItemRepository.findById(itemId).orElse(null);
+    }
     public List<MenuItems> findItemsByCategory(MenuCategory menuCategory,
                                                String stringFilter) {
         if (menuCategory == null)
