@@ -149,11 +149,11 @@ public class CartView extends VerticalLayout {
     }
 
     private Component createEmptyStateComponent() {
-        Span emptyCart = new Span("The cart is empty. Add something to create your order.");
+        Span emptyCart = new Span("The cart is empty. Add something to make an order.");
+        emptyCart.getStyle().set("font-size", "17px");
 
-        Image emptyStateImage = new Image("cart-is-empty.png", "No data available");
-        emptyStateImage.setWidthFull();
-        emptyStateImage.setHeight("200px");
+        Image emptyStateImage = new Image("images/cart-is-empty.png", "No data available");
+        emptyStateImage.setWidth("100%");
 
         return new VerticalLayout(emptyCart, emptyStateImage);
     }
@@ -161,6 +161,7 @@ public class CartView extends VerticalLayout {
     private void configureGrid() {
         // Retrieve the cart items from the session
         cartItems = (List<MenuItemsOrder>) vaadinSession.getAttribute("cartItems");
+        grid.removeAllColumns();
 
         if (cartItems != null && !cartItems.isEmpty())
             grid.setItems(cartItems);
@@ -183,6 +184,7 @@ public class CartView extends VerticalLayout {
                 button.addClickListener(e -> {
                     assert cartItems != null;
                     cartItems.remove(item);
+                    grid.getDataProvider().refreshAll();
 
                     totalAmountLabel.setText("Total amount to pay: " + getTotalPrice());
                     totalTimeToProcess.setText("Total time to process: " +  getTotalTimeToProcess());
@@ -221,14 +223,6 @@ public class CartView extends VerticalLayout {
         finalizeButton.addClickListener(e -> {
             CreateOrder createOrder = new CreateOrder(ordersService, orderDetailsService, menuItem,
                     tableEmployeeRelation, orderStatusService, table);
-            finalizeOrderButton.setEnabled(false);
-
-            grid.getDataProvider().refreshAll();
-            totalAmountLabel.setText("Total amount to pay: " + getTotalPrice());
-            totalTimeToProcess.setText("Total time to process: " +  getTotalTimeToProcess());
-            header.setText("Cart " + getTotalItemsCount());
-            suggestedItemsData();
-
             getUI().ifPresent(ui -> ui.navigate(OrderStatusView.class));
         });
 
@@ -274,7 +268,7 @@ public class CartView extends VerticalLayout {
                             imageContainer.add(new MenuItemViewCard(item, table));
                         });
 
-                if (suggestedItems != null)
+                if (!uniqueCommonItems.isEmpty())
                     suggestedItems.add(new Span("You may also like:"), imageContainer);
             }
         }
@@ -291,6 +285,7 @@ public class CartView extends VerticalLayout {
         quantity.setReadOnly(false);
         quantity.addValueChangeListener(e -> {
             order.setQuantity(e.getValue());
+            grid.getDataProvider().refreshAll();
 
             totalAmountLabel.setText("Total amount to pay: " + getTotalPrice());
             totalTimeToProcess.setText("Total time to process: " +  getTotalTimeToProcess());

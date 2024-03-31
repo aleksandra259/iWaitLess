@@ -52,11 +52,13 @@ public class MenuPreviewView extends VerticalLayout
         List<String> values = parametersMap.get("table");
         if (values != null) {
             RestaurantTable table = restaurantTable.findTableByTableNo(values.get(0));
-            menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable, table, false);
+            menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable, table,
+                    false, false, false);
 
             vaadinSession.setAttribute("tableNo", values.get(0));
         } else {
-            menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable, null, false);
+            menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable, null,
+                    false, false, false);
         }
 
         add(menuLoad);

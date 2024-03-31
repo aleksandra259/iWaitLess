@@ -54,4 +54,10 @@ public class MenuItems {
 
     @Column(name = "AVAILABLE")
     private boolean available;
+
+    @Column(name = "VEGETARIAN")
+    private boolean vegetarian;
+
+    @Column(name = "VEGAN")
+    private boolean vegan;
 }

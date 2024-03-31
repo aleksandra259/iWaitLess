@@ -92,8 +92,11 @@ public class MenuPreviewLayout extends AppLayout {
 
     private void setSubMenuData () {
         H3 orderHeader = new H3("Orders");
-        H3 header = new H3("Categories");
-        header.getStyle().set("margin-top", "20px");
+        H3 categoriesHeader = new H3("Categories");
+        H3 personalizeHeader = new H3("Personalize");
+        orderHeader.getStyle().set("margin-top", "30px");
+        categoriesHeader.getStyle().set("margin-top", "30px");
+        personalizeHeader.getStyle().set("margin-top", "30px");
         categories.getStyle().set("padding-top", "20px");
         categories.setSpacing(false);
 
@@ -101,8 +104,11 @@ public class MenuPreviewLayout extends AppLayout {
         orderStatus.addClassName("order-status-link-button");
         RouterLink mostPopular = new RouterLink("Popular", PopularMenuItemsView.class);
         mostPopular.addClassName("order-status-link-button");
+        RouterLink personalize = new RouterLink("Personalize", PersonalizedMenuView.class);
+        personalize.addClassName("order-status-link-button");
 
-        categories.add(orderHeader, orderStatus, header, mostPopular);
+        categories.add(orderHeader, orderStatus, personalizeHeader,
+                personalize, categoriesHeader, mostPopular);
 
         List<MenuCategory> categorySorted = menuCategory.findAllCategories();
         categorySorted.sort(Comparator.comparing(MenuCategory::getOrderNo));
@@ -114,6 +120,7 @@ public class MenuPreviewLayout extends AppLayout {
                         UI.getCurrent().getPage().executeJs("window.location.hash = $0", anchorLink));
                 button.addThemeVariants(ButtonVariant.LUMO_CONTRAST, ButtonVariant.LUMO_TERTIARY);
                 button.getStyle().set("color", "black");
+                button.getStyle().set("font-size", "18px");
 
                 categories.add(button);
             }
@@ -130,7 +137,6 @@ public class MenuPreviewLayout extends AppLayout {
 
             if (keyValue.length == 2)
                 paramMap.put(keyValue[0], keyValue[1]);
-
         }
 
         return paramMap;

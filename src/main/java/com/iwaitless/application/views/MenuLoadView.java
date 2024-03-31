@@ -38,17 +38,23 @@ public class MenuLoadView extends VerticalLayout
     VerticalLayout menuLayout = new VerticalLayout();
     boolean tableExists;
     boolean showSearch;
+    boolean showVegetarian;
+    boolean showVegan;
 
     public MenuLoadView(MenuCategoryService menuCategory,
                         MenuItemService menuItem,
                         RestaurantTableService restaurantTable,
                         RestaurantTable table,
-                        boolean search) {
+                        boolean search,
+                        boolean isVegetarian,
+                        boolean isVegan) {
         this.menuCategory = menuCategory;
         this.menuItem = menuItem;
         this.restaurantTable = restaurantTable;
         this.table = table;
         this.showSearch = search;
+        this.showVegetarian = isVegetarian;
+        this.showVegan = isVegan;
 
         menuLayout.setWidthFull();
 
@@ -99,7 +105,7 @@ public class MenuLoadView extends VerticalLayout
         MenuItemsPreviewView itemsPreview
                 = new MenuItemsPreviewView(menuItem, categorySorted,
                                            searchField.getValue(),
-                                           table);
+                                           table, showVegetarian, showVegan);
         if (!tableExists || showSearch) {
             itemsPreview.addClassName("menu-categories-page");
             menuLayout.addClassName("fixed-menu-bar");

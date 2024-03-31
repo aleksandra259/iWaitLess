@@ -20,11 +20,13 @@ a[highlight] {
      display: none;
    }
    .image-gallery-view ol {
-     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+     grid-template-columns: repeat(auto-fill, minmax(150px, 2fr));
+     margin-left:-22px;
+     margin-right: -22px;
    }
    .menu-item-card {
-     max-height: 60px;
-     font-size: 9pt;
+     max-height: 85px;
+     font-size: 11pt;
    }
    .menu-categories-page {
      margin-top: 5px;
@@ -34,7 +36,7 @@ a[highlight] {
      width: 60px;
    }
    .popular-items-page {
-     margin-top: 45px;
+     margin-top: 55px;
    }
 }
 
@@ -81,18 +83,23 @@ a[highlight] {
 }
 
 .order-status-link-button {
-  display: inline-block;
+  display: block;
   padding: 0.5rem 0.4rem;
   color: black;
-  text-decoration: none;
+  text-decoration: none !important;
   background-color: transparent;
   border: none;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
 }
 
-.router-link-button:hover {
-  background-color: #f1f3f4;
+.order-status-link-button:visited {
+  text-decoration: none !important;
+}
+.order-status-link-button:active {
+  font-weight: 500 !important;
+}
+
+.personalize-menu-layout {
+  margin-bottom: -3px;
 }

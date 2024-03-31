@@ -12,7 +12,6 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
@@ -25,8 +24,6 @@ public class CallWaiterPopup extends VerticalLayout {
 
     Dialog dialog;
     Button close = new Button(new Icon(VaadinIcon.CLOSE));
-
-    Select<String> paymentMethodSelect = new Select<>();
     String tableNo;
 
     VaadinSession vaadinSession = VaadinSession.getCurrent();
@@ -35,10 +32,6 @@ public class CallWaiterPopup extends VerticalLayout {
         this.tableNo = (String)vaadinSession.getAttribute("tableNo");
 
         Dialog dialog = createDialog();
-
-        paymentMethodSelect.setItems("Credit Card", "Debit Card", "Cash");
-        paymentMethodSelect.setLabel("Payment Method");
-
         dialog.open();
     }
 
@@ -46,11 +39,8 @@ public class CallWaiterPopup extends VerticalLayout {
         dialog = new Dialog();
         dialog.setCloseOnEsc(false);
         dialog.setCloseOnOutsideClick(false);
-        dialog.setHeaderTitle("Choose an option:");
-
-        VerticalLayout dialogLayout = createButtonsLayout();
-        dialogLayout.setSpacing(false);
-        dialog.add(dialogLayout);
+        dialog.setHeaderTitle("Contact your waiter");
+        dialog.add(createButtonsLayout());
 
         HorizontalLayout dialogHeader = new HorizontalLayout();
         dialogHeader.add(close);
@@ -70,6 +60,8 @@ public class CallWaiterPopup extends VerticalLayout {
         });
 
         Button callWaitressButton = new Button("Call Waitress", VaadinIcon.PHONE.create());
+        callWaitressButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        callWaitressButton.addClassName("order-status-link-button");
         callWaitressButton.addClickListener(e -> {
             dialog.close();
             navigateBack();
@@ -79,24 +71,17 @@ public class CallWaiterPopup extends VerticalLayout {
         });
 
         Button askBillButton = new Button("Ask Bill", VaadinIcon.DOLLAR.create());
+        askBillButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        askBillButton.addClassName("order-status-link-button");
         askBillButton.addClickListener(e -> {
-            if (paymentMethodSelect.isEmpty()) {
-                Notification.show("Please select a payment method", 3000, Notification.Position.TOP_STRETCH)
-                        .addThemeVariants(NotificationVariant.LUMO_ERROR);
-            } else {
-                dialog.close();
-                navigateBack();
-                Notification.show("Bill requested with payment method: " + paymentMethodSelect.getValue(),
-                                3000, Notification.Position.TOP_STRETCH)
-                        .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-            }
+            dialog.close();
+            navigateBack();
+            Notification.show("Your waitress is notified", 3000,
+                            Notification.Position.TOP_STRETCH)
+                    .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         });
 
-        HorizontalLayout payWay = new HorizontalLayout(paymentMethodSelect, askBillButton);
-        payWay.setAlignItems(Alignment.BASELINE);
-        payWay.setSpacing(false);
-
-        return new VerticalLayout(callWaitressButton, payWay);
+        return new VerticalLayout(callWaitressButton, askBillButton);
     }
 
     private void navigateBack() {

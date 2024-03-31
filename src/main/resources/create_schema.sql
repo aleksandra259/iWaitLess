@@ -51,6 +51,8 @@ CREATE TABLE MENU_ITEM (
   size double,
   time_to_process double,
   available boolean DEFAULT true,
+  vegetarian boolean DEFAULT false,
+  vegan boolean DEFAULT false,
   constraint fk_menu_category foreign key(category) references HT_MENU_CATEGORY(id)
 );
 

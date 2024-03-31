@@ -46,7 +46,7 @@ public class MenuCatalogueView extends VerticalLayout implements HasUrlParameter
         if (!tableNo.isEmpty()) {
             table = restaurantTable.findTableByTableNo(tableNo);
             menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable,
-                        table, true);
+                        table, true, false, false);
             content.add(new MenuPreviewLayout(menuCategory, menuItem, table));
         }
 
