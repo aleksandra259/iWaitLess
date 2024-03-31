@@ -30,7 +30,7 @@ public class OrderDetails {
 
     @NotNull
     @Column(name = "QUANTITY")
-    private Long quantity;
+    private int quantity;
 
     @Column(name = "COMMENT")
     private String comment;

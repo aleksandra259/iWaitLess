@@ -1,6 +1,5 @@
 package com.iwaitless.application.views.forms;
 
-import com.iwaitless.application.views.MenuPreviewLayout;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -14,16 +13,15 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
-import com.vaadin.flow.router.BeforeEvent;
-import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 @PageTitle("iWaitLess|Call Waiter")
 @Route("call-waiter-popup")
 @AnonymousAllowed
-public class CallWaiterPopup extends VerticalLayout implements HasUrlParameter<String> {
+public class CallWaiterPopup extends VerticalLayout {
 
     Dialog dialog;
     Button close = new Button(new Icon(VaadinIcon.CLOSE));
@@ -31,7 +29,11 @@ public class CallWaiterPopup extends VerticalLayout implements HasUrlParameter<S
     Select<String> paymentMethodSelect = new Select<>();
     String tableNo;
 
+    VaadinSession vaadinSession = VaadinSession.getCurrent();
+
     public CallWaiterPopup() {
+        this.tableNo = (String)vaadinSession.getAttribute("tableNo");
+
         Dialog dialog = createDialog();
 
         paymentMethodSelect.setItems("Credit Card", "Debit Card", "Cash");
@@ -99,11 +101,6 @@ public class CallWaiterPopup extends VerticalLayout implements HasUrlParameter<S
 
     private void navigateBack() {
         UI.getCurrent().getPage().executeJs("history.back()");
-    }
-
-    @Override
-    public void setParameter(BeforeEvent event, String parameter) {
-        tableNo = MenuPreviewLayout.getTableNo(parameter);
     }
 }
 

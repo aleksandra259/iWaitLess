@@ -97,8 +97,9 @@ public class MenuCategoriesView extends VerticalLayout {
 
     private void configureGrid() {
         grid.addClassNames("menu-category-grid");
-        grid.setSizeFull();
+        grid.setWidthFull();
         grid.setAllRowsVisible(true);
+        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
         getThemeList().add("spacing-xs");
 
         Grid.Column<MenuCategory> orderNo = grid.addColumn(MenuCategory::getOrderNo).setSortProperty();
@@ -112,7 +113,7 @@ public class MenuCategoriesView extends VerticalLayout {
                     button.addClickListener(e ->
                             createMenuCategory(category));
                     button.setIcon(new Icon(VaadinIcon.EDIT));
-                })).setWidth("1em");
+                })).setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
         grid.addColumn(
             new ComponentRenderer<>(Button::new, (button, category) -> {
                 button.addThemeVariants(ButtonVariant.LUMO_ICON,
@@ -121,9 +122,7 @@ public class MenuCategoriesView extends VerticalLayout {
                 button.getElement().setAttribute("aria-label", "Delete category");
                 button.setIcon(new Icon(VaadinIcon.TRASH));
                 button.addClickListener(e -> deleteMenuCategory(category));
-            })).setWidth("1em").setTextAlign(ColumnTextAlign.END);
-
-        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
+            })).setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
 
         GridSortOrder<MenuCategory> order = new GridSortOrder<>(orderNo, SortDirection.ASCENDING);
         grid.sort(List.of(order));

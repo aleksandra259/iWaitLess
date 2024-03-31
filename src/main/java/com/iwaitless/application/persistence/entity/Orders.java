@@ -25,7 +25,7 @@ public class Orders {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "TABLE_REL_ID")
+    @JoinColumn(name = "TABLE_RELATION_ID")
     private TableEmployeeRelation tableRelationId;
 
     @NotNull
@@ -37,7 +37,6 @@ public class Orders {
     @JoinColumn(name = "STATUS", referencedColumnName = "ID")
     private OrderStatus status;
 
-    @NotNull
     @OneToOne
     @JoinColumn(name = "PAYMENT_WAY", referencedColumnName = "ID")
     private PaymentWay paymentWay;

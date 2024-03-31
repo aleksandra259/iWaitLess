@@ -66,8 +66,7 @@ public class MainLayout extends AppLayout {
         } else if (authorities.contains("ROLE_USER_ST")) {
             addToDrawer(new VerticalLayout(
                     new RouterLink("Home Page", HomePageView.class),
-                    new RouterLink("Tables Assignment", RestaurantTablesAssignView.class),
-                    new RouterLink("Menu Preview", MenuPreviewView.class)
+                    new RouterLink("Tables Assignment", RestaurantTablesAssignView.class)
             ));
         } else if (authorities.contains("ROLE_USER_KT")) {
             addToDrawer(new VerticalLayout(

@@ -15,6 +15,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
@@ -71,10 +72,10 @@ public class MenuPreviewLayout extends AppLayout {
                 link.setRoute(MenuCatalogueView.class, "table=" + table.getTableNo());
                 break;
             case "Call Waitress":
-                link.setRoute(CallWaiterPopup.class, "table=" + table.getTableNo());
+                link.setRoute(CallWaiterPopup.class);
                 break;
             case "Orders":
-                link.setRoute(CartView.class, "table=" + table.getTableNo());
+                link.setRoute(CartView.class);
                 break;
             default:
         }
@@ -90,11 +91,18 @@ public class MenuPreviewLayout extends AppLayout {
     }
 
     private void setSubMenuData () {
+        H3 orderHeader = new H3("Orders");
         H3 header = new H3("Categories");
         header.getStyle().set("margin-top", "20px");
         categories.getStyle().set("padding-top", "20px");
         categories.setSpacing(false);
-        categories.add(header);
+
+        RouterLink orderStatus = new RouterLink("Check Order Status", OrderStatusView.class);
+        orderStatus.addClassName("order-status-link-button");
+        RouterLink mostPopular = new RouterLink("Popular", PopularMenuItemsView.class);
+        mostPopular.addClassName("order-status-link-button");
+
+        categories.add(orderHeader, orderStatus, header, mostPopular);
 
         List<MenuCategory> categorySorted = menuCategory.findAllCategories();
         categorySorted.sort(Comparator.comparing(MenuCategory::getOrderNo));
@@ -105,6 +113,7 @@ public class MenuPreviewLayout extends AppLayout {
                 Button button = new Button(category.getName(), event ->
                         UI.getCurrent().getPage().executeJs("window.location.hash = $0", anchorLink));
                 button.addThemeVariants(ButtonVariant.LUMO_CONTRAST, ButtonVariant.LUMO_TERTIARY);
+                button.getStyle().set("color", "black");
 
                 categories.add(button);
             }
@@ -121,12 +130,14 @@ public class MenuPreviewLayout extends AppLayout {
 
             if (keyValue.length == 2)
                 paramMap.put(keyValue[0], keyValue[1]);
+
         }
 
         return paramMap;
     }
     public static String getTableNo (String parameter) {
         Map<String, String> paramMap = getParameters (parameter);
+        VaadinSession.getCurrent().setAttribute("tableNo", paramMap.get("table"));
 
         return paramMap.get("table");
     }

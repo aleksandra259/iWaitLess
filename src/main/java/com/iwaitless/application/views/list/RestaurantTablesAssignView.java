@@ -28,7 +28,7 @@ import java.util.Objects;
 
 @PageTitle("Tables Assignment")
 @Route(value = "tables-assignment", layout = MainLayout.class)
-@RolesAllowed("ROLE_USER_KT")
+@RolesAllowed("ROLE_USER_ST")
 public class RestaurantTablesAssignView extends VerticalLayout {
 
     RestaurantTableService restaurantTable;
@@ -60,11 +60,13 @@ public class RestaurantTablesAssignView extends VerticalLayout {
 
     private void configureGrid() {
         grid.addClassNames("tables-grid");
-        grid.setSizeFull();
+        grid.setWidthFull();
         grid.setAllRowsVisible(true);
+        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
         getThemeList().add("spacing-xs");
-        grid.addColumn(RestaurantTable::getTableId).setHeader("Table No").setWidth("5em");
-        grid.addColumn(RestaurantTable::getDescription).setHeader("Description").setWidth("28em");
+
+        grid.addColumn(RestaurantTable::getTableId).setHeader("Table No").setAutoWidth(true).setFlexGrow(0);
+        grid.addColumn(RestaurantTable::getDescription).setHeader("Description");
         grid.addColumn(table -> {
                 String assigned = getAssignedEmployee(table);
                 if (assigned != null && !assigned.trim().isEmpty())
@@ -72,8 +74,7 @@ public class RestaurantTablesAssignView extends VerticalLayout {
 
                 return "Not Assigned";
             }).setHeader("Assigned to")
-              .setWidth("5em")
-              .setTextAlign(ColumnTextAlign.END);
+              .setAutoWidth(true).setFlexGrow(0);
 
 
         grid.addColumn(
@@ -87,7 +88,7 @@ public class RestaurantTablesAssignView extends VerticalLayout {
 
                     String assigned = getAssignedEmployee(table);
                     button.setEnabled(assigned == null || assigned.trim().isEmpty());
-                })).setWidth("5em").setTextAlign(ColumnTextAlign.END);
+                })).setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, table) -> {
                     button.setText("Remove Assignment");
@@ -102,10 +103,7 @@ public class RestaurantTablesAssignView extends VerticalLayout {
                     button.setEnabled(assigned != null
                             && !assigned.trim().isEmpty()
                             && Objects.equals(assigned, employee.getFirstName() + " " + employee.getLastName()));
-                })).setWidth("5em").setTextAlign(ColumnTextAlign.END);
-
-
-        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
+                })).setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
     }
 
     private void createTableRelation (RestaurantTable table) {

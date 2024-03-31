@@ -47,12 +47,13 @@ public class RestaurantTablesConfigurationView extends VerticalLayout {
         grid.addClassNames("tables-grid");
         grid.setSizeFull();
         grid.setAllRowsVisible(true);
+        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
 
-        grid.addColumn(RestaurantTable::getTableNo).setHeader("Table No").setWidth("5em");
-        grid.addColumn(RestaurantTable::getDescription).setHeader("Description").setWidth("30em");
+        grid.addColumn(RestaurantTable::getTableNo).setHeader("Table No").setAutoWidth(true).setFlexGrow(0);
+        grid.addColumn(RestaurantTable::getDescription).setHeader("Description");
         grid.addColumn(table ->
                 (table.getQrCode() != null && !table.getQrCode().trim().isEmpty())
-                        ? "Generated" : "Not Generated").setHeader("QR Code").setWidth("5em").setTextAlign(ColumnTextAlign.END);
+                        ? "Generated" : "Not Generated").setHeader("QR Code").setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, table) -> {
                     button.addThemeVariants(ButtonVariant.LUMO_ICON,
@@ -61,9 +62,7 @@ public class RestaurantTablesConfigurationView extends VerticalLayout {
                     button.addClickListener(e ->
                             createTable(table));
                     button.setIcon(new Icon(VaadinIcon.EDIT));
-            })).setHeader("")
-               .setWidth("2em")
-               .setTextAlign(ColumnTextAlign.END);
+            })).setHeader("").setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, table) -> {
                     button.addThemeVariants(ButtonVariant.LUMO_ICON,
@@ -73,11 +72,7 @@ public class RestaurantTablesConfigurationView extends VerticalLayout {
                     button.setIcon(new Icon(VaadinIcon.TRASH));
                     button.addClickListener(e ->
                             deleteTable(table));
-            })).setHeader("")
-               .setWidth("2em")
-               .setTextAlign(ColumnTextAlign.END);
-
-        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
+            })).setHeader("").setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
     }
 
     private HorizontalLayout getToolbar() {

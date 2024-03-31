@@ -92,7 +92,7 @@ CREATE TABLE TABLE_EMPLOYEE_RELATION (
 CREATE TABLE ORDERS (
   order_no int NOT NULL primary key,
   table_relation_id int,
-  ordered_on date,
+  ordered_on DATETIME,
   status varchar(50),
   payment_way varchar(50),
   constraint fk_table_rel_order foreign key(table_relation_id) references TABLE_EMPLOYEE_RELATION(id),
@@ -105,7 +105,7 @@ CREATE TABLE ORDER_DETAILS (
   order_no int,
   item_id int,
   quantity int,
-  comment varchar(500),
+  comment varchar(4000),
   status varchar(50),
   constraint fk_order_menu_item foreign key(item_id) references menu_item(item_id),
   constraint fk_order_detail_status foreign key(status) references ht_order_status(id),

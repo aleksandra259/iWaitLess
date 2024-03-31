@@ -7,6 +7,7 @@ import com.iwaitless.application.services.RestaurantTableService;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
+import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 @PageTitle("iWaitLess | Menu")
@@ -41,6 +42,7 @@ public class MenuCatalogueView extends VerticalLayout implements HasUrlParameter
         }
 
         String tableNo = MenuPreviewLayout.getTableNo(parameter);
+        VaadinSession.getCurrent().setAttribute("tableNo", tableNo);
         if (!tableNo.isEmpty()) {
             table = restaurantTable.findTableByTableNo(tableNo);
             menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable,

@@ -21,6 +21,13 @@ public class MenuItemService {
     public List<MenuItems> findAllItems() {
         return menuItemRepository.findAll();
     }
+
+    public List<MenuItems> findAvailableItems() {
+        return menuItemRepository.findAll()
+                    .stream()
+                    .filter(MenuItems::isAvailable)
+                    .collect(Collectors.toList());
+    }
     public MenuItems findItemById(Long itemId) {
         return menuItemRepository.findById(itemId).orElse(null);
     }

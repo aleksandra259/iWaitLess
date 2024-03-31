@@ -9,6 +9,7 @@ import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
@@ -97,8 +98,9 @@ public class MenuItemsView extends VerticalLayout {
 
     private void configureGrid() {
         grid.addClassNames("menu-item-grid");
-        grid.setSizeFull();
+        grid.setWidthFull();
         grid.setAllRowsVisible(true);
+        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
         getThemeList().add("spacing-xs");
 
         grid.addComponentColumn(item -> {
@@ -107,11 +109,11 @@ public class MenuItemsView extends VerticalLayout {
             image.setHeight(80, Unit.PIXELS);
 
             return image;
-        }).setWidth("8.5em").setFlexGrow(0);
-        grid.addColumn(createItemRenderer()).setWidth("13em");
-        grid.addColumn(item -> item.getPrice() + " " + item.getCurrency()).setWidth("2.5em");
-        grid.addColumn(item -> item.getSize() + " gram").setWidth("2.5em");
-        grid.addColumn(item -> item.isAvailable() ? "Available" : "Not Available").setWidth("4em");
+        }).setAutoWidth(true).setFlexGrow(0);
+        grid.addColumn(createItemRenderer());
+        grid.addColumn(item -> item.getPrice() + " " + item.getCurrency());
+        grid.addColumn(item -> item.getSize() + " gram");
+        grid.addColumn(item -> item.isAvailable() ? "Available" : "Not Available");
 
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, item) -> {
@@ -121,7 +123,7 @@ public class MenuItemsView extends VerticalLayout {
                     button.addClickListener(e ->
                             createMenuItem(item));
                     button.setIcon(new Icon(VaadinIcon.EDIT));
-                })).setWidth("1em");
+                })).setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, item) -> {
                     button.addThemeVariants(ButtonVariant.LUMO_ICON,
@@ -131,9 +133,7 @@ public class MenuItemsView extends VerticalLayout {
                     button.setIcon(new Icon(VaadinIcon.TRASH));
                     button.addClickListener(e ->
                         deleteMenuItem(item));
-                })).setWidth("1em");
-
-        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
+                })).setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
     }
 
     private static Renderer<MenuItems> createItemRenderer() {

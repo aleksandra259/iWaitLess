@@ -8,6 +8,7 @@ import com.iwaitless.application.views.forms.EmployeeForm;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
@@ -47,7 +48,9 @@ public class ListStaffView extends VerticalLayout {
 
     private void configureGrid() {
         grid.addClassNames("staff-grid");
-        grid.setSizeFull();
+        grid.setWidthFull();
+        grid.setAllRowsVisible(true);
+        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
 
         grid.addColumn(createEmployeeRenderer()).setHeader("Employee");
         grid.addColumns("email", "phone", "address");
@@ -72,7 +75,7 @@ public class ListStaffView extends VerticalLayout {
                     button.addClickListener(e ->
                             createEmployee(employee));
                     button.setIcon(new Icon(VaadinIcon.EDIT));
-                })).setWidth("1em");
+                })).setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, employee) -> {
                     button.addThemeVariants(ButtonVariant.LUMO_ICON,
@@ -82,10 +85,8 @@ public class ListStaffView extends VerticalLayout {
                     button.setIcon(new Icon(VaadinIcon.TRASH));
                     button.addClickListener(e ->
                             deleteEmployee(employee));
-                })).setWidth("1em");
+                })).setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
 
-        grid.getColumns().forEach(col -> col.setAutoWidth(true));
-        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
     }
 
     private static Renderer<Staff> createEmployeeRenderer() {

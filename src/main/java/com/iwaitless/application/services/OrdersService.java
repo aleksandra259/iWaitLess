@@ -2,6 +2,7 @@ package com.iwaitless.application.services;
 
 import com.iwaitless.application.persistence.entity.Orders;
 import com.iwaitless.application.persistence.repository.OrdersRepository;
+import com.vaadin.flow.component.UI;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -36,8 +37,9 @@ public class OrdersService {
             return;
         }
         ordersRepository.save(order);
+
+        UI.getCurrent().getPage().executeJs("window.notifyUpdate = function() {"
+                + "com.iwaitless.application.views.OrderStatusView.notifyProgressBarUpdate();"
+                + "};");
     }
-
-
-
 }
