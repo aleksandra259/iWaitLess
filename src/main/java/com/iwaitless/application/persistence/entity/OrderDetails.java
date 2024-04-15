@@ -1,9 +1,11 @@
 package com.iwaitless.application.persistence.entity;
 
-import com.iwaitless.application.persistence.entity.nomenclatures.OrderStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 @Table(name = "ORDER_DETAILS")
@@ -34,8 +36,4 @@ public class OrderDetails {
 
     @Column(name = "COMMENT")
     private String comment;
-
-    @ManyToOne
-    @JoinColumn(name = "STATUS", referencedColumnName = "ID")
-    private OrderStatus status;
 }

@@ -46,7 +46,6 @@ public class RestaurantTablesConfigurationView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassNames("tables-grid");
         grid.setSizeFull();
-        grid.setAllRowsVisible(true);
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
 
         grid.addColumn(RestaurantTable::getTableNo).setHeader("Table No").setAutoWidth(true).setFlexGrow(0);

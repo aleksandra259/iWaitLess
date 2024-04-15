@@ -6,9 +6,7 @@ import com.iwaitless.application.services.MenuCategoryService;
 import com.iwaitless.application.services.MenuItemService;
 import com.iwaitless.application.services.OrdersService;
 import com.iwaitless.application.services.RestaurantTableService;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.NativeLabel;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.component.progressbar.ProgressBarVariant;
@@ -16,20 +14,16 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-import com.vaadin.flow.shared.Registration;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
-import java.util.Timer;
 
 @PageTitle("iWaitLess | Order Status")
 @Route("order-status")
 @AnonymousAllowed
 public class OrderStatusView extends VerticalLayout {
-    private final MenuCategoryService menuCategory;
-    private final MenuItemService menuItem;
-    private final RestaurantTableService restaurantTable;
     private final OrdersService ordersService;
     String tableNo;
     RestaurantTable table;
@@ -38,8 +32,6 @@ public class OrderStatusView extends VerticalLayout {
     VerticalLayout orderStatusLayout = new VerticalLayout();
     HashMap<ProgressBar, Integer> progressBarList = new HashMap<>();
 
-    private Timer timer;
-    private Registration timerRegistration;
     Long orderNo;
     Orders order;
 
@@ -47,9 +39,6 @@ public class OrderStatusView extends VerticalLayout {
                            MenuItemService menuItem,
                            RestaurantTableService restaurantTable,
                            OrdersService ordersService) {
-        this.menuCategory = menuCategory;
-        this.menuItem = menuItem;
-        this.restaurantTable = restaurantTable;
         this.ordersService = ordersService;
 
         orderNo = (Long)vaadinSession.getAttribute("orderNo");
@@ -57,16 +46,32 @@ public class OrderStatusView extends VerticalLayout {
         if (tableNo != null)
             table = restaurantTable.findTableByTableNo(tableNo);
 
-        H2 header = new H2("Order #" + orderNo + " tracker");
-        orderStatusLayout.add(createOrderStatusComponent("Order Received"));
-        orderStatusLayout.add(createOrderStatusComponent("Order Accepted"));
-        orderStatusLayout.add(createOrderStatusComponent("Preparing"));
-        orderStatusLayout.add(createOrderStatusComponent("Quality Check"));
-        orderStatusLayout.add(createOrderStatusComponent("Ready to be served"));
+        if (orderNo != null) {
+            H2 header = new H2("Order #" + orderNo + " tracker");
+            orderStatusLayout.add(createOrderStatusComponent("Order Received"));
+            orderStatusLayout.add(createOrderStatusComponent("Order Accepted"));
+            orderStatusLayout.add(createOrderStatusComponent("Preparing"));
+            orderStatusLayout.add(createOrderStatusComponent("Quality Check"));
+            orderStatusLayout.add(createOrderStatusComponent("Ready to be served"));
 
-        notifyProgressBarUpdate();
+            notifyProgressBarUpdate();
 
-        add(header, orderStatusLayout, new MenuPreviewLayout(menuCategory, menuItem, table));
+            add(setMenuLayout(), header, orderStatusLayout,
+                new MenuPreviewLayout(menuCategory, menuItem, table));
+        } else {
+            H3 header = new H3("No orders found");
+            Span emptyOrder = new Span("Looks like you have not made any order yet. "
+                    + "Add something to the cart and finalize your order to see its status.");
+            emptyOrder.getStyle().set("font-size", "18px");
+            emptyOrder.getStyle().set("text-align", "center");
+
+            Image emptyOrderImage = new Image("images/no-order-made.png", "No data available");
+            emptyOrderImage.setWidth("100%");
+
+            add(setMenuLayout(),
+                new VerticalLayout(new H1("^"), header, emptyOrderImage, emptyOrder),
+                new MenuPreviewLayout(menuCategory, menuItem, table));
+        }
     }
 
     private Div createOrderStatusComponent(String status) {
@@ -106,6 +111,20 @@ public class OrderStatusView extends VerticalLayout {
         }
 
         updateProgressBarValues(status);
+    }
+
+    private VerticalLayout setMenuLayout () {
+        VerticalLayout menuLayout = new VerticalLayout();
+        menuLayout.setWidthFull();
+        H1 title = new H1("iWaitLess | Order status");
+        title.getStyle().set("font-size", "var(--lumo-font-size-xl)")
+                .set("margin", "var(--lumo-space-xs) var(--lumo-space-xs)")
+                .set("padding", "var(--lumo-space-xs) var(--lumo-space-xs)");
+        menuLayout.add(title);
+        menuLayout.addClassName("fixed-menu-bar");
+        menuLayout.addClassNames(LumoUtility.Background.CONTRAST_5);
+
+        return menuLayout;
     }
 
     private int getOrderStatusValue (String status) {

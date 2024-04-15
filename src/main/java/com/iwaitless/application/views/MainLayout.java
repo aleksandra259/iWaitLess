@@ -2,6 +2,7 @@ package com.iwaitless.application.views;
 
 import com.iwaitless.application.authentication.SecurityService;
 import com.iwaitless.application.views.list.ListStaffView;
+import com.iwaitless.application.views.list.OrdersView;
 import com.iwaitless.application.views.list.RestaurantTablesAssignView;
 import com.iwaitless.application.views.list.RestaurantTablesConfigurationView;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -61,16 +62,19 @@ public class MainLayout extends AppLayout {
                     new RouterLink("Home Page", HomePageView.class),
                     new RouterLink("Staff List", ListStaffView.class),
                     new RouterLink("Menu Configuration", MenuConfigurationView.class),
-                    new RouterLink("Tables Configuration", RestaurantTablesConfigurationView.class)
+                    new RouterLink("Tables Configuration", RestaurantTablesConfigurationView.class),
+                    new RouterLink("Orders", OrdersView.class)
             ));
         } else if (authorities.contains("ROLE_USER_ST")) {
             addToDrawer(new VerticalLayout(
                     new RouterLink("Home Page", HomePageView.class),
-                    new RouterLink("Tables Assignment", RestaurantTablesAssignView.class)
+                    new RouterLink("Tables Assignment", RestaurantTablesAssignView.class),
+                    new RouterLink("Orders", OrdersView.class)
             ));
         } else if (authorities.contains("ROLE_USER_KT")) {
             addToDrawer(new VerticalLayout(
-                    new RouterLink("Home Page", HomePageView.class)
+                    new RouterLink("Home Page", HomePageView.class),
+                    new RouterLink("Orders", OrdersView.class)
             ));
         }
     }

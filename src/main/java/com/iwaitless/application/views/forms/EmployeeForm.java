@@ -87,9 +87,10 @@ public class EmployeeForm extends FormLayout {
 
     private void createButtonsLayout() {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
         cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        delete.getStyle().set("margin-inline-end", "auto");
 
         save.addClickShortcut(Key.ENTER);
         cancel.addClickShortcut(Key.ESCAPE);
@@ -106,9 +107,6 @@ public class EmployeeForm extends FormLayout {
         });
 
         binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
-
-        delete.getStyle().set("margin-inline-end", "auto");
-        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         HorizontalLayout buttonLayout = new HorizontalLayout(save, delete, cancel);
         buttonLayout.getStyle().set("flex-wrap", "wrap");

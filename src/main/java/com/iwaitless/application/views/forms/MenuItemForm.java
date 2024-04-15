@@ -94,8 +94,7 @@ public class MenuItemForm extends FormLayout {
         dialog.getFooter().add(cancel);
         dialog.getFooter().add(save);
 
-        HorizontalLayout dialogHeader = new HorizontalLayout();
-        dialogHeader.add(close);
+        HorizontalLayout dialogHeader = new HorizontalLayout(close);
         dialogHeader.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
         dialogHeader.setWidthFull();
         dialog.getHeader().add(dialogHeader);
@@ -126,8 +125,6 @@ public class MenuItemForm extends FormLayout {
         });
 
         binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
-
-        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         HorizontalLayout buttonLayout = new HorizontalLayout(save, cancel);
         buttonLayout.getStyle().set("flex-wrap", "wrap");

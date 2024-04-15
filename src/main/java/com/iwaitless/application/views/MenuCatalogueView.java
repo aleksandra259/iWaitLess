@@ -45,6 +45,11 @@ public class MenuCatalogueView extends VerticalLayout implements HasUrlParameter
         VaadinSession.getCurrent().setAttribute("tableNo", tableNo);
         if (!tableNo.isEmpty()) {
             table = restaurantTable.findTableByTableNo(tableNo);
+
+            VaadinSession vaadinSession = VaadinSession.getCurrent();
+            vaadinSession.setAttribute("consistFilter", "");
+            vaadinSession.setAttribute("notConsistFilter", "");
+
             menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable,
                         table, true, false, false);
             content.add(new MenuPreviewLayout(menuCategory, menuItem, table));

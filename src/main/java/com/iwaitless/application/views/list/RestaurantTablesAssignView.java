@@ -61,7 +61,6 @@ public class RestaurantTablesAssignView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassNames("tables-grid");
         grid.setWidthFull();
-        grid.setAllRowsVisible(true);
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
         getThemeList().add("spacing-xs");
 

@@ -207,7 +207,7 @@ public class MenuItemsView extends VerticalLayout {
             }
         }
 
-        return new Image("images/picture-not-available.jpg", "");
+        return new Image("images/picture-not-available.png", "");
     }
 
     private static Image getImage(MenuItems item, File currentFile) {

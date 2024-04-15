@@ -66,7 +66,6 @@ public class CreateOrder {
                 orderDetails.setItemId(menuItem.findItemById(item.getItemId()));
                 orderDetails.setQuantity(item.getQuantity());
                 orderDetails.setComment(item.getComment());
-                orderDetails.setStatus(orderStatusService.findStatusById("C"));
 
                 orderDetailsService.saveOrderDetail(orderDetails);
             }

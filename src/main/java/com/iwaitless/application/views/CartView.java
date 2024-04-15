@@ -12,10 +12,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.OrderedList;
-import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -50,7 +47,7 @@ public class CartView extends VerticalLayout {
 
     Span totalAmountLabel = new Span();
     Span totalTimeToProcess = new Span();
-    H2 header = new H2();
+    H3 header = new H3();
     List<MenuItemsOrder> cartItems;
     RestaurantTable table = new RestaurantTable();
     Button finalizeOrderButton = new Button("Finalize Order");
@@ -138,24 +135,27 @@ public class CartView extends VerticalLayout {
     private void updateContent() {
         if (cartItems == null || cartItems.isEmpty()) {
             removeAll();
-            add(header, createEmptyStateComponent(), new MenuPreviewLayout(menuCategory, menuItem, table));
+            add(setMenuLayout(), new H1("^"), header, createEmptyStateComponent(),
+                    new MenuPreviewLayout(menuCategory, menuItem, table));
         } else {
             removeAll();
             configureGrid();
 
-            add(header, grid, totalTimeToProcess, totalAmountLabel, finalizeOrderButton,
-                    suggestedItems, new MenuPreviewLayout(menuCategory, menuItem, table));
+            add(setMenuLayout(), new H1("^"), header, grid, totalTimeToProcess,
+                    totalAmountLabel, finalizeOrderButton, suggestedItems,
+                    new MenuPreviewLayout(menuCategory, menuItem, table));
         }
     }
 
     private Component createEmptyStateComponent() {
         Span emptyCart = new Span("The cart is empty. Add something to make an order.");
-        emptyCart.getStyle().set("font-size", "17px");
+        emptyCart.getStyle().set("font-size", "18px");
+        emptyCart.getStyle().set("text-align", "center");
 
         Image emptyStateImage = new Image("images/cart-is-empty.png", "No data available");
         emptyStateImage.setWidth("100%");
 
-        return new VerticalLayout(emptyCart, emptyStateImage);
+        return new VerticalLayout(emptyStateImage, emptyCart);
     }
 
     private void configureGrid() {
@@ -168,7 +168,6 @@ public class CartView extends VerticalLayout {
 
         grid.addClassName("cart-items-grid");
         grid.setWidthFull();
-        grid.setAllRowsVisible(true);
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
 
         grid.addColumn(createItemRenderer());
@@ -209,6 +208,20 @@ public class CartView extends VerticalLayout {
 
     }
 
+    private VerticalLayout setMenuLayout () {
+        VerticalLayout menuLayout = new VerticalLayout();
+        menuLayout.setWidthFull();
+        H1 title = new H1("iWaitLess | Cart");
+        title.getStyle().set("font-size", "var(--lumo-font-size-xl)")
+                .set("margin", "var(--lumo-space-xs) var(--lumo-space-xs)")
+                .set("padding", "var(--lumo-space-xs) var(--lumo-space-xs)");
+        menuLayout.add(title);
+        menuLayout.addClassName("fixed-menu-bar");
+        menuLayout.addClassNames(LumoUtility.Background.CONTRAST_5);
+
+        return menuLayout;
+    }
+
     private void finalizeOrder() {
         Dialog dialog = new Dialog();
 
@@ -221,7 +234,7 @@ public class CartView extends VerticalLayout {
         finalizeButton.getStyle().set("margin-right", "auto");
         dialog.getFooter().add(finalizeButton);
         finalizeButton.addClickListener(e -> {
-            CreateOrder createOrder = new CreateOrder(ordersService, orderDetailsService, menuItem,
+            new CreateOrder(ordersService, orderDetailsService, menuItem,
                     tableEmployeeRelation, orderStatusService, table);
             getUI().ifPresent(ui -> ui.navigate(OrderStatusView.class));
         });

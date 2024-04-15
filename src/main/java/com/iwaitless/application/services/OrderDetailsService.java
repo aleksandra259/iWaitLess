@@ -2,10 +2,12 @@ package com.iwaitless.application.services;
 
 import com.iwaitless.application.persistence.entity.MenuItems;
 import com.iwaitless.application.persistence.entity.OrderDetails;
+import com.iwaitless.application.persistence.repository.MenuItemRepository;
 import com.iwaitless.application.persistence.repository.OrderDetailsRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +31,7 @@ public class OrderDetailsService {
 
         for (OrderDetails orderDetails : orderDetailsList) {
             List<OrderDetails> orderItems =
-                    this.getOrderDetailsByOrderNo(orderDetails.getOrderNo().getOrderNo());
+                    this.findOrderDetailsByOrderNo(orderDetails.getOrderNo().getOrderNo());
 
             for (OrderDetails orderItem : orderItems) {
                 MenuItems orderedItem = orderItem.getItemId();
@@ -48,7 +50,7 @@ public class OrderDetailsService {
 
         for (OrderDetails orderDetails : orderDetailsList) {
             List<OrderDetails> orderItems =
-                    this.getOrderDetailsByOrderNo(orderDetails.getOrderNo().getOrderNo());
+                    this.findOrderDetailsByOrderNo(orderDetails.getOrderNo().getOrderNo());
 
             for (OrderDetails orderItem : orderItems)
                 menuItems.add(orderItem.getItemId());
@@ -57,11 +59,28 @@ public class OrderDetailsService {
         return menuItems;
     }
 
+    public String getPriceByOrder (Long orderNo) {
+        BigDecimal sum = BigDecimal.ZERO;
+        String currency = "EUR";
+        List<OrderDetails> orderDetails = orderDetailsRepository.findByOrderNo_OrderNo(orderNo);
+
+        for (OrderDetails orderDetail : orderDetails) {
+            BigDecimal quantity = BigDecimal.valueOf(orderDetail.getQuantity());
+            BigDecimal price = BigDecimal.valueOf(orderDetail.getItemId().getPrice());
+            BigDecimal subtotal = quantity.multiply(price);
+
+            sum = sum.add(subtotal);
+            currency = orderDetail.getItemId().getCurrency().getCurrencyCode();
+        }
+        
+        return sum + " " + currency;
+    }
+
     public void saveOrderDetail(OrderDetails orderDetail) {
         orderDetailsRepository.save(orderDetail);
     }
 
-    public List<OrderDetails> getOrderDetailsByOrderNo(Long orderNo) {
+    public List<OrderDetails> findOrderDetailsByOrderNo(Long orderNo) {
         return orderDetailsRepository.findByOrderNo_OrderNo(orderNo);
     }
 

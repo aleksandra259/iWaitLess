@@ -103,3 +103,30 @@ a[highlight] {
 .personalize-menu-layout {
   margin-bottom: -3px;
 }
+
+.toolbar {
+  position: fixed;
+  top: 70px;
+  z-index: 1;
+  display: flex;
+}
+
+.tables-grid {
+  margin-top: 70px;
+  display: flex;
+  position: sticky;
+}
+
+.order-grid {
+  margin-top: 180px;
+  display: flex;
+  position: sticky;
+}
+
+vaadin-grid.orders-grid::part(done) {
+  background-color: var(--lumo-success-color-10pct);
+}
+
+vaadin-grid.orders-grid::part(cancelled) {
+  background-color: var(--lumo-error-color-10pct);
+}

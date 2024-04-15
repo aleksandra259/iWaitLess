@@ -108,9 +108,7 @@ CREATE TABLE ORDER_DETAILS (
   item_id int,
   quantity int,
   comment varchar(4000),
-  status varchar(50),
   constraint fk_order_menu_item foreign key(item_id) references menu_item(item_id),
-  constraint fk_order_detail_status foreign key(status) references ht_order_status(id),
   constraint fk_order_to_detail foreign key(order_no) references orders(order_no)
 );
 

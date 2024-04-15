@@ -93,7 +93,7 @@ public class MenuPreviewLayout extends AppLayout {
     private void setSubMenuData () {
         H3 orderHeader = new H3("Orders");
         H3 categoriesHeader = new H3("Categories");
-        H3 personalizeHeader = new H3("Personalize");
+        H3 personalizeHeader = new H3("Personalize menu");
         orderHeader.getStyle().set("margin-top", "30px");
         categoriesHeader.getStyle().set("margin-top", "30px");
         personalizeHeader.getStyle().set("margin-top", "30px");
