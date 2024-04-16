@@ -27,6 +27,8 @@ public class TableEmployeeRelationService {
         List<RestaurantTable> tables = new ArrayList<>();
 
         tableEmployeeRelationRepository.findAllByEmployeeId(employee)
+                .stream()
+                .filter(rel -> "A".equals(rel.getStatus()))
                 .forEach(rel -> {
                     tables.add(restaurantTableRepository
                             .findById(rel.getTableId().getTableId())
@@ -40,6 +42,7 @@ public class TableEmployeeRelationService {
         return tableEmployeeRelationRepository
                 .findAllByTableId(table)
                 .stream()
+                .filter(rel -> "A".equals(rel.getStatus()))
                 .findFirst()
                 .orElse(null);
     }
@@ -48,6 +51,7 @@ public class TableEmployeeRelationService {
         TableEmployeeRelation relation = tableEmployeeRelationRepository
                 .findAllByTableId(table)
                 .stream()
+                .filter(rel -> "A".equals(rel.getStatus()))
                 .findFirst()
                 .orElse(null);
 
@@ -62,8 +66,8 @@ public class TableEmployeeRelationService {
         tableEmployeeRelationRepository.save(table);
     }
 
-    public void deleteAssignTable(TableEmployeeRelation table) {
-        tableEmployeeRelationRepository.delete(table);
+    public void saveAssignTable(TableEmployeeRelation table) {
+        tableEmployeeRelationRepository.save(table);
     }
 
 

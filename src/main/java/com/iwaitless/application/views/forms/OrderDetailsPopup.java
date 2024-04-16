@@ -56,8 +56,8 @@ public class OrderDetailsPopup extends FormLayout {
 
         this.orderDetails = orderDetailService.findOrderDetailsByOrderNo(order.getOrderNo());
 
-        addClassName("menu-item-popup");
         getStyle().set("width", "30rem").set("max-width", "100%");
+        dialog.setWidth("30rem");
         addClassNames(LumoUtility.Background.CONTRAST_5, LumoUtility.Display.FLEX,
                 LumoUtility.AlignItems.START, LumoUtility.BorderRadius.NONE,
                 LumoUtility.Margin.NONE);
@@ -114,14 +114,12 @@ public class OrderDetailsPopup extends FormLayout {
             }
             case "6" -> {  // Order Status: Finalized
                 Span statusSpan = new Span("Order status: Finalized");
-                statusSpan.getElement().getStyle().set("margin", "auto");
+                statusSpan.setClassName("order-status-finalized");
                 dialog.getFooter().add(statusSpan);
             }
             case "-1" -> {  // Order Status: Cancelled
                 Span statusSpan = new Span("Order status: Cancelled");
-                statusSpan.getElement().getStyle().set("margin", "auto");
-                statusSpan.getStyle().set("color", "red")
-                        .set("font-weight", "bold");
+                statusSpan.setClassName("order-status-cancelled");
                 dialog.getFooter().add(statusSpan);
             }
             default -> {  // Order status: dropdown menu to update status, Cancel order
@@ -179,8 +177,8 @@ public class OrderDetailsPopup extends FormLayout {
                 .setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
 
 
-        Span totalAmountLabel = new Span("Total amount to pay: " + getTotalPrice());
-        totalAmountLabel.getStyle().set("text-align", "right");
+        Paragraph totalAmountLabel = new Paragraph("Total price: " + getTotalPrice());
+        totalAmountLabel.setClassName("total-amount-text");
 
         dialog.add(description, gridDetails, totalAmountLabel);
     }

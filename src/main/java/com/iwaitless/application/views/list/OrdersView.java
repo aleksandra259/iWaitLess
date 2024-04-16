@@ -18,16 +18,19 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@PageTitle("Orders")
 @Route(value = "orders", layout = MainLayout.class)
 @AnonymousAllowed
 public class OrdersView extends VerticalLayout {
@@ -36,12 +39,12 @@ public class OrdersView extends VerticalLayout {
     CheckboxGroup<String> tableFilter = new CheckboxGroup<>();
     Checkbox myOrders = new Checkbox();
 
-    OrdersService service;
-    OrderStatusService statusService;
-    OrderDetailsService detailsService;
-    RestaurantTableService tableService;
-    TableEmployeeRelationService tableEmployeeService;
-    StaffService staffService;
+    private final OrdersService service;
+    private final OrderStatusService statusService;
+    private final OrderDetailsService detailsService;
+    private final RestaurantTableService tableService;
+    private final TableEmployeeRelationService tableEmployeeService;
+    private final StaffService staffService;
 
     public OrdersView(OrdersService service,
                       OrderDetailsService detailsService,
@@ -87,11 +90,12 @@ public class OrdersView extends VerticalLayout {
                 .setHeader("Total price")
                 .setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(order -> {
-                    SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+                    SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
                     return formatter.format(order.getOrderedOn());
                 })
                 .setHeader("Ordered On").setSortable(true)
-                .setComparator(Orders::getOrderedOn)
+                .setSortable(true)
+                .setComparator(Comparator.comparing(Orders::getOrderedOn).reversed())
                 .setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(order -> order.getStatus().getName())
                 .setHeader("Status").setSortable(true)
@@ -112,10 +116,23 @@ public class OrdersView extends VerticalLayout {
                                 + "    <span> ${item.name} </span>"
                                 + "    <span style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">"
                                 + "      ${item.table}" + "    </span>"
+                                + "    <span style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">"
+                                + "      ${item.assignee}" + "    </span>"
                                 + "  </vaadin-vertical-layout>"
                                 + "</vaadin-horizontal-layout>")
                 .withProperty("name", e -> "Order #" + e.getOrderNo())
-                .withProperty("table", e -> "for table: " + e.getTableRelationId().getTableId().getTableNo());
+                .withProperty("table", e -> "for table: " + e.getTableRelationId().getTableId().getTableNo())
+                .withProperty("assignee", e -> {
+                    if (e.getTableRelationId().getEmployeeId().getEmployeeId() != 999999L) {
+                        String firstName = e.getTableRelationId().getEmployeeId().getFirstName();
+                        String lastName = e.getTableRelationId().getEmployeeId().getLastName();
+
+                        if (firstName != null && !firstName.isEmpty())
+                            return "(assigned to " + firstName + " " + lastName + ")";
+                    }
+
+                    return "(table not assigned)";
+                });
     }
 
     private VerticalLayout getToolbar() {

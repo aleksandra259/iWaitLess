@@ -48,6 +48,7 @@ public class OrderStatusView extends VerticalLayout {
 
         if (orderNo != null) {
             H2 header = new H2("Order #" + orderNo + " tracker");
+            header.addClassName("tables-grid");
             orderStatusLayout.add(createOrderStatusComponent("Order Received"));
             orderStatusLayout.add(createOrderStatusComponent("Order Accepted"));
             orderStatusLayout.add(createOrderStatusComponent("Preparing"));

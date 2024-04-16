@@ -23,7 +23,6 @@ public class Orders {
     @Column(name = "ORDER_NO", updatable = false, nullable = false, insertable = false, unique = true)
     private Long orderNo;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "TABLE_RELATION_ID")
     private TableEmployeeRelation tableRelationId;

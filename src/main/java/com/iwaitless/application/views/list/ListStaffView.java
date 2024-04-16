@@ -25,6 +25,7 @@ import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
 
 import java.text.SimpleDateFormat;
+import java.util.stream.Collectors;
 
 @PageTitle("Staff List")
 @Route(value="staff", layout = MainLayout.class)
@@ -49,16 +50,19 @@ public class ListStaffView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassNames("staff-grid");
         grid.setWidthFull();
-        grid.setAllRowsVisible(true);
+        grid.setSizeFull();
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
 
         grid.addColumn(createEmployeeRenderer()).setHeader("Employee");
-        grid.addColumns("email", "phone", "address");
+        grid.addColumn(Staff::getEmail).setHeader("Email").setAutoWidth(true).setFlexGrow(0);
+        grid.addColumn(Staff::getPhone).setHeader("Phone").setAutoWidth(true).setFlexGrow(0);
+        grid.addColumn(Staff::getAddress).setHeader("Address").setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(employee -> {
                     SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
                     return formatter.format(employee.getBirthdate());
                 })
-                .setHeader("Birthdate");
+                .setHeader("Birthdate")
+                .setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(employee -> {
                     UserStaffRelation user = service.finsUserByEmployeeId(employee.getEmployeeId());
                     if (user != null)
@@ -66,7 +70,8 @@ public class ListStaffView extends VerticalLayout {
 
                     return null;
                 })
-                .setHeader("Username");
+                .setHeader("Username")
+                .setAutoWidth(true).setFlexGrow(0);;
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, employee) -> {
                     button.addThemeVariants(ButtonVariant.LUMO_ICON,
@@ -118,7 +123,10 @@ public class ListStaffView extends VerticalLayout {
     }
 
     private void setEmployeeData() {
-        grid.setItems(service.findAllEmployees(filterText.getValue()));
+        grid.setItems(service.findAllEmployees(filterText.getValue())
+                .stream()
+                .filter(e -> e.getEmployeeId() != 999999L)
+                .collect(Collectors.toList()));
     }
 
     private void createEmployee(Staff staff) {

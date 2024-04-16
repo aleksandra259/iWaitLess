@@ -83,7 +83,7 @@ public class RestaurantTablesAssignView extends VerticalLayout {
                     button.setText("Assign to me");
                     button.getElement().setAttribute("aria-label", "Assign to me");
                     button.addClickListener(e ->
-                            createTableRelation(table));
+                            createTableRelation(table, staffService.findEmployeeByUsername(username)));
 
                     String assigned = getAssignedEmployee(table);
                     button.setEnabled(assigned == null || assigned.trim().isEmpty());
@@ -94,8 +94,11 @@ public class RestaurantTablesAssignView extends VerticalLayout {
                     button.addThemeVariants(ButtonVariant.LUMO_PRIMARY,
                         ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_SMALL);
                     button.getElement().setAttribute("aria-label", "Remove my Assignment");
-                    button.addClickListener(e ->
-                            deleteTableRelation(table));
+                    button.addClickListener(e -> {
+                            Staff staff = new Staff();
+                            staff.setEmployeeId(999999L);
+                            createTableRelation(table, staff);
+                    });
 
                     String assigned = getAssignedEmployee(table);
                     Staff employee = staffService.findEmployeeByUsername(username);
@@ -105,17 +108,17 @@ public class RestaurantTablesAssignView extends VerticalLayout {
                 })).setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
     }
 
-    private void createTableRelation (RestaurantTable table) {
-        TableEmployeeRelation relation = new TableEmployeeRelation();
+    private void createTableRelation (RestaurantTable table, Staff employee) {
+        TableEmployeeRelation relation = tableRelationService.findTableRelationByTable(table);
+        relation.setStatus("D");
+        tableRelationService.saveAssignTable(relation);
+
+        relation = new TableEmployeeRelation();
         relation.setTableId(table);
-        relation.setEmployeeId(staffService.findEmployeeByUsername(username));
+        relation.setEmployeeId(employee);
+        relation.setStatus("A");
 
         tableRelationService.assignTable(relation);
-        setTablesData();
-    }
-
-    private void deleteTableRelation(RestaurantTable table) {
-        tableRelationService.deleteAssignTable(tableRelationService.findTableRelationByTable(table));
         setTablesData();
     }
 
@@ -141,13 +144,16 @@ public class RestaurantTablesAssignView extends VerticalLayout {
         List<RestaurantTable> assignedTables = tableRelationService
                 .findAllAssignedTables(staffService.findEmployeeByUsername(username));
 
-        assignedTables.forEach(this::deleteTableRelation);
+        Staff staff = new Staff();
+        staff.setEmployeeId(999999L);
+        assignedTables.forEach(table -> this.createTableRelation(table, staff));
     }
 
     private String getAssignedEmployee(RestaurantTable table) {
         Staff employee = tableRelationService.findAssignedTo(table);
         if (employee != null && employee.getEmployeeId() != null
-                && !employee.getEmployeeId().toString().trim().isEmpty())
+                && !employee.getEmployeeId().toString().trim().isEmpty()
+                && employee.getEmployeeId() != 999999L)
             return employee.getFirstName() + " " + employee.getLastName();
 
         return null;

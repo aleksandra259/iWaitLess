@@ -1,7 +1,10 @@
 package com.iwaitless.application.views.list;
 
 import com.iwaitless.application.persistence.entity.RestaurantTable;
+import com.iwaitless.application.persistence.entity.Staff;
+import com.iwaitless.application.persistence.entity.TableEmployeeRelation;
 import com.iwaitless.application.services.RestaurantTableService;
+import com.iwaitless.application.services.TableEmployeeRelationService;
 import com.iwaitless.application.views.MainLayout;
 import com.iwaitless.application.views.forms.TablesForm;
 import com.vaadin.flow.component.button.Button;
@@ -27,12 +30,15 @@ import jakarta.annotation.security.RolesAllowed;
 public class RestaurantTablesConfigurationView extends VerticalLayout {
 
     RestaurantTableService restaurantTable;
+    TableEmployeeRelationService tableRelationService;
     TextField filterText = new TextField();
     Grid<RestaurantTable> grid = new Grid<>(RestaurantTable.class, false);
     TablesForm form;
 
-    public RestaurantTablesConfigurationView(RestaurantTableService restaurantTable) {
+    public RestaurantTablesConfigurationView(RestaurantTableService restaurantTable,
+                                             TableEmployeeRelationService tableRelationService) {
         this.restaurantTable = restaurantTable;
+        this.tableRelationService = tableRelationService;
 
         addClassName("list-tables-view");
         setSizeFull();
@@ -96,6 +102,15 @@ public class RestaurantTablesConfigurationView extends VerticalLayout {
         form = new TablesForm(table);
         form.addSaveListener(this::saveTable);
         form.addCloseListener(e -> closeEditor());
+
+        Staff employee = new Staff();
+        employee.setEmployeeId(999999L);
+        TableEmployeeRelation relation = new TableEmployeeRelation();
+        relation.setTableId(table);
+        relation.setEmployeeId(employee);
+        relation.setStatus("A");
+
+        tableRelationService.assignTable(relation);
 
         setTablesData();
     }

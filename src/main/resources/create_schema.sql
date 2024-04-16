@@ -87,6 +87,7 @@ CREATE TABLE TABLE_EMPLOYEE_RELATION (
   id int NOT NULL primary key,
   table_id int,
   employee_id int,
+  status varchar(2),
   constraint fk_table_rel_employee foreign key(employee_id) references staff(employee_id),
   constraint fk_table_rel_table foreign key(table_id) references RESTAURANT_TABLE(table_id)
 );

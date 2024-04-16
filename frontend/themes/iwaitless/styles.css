@@ -111,7 +111,7 @@ a[highlight] {
   display: flex;
 }
 
-.tables-grid {
+.tables-grid, .staff-grid {
   margin-top: 70px;
   display: flex;
   position: sticky;
@@ -123,6 +123,23 @@ a[highlight] {
   position: sticky;
 }
 
+.order-status-finalized, .order-status-cancelled {
+  margin: auto;
+  font-weight: bold;
+  font-size: 17px;
+}
+.order-status-cancelled {
+  color: red;
+}
+.order-status-finalized {
+  color: green;
+}
+
+.total-amount-text {
+  text-align: right;
+  font-size: 18px;
+}
+
 vaadin-grid.orders-grid::part(done) {
   background-color: var(--lumo-success-color-10pct);
 }
@@ -130,3 +147,4 @@ vaadin-grid.orders-grid::part(done) {
 vaadin-grid.orders-grid::part(cancelled) {
   background-color: var(--lumo-error-color-10pct);
 }
+

@@ -29,4 +29,6 @@ public class TableEmployeeRelation {
     @JoinColumn(name = "EMPLOYEE_ID")
     @NotNull
     private Staff employeeId;
+
+    private String status;
 }
