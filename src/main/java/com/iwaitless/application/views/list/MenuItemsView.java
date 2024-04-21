@@ -111,7 +111,7 @@ public class MenuItemsView extends VerticalLayout {
             return image;
         }).setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(createItemRenderer());
-        grid.addColumn(item -> item.getPrice() + " " + item.getCurrency());
+        grid.addColumn(item -> String.format("%.2f", item.getPrice()) + " " + item.getCurrency());
         grid.addColumn(item -> item.getSize() + " gram");
         grid.addColumn(item -> item.isAvailable() ? "Available" : "Not Available");
 

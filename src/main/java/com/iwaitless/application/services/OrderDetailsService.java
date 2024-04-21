@@ -2,7 +2,6 @@ package com.iwaitless.application.services;
 
 import com.iwaitless.application.persistence.entity.MenuItems;
 import com.iwaitless.application.persistence.entity.OrderDetails;
-import com.iwaitless.application.persistence.repository.MenuItemRepository;
 import com.iwaitless.application.persistence.repository.OrderDetailsRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,7 +72,7 @@ public class OrderDetailsService {
             currency = orderDetail.getItemId().getCurrency().getCurrencyCode();
         }
         
-        return sum + " " + currency;
+        return String.format("%.2f", sum) + " " + currency;
     }
 
     public void saveOrderDetail(OrderDetails orderDetail) {

@@ -100,7 +100,7 @@ public class MenuItemPopup extends FormLayout {
 
         Button priceButton = new Button();
         priceButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        priceButton.setText(item.getPrice() + " " + item.getCurrency());
+        priceButton.setText(String.format("%.2f", item.getPrice()) + " " + item.getCurrency());
         priceButton.setWidth("30%");
         priceButton.getStyle().set("border-radius", "0px");
 

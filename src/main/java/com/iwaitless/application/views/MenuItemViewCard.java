@@ -41,7 +41,7 @@ public class MenuItemViewCard extends ListItem {
 
         Span price = new Span();
         price.getElement().setAttribute("theme", "price");
-        price.setText(item.getPrice() + " " + item.getCurrency());
+        price.setText(String.format("%.2f", item.getPrice()) + " " + item.getCurrency());
         price.addClassName("menu-item-card");
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();

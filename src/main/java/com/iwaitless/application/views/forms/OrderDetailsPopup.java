@@ -173,7 +173,8 @@ public class OrderDetailsPopup extends FormLayout {
         gridDetails.addColumn(createOrderDetailRenderer()).setHeader("Item");
         gridDetails.addColumn(e -> "Qty: " + e.getQuantity()).setHeader("Quantity")
                 .setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
-        gridDetails.addColumn(e -> e.getItemId().getPrice() + " " + e.getItemId().getCurrency()).setHeader("Price")
+        gridDetails.addColumn(e -> String.format("%.2f", e.getItemId().getPrice())
+                        + " " + e.getItemId().getCurrency()).setHeader("Price")
                 .setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
 
 
@@ -216,7 +217,7 @@ public class OrderDetailsPopup extends FormLayout {
                 currency = detail.getItemId().getCurrency().getCurrencyCode();
             }
 
-        return sum + " " + currency;
+        return String.format("%.2f", sum) + " " + currency;
     }
 
     // Events

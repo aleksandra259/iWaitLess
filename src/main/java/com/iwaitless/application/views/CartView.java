@@ -45,6 +45,7 @@ public class CartView extends VerticalLayout {
     TableEmployeeRelationService tableEmployeeRelation;
     OrderStatusService orderStatusService;
 
+
     Span totalAmountLabel = new Span();
     Span totalTimeToProcess = new Span();
     H3 header = new H3();
@@ -236,6 +237,7 @@ public class CartView extends VerticalLayout {
         finalizeButton.addClickListener(e -> {
             new CreateOrder(ordersService, orderDetailsService, menuItem,
                     tableEmployeeRelation, orderStatusService, table);
+
             getUI().ifPresent(ui -> ui.navigate(OrderStatusView.class));
         });
 
@@ -277,9 +279,7 @@ public class CartView extends VerticalLayout {
 
                 uniqueCommonItems.stream()
                         .limit(10)
-                        .forEach(item -> {
-                            imageContainer.add(new MenuItemViewCard(item, table));
-                        });
+                        .forEach(item -> imageContainer.add(new MenuItemViewCard(item, table)));
 
                 if (!uniqueCommonItems.isEmpty())
                     suggestedItems.add(new Span("You may also like:"), imageContainer);
@@ -320,7 +320,7 @@ public class CartView extends VerticalLayout {
                                 + "</vaadin-horizontal-layout>")
                 .withProperty("name", MenuItemsOrder::getName)
                 .withProperty("description", MenuItemsOrder::getDescription)
-                .withProperty("price", MenuItemsOrder::getPrice)
+                .withProperty("price", e -> String.format("%.2f", e.getPrice()))
                 .withProperty("currency", e -> e.getCurrency().getCurrencyCode());
     }
 }

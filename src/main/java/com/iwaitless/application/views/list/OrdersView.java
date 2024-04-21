@@ -11,10 +11,12 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridSortOrder;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.provider.SortDirection;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
@@ -25,7 +27,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.text.SimpleDateFormat;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -88,14 +89,12 @@ public class OrdersView extends VerticalLayout {
         grid.addColumn(createOrderRenderer()).setHeader("Order");
         grid.addColumn(order -> detailsService.getPriceByOrder(order.getOrderNo()))
                 .setHeader("Total price")
-                .setAutoWidth(true).setFlexGrow(0);
-        grid.addColumn(order -> {
+                .setAutoWidth(true);
+        Grid.Column<Orders> orderedOn = grid.addColumn(order -> {
                     SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
                     return formatter.format(order.getOrderedOn());
                 })
                 .setHeader("Ordered On").setSortable(true)
-                .setSortable(true)
-                .setComparator(Comparator.comparing(Orders::getOrderedOn).reversed())
                 .setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(order -> order.getStatus().getName())
                 .setHeader("Status").setSortable(true)
@@ -107,6 +106,9 @@ public class OrdersView extends VerticalLayout {
                     button.addClickListener(e ->
                         new OrderDetailsPopup(order, service, detailsService, statusService, grid));
                 })).setTextAlign(ColumnTextAlign.END);
+
+        GridSortOrder<Orders> order = new GridSortOrder<>(orderedOn, SortDirection.DESCENDING);
+        grid.sort(List.of(order));
     }
 
     private static Renderer<Orders> createOrderRenderer() {
@@ -176,9 +178,7 @@ public class OrdersView extends VerticalLayout {
                 .collect(Collectors.toSet());
 
         Button myTablesButton = new Button("Filter my tables");
-        myTablesButton.addClickListener(e -> {
-            tableFilter.select(myTables);
-        });
+        myTablesButton.addClickListener(e -> tableFilter.select(myTables));
 
         if (myTables.isEmpty())
             myTablesButton.setEnabled(false);
