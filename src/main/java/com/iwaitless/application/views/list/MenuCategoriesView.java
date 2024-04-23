@@ -4,7 +4,7 @@ import com.iwaitless.application.persistence.entity.MenuItems;
 import com.iwaitless.application.persistence.entity.nomenclatures.MenuCategory;
 import com.iwaitless.application.services.MenuCategoryService;
 import com.iwaitless.application.services.MenuItemService;
-import com.iwaitless.application.views.forms.MenuCategoryForm;
+import com.iwaitless.application.views.forms.MenuCategoryPopup;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -34,7 +34,7 @@ public class MenuCategoriesView extends VerticalLayout {
     Button newCategory = new Button();
 
     Grid<MenuCategory> grid = new Grid<>(MenuCategory.class, false);
-    MenuCategoryForm form;
+    MenuCategoryPopup form;
 
     public MenuCategoriesView(MenuCategoryService menuCategory,
                               MenuItemService menuItem,
@@ -77,14 +77,14 @@ public class MenuCategoriesView extends VerticalLayout {
     }
 
     private void createMenuCategory (MenuCategory category) {
-        form = new MenuCategoryForm(category);
+        form = new MenuCategoryPopup(category);
         form.addSaveListener(this::saveMenuCategory);
         form.addCloseListener(e -> closeEditor());
 
         setMenuCategoryData();
     }
 
-    private void saveMenuCategory(MenuCategoryForm.SaveEvent event) {
+    private void saveMenuCategory(MenuCategoryPopup.SaveEvent event) {
         menuCategory.saveCategory(event.getMenuCategory());
         setMenuCategoryData();
         closeEditor();

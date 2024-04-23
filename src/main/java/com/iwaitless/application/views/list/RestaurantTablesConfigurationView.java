@@ -6,7 +6,7 @@ import com.iwaitless.application.persistence.entity.TableEmployeeRelation;
 import com.iwaitless.application.services.RestaurantTableService;
 import com.iwaitless.application.services.TableEmployeeRelationService;
 import com.iwaitless.application.views.MainLayout;
-import com.iwaitless.application.views.forms.TablesForm;
+import com.iwaitless.application.views.forms.TablesPopup;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -33,7 +33,7 @@ public class RestaurantTablesConfigurationView extends VerticalLayout {
     TableEmployeeRelationService tableRelationService;
     TextField filterText = new TextField();
     Grid<RestaurantTable> grid = new Grid<>(RestaurantTable.class, false);
-    TablesForm form;
+    TablesPopup form;
 
     public RestaurantTablesConfigurationView(RestaurantTableService restaurantTable,
                                              TableEmployeeRelationService tableRelationService) {
@@ -99,15 +99,15 @@ public class RestaurantTablesConfigurationView extends VerticalLayout {
     }
 
     private void createTable(RestaurantTable table) {
-        form = new TablesForm(table);
+        form = new TablesPopup(table);
         form.addSaveListener(this::saveTable);
         form.addCloseListener(e -> closeEditor());
 
         Staff employee = new Staff();
         employee.setEmployeeId(999999L);
         TableEmployeeRelation relation = new TableEmployeeRelation();
-        relation.setTableId(table);
-        relation.setEmployeeId(employee);
+        relation.setTable(table);
+        relation.setEmployee(employee);
         relation.setStatus("A");
 
         tableRelationService.assignTable(relation);
@@ -115,7 +115,7 @@ public class RestaurantTablesConfigurationView extends VerticalLayout {
         setTablesData();
     }
 
-    private void saveTable(TablesForm.SaveEvent event) {
+    private void saveTable(TablesPopup.SaveEvent event) {
         restaurantTable.saveTable(event.getRestaurantTable());
         setTablesData();
         closeEditor();

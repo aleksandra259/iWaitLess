@@ -50,7 +50,7 @@ public class StaffService {
         UserStaffRelation userStaffRelation = userStaffRepository
                 .findAll()
                 .stream()
-                .filter(rel -> rel.getEmployeeId().getEmployeeId().equals(staff.getEmployeeId()))
+                .filter(rel -> rel.getEmployee().getEmployeeId().equals(staff.getEmployeeId()))
                 .findFirst()
                 .orElse(null);
         userStaffRepository.delete(Objects.requireNonNull(userStaffRelation));
@@ -70,10 +70,10 @@ public class StaffService {
         long userCounter = userStaffRepository
                 .findAll()
                 .stream()
-                .filter(users -> users.getEmployeeId().getEmployeeId().equals(staff.getEmployeeId())).count();
+                .filter(users -> users.getEmployee().getEmployeeId().equals(staff.getEmployeeId())).count();
         if(userCounter == 0) {
             UserStaffRelation userStaffRelation = new UserStaffRelation();
-            userStaffRelation.setEmployeeId(staff);
+            userStaffRelation.setEmployee(staff);
 
             SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
             int num0 = Integer.parseInt(formatter.format(staff.getBirthdate()).substring(7));
@@ -124,7 +124,7 @@ public class StaffService {
         return finsAllUsers()
                 .stream()
                 .filter(user ->
-                        user.getEmployeeId().getEmployeeId().equals(id))
+                        user.getEmployee().getEmployeeId().equals(id))
                 .findFirst()
                 .orElse(null);
     }

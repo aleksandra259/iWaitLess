@@ -58,6 +58,7 @@ public class MenuItemPopup extends FormLayout {
         dialogHeader.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
         dialogHeader.setWidthFull();
         dialog.getHeader().add(dialogHeader);
+        dialog.setDraggable(true);
 
         dialog.open();
     }

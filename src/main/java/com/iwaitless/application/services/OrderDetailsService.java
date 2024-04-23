@@ -30,10 +30,10 @@ public class OrderDetailsService {
 
         for (OrderDetails orderDetails : orderDetailsList) {
             List<OrderDetails> orderItems =
-                    this.findOrderDetailsByOrderNo(orderDetails.getOrderNo().getOrderNo());
+                    this.findOrderDetailsByOrderNo(orderDetails.getOrder().getOrderNo());
 
             for (OrderDetails orderItem : orderItems) {
-                MenuItems orderedItem = orderItem.getItemId();
+                MenuItems orderedItem = orderItem.getItem();
                 if (!orderedItem.equals(item) && !commonItems.contains(orderedItem)) {
                     commonItems.add(orderedItem);
                 }
@@ -49,10 +49,10 @@ public class OrderDetailsService {
 
         for (OrderDetails orderDetails : orderDetailsList) {
             List<OrderDetails> orderItems =
-                    this.findOrderDetailsByOrderNo(orderDetails.getOrderNo().getOrderNo());
+                    this.findOrderDetailsByOrderNo(orderDetails.getOrder().getOrderNo());
 
             for (OrderDetails orderItem : orderItems)
-                menuItems.add(orderItem.getItemId());
+                menuItems.add(orderItem.getItem());
         }
 
         return menuItems;
@@ -61,34 +61,26 @@ public class OrderDetailsService {
     public String getPriceByOrder (Long orderNo) {
         BigDecimal sum = BigDecimal.ZERO;
         String currency = "EUR";
-        List<OrderDetails> orderDetails = orderDetailsRepository.findByOrderNo_OrderNo(orderNo);
+        List<OrderDetails> orderDetails = orderDetailsRepository.findByOrder_OrderNo(orderNo);
 
         for (OrderDetails orderDetail : orderDetails) {
             BigDecimal quantity = BigDecimal.valueOf(orderDetail.getQuantity());
-            BigDecimal price = BigDecimal.valueOf(orderDetail.getItemId().getPrice());
+            BigDecimal price = BigDecimal.valueOf(orderDetail.getItem().getPrice());
             BigDecimal subtotal = quantity.multiply(price);
 
             sum = sum.add(subtotal);
-            currency = orderDetail.getItemId().getCurrency().getCurrencyCode();
+            currency = orderDetail.getItem().getCurrency().getCurrencyCode();
         }
         
         return String.format("%.2f", sum) + " " + currency;
     }
 
+    public List<OrderDetails> findOrderDetailsByOrderNo(Long orderNo) {
+        return orderDetailsRepository.findByOrder_OrderNo(orderNo);
+    }
+
     public void saveOrderDetail(OrderDetails orderDetail) {
         orderDetailsRepository.save(orderDetail);
-    }
-
-    public List<OrderDetails> findOrderDetailsByOrderNo(Long orderNo) {
-        return orderDetailsRepository.findByOrderNo_OrderNo(orderNo);
-    }
-
-    public void deleteOrderDetail(Long detailId) {
-        orderDetailsRepository.deleteById(detailId);
-    }
-
-    public int getNumberOfItemsInOrder(Long orderNo) {
-        return orderDetailsRepository.countByOrderNoOrderNo(orderNo);
     }
 }
 

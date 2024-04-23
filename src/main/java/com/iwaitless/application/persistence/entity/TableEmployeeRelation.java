@@ -23,12 +23,12 @@ public class TableEmployeeRelation {
     @ManyToOne
     @JoinColumn(name = "TABLE_ID")
     @NotNull
-    private RestaurantTable tableId;
+    private RestaurantTable table;
 
     @ManyToOne
     @JoinColumn(name = "EMPLOYEE_ID")
     @NotNull
-    private Staff employeeId;
+    private Staff employee;
 
     private String status;
 }

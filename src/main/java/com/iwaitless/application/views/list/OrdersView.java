@@ -123,11 +123,11 @@ public class OrdersView extends VerticalLayout {
                                 + "  </vaadin-vertical-layout>"
                                 + "</vaadin-horizontal-layout>")
                 .withProperty("name", e -> "Order #" + e.getOrderNo())
-                .withProperty("table", e -> "for table: " + e.getTableRelationId().getTableId().getTableNo())
+                .withProperty("table", e -> "for table: " + e.getTableRelation().getTable().getTableNo())
                 .withProperty("assignee", e -> {
-                    if (e.getTableRelationId().getEmployeeId().getEmployeeId() != 999999L) {
-                        String firstName = e.getTableRelationId().getEmployeeId().getFirstName();
-                        String lastName = e.getTableRelationId().getEmployeeId().getLastName();
+                    if (e.getTableRelation().getEmployee().getEmployeeId() != 999999L) {
+                        String firstName = e.getTableRelation().getEmployee().getFirstName();
+                        String lastName = e.getTableRelation().getEmployee().getLastName();
 
                         if (firstName != null && !firstName.isEmpty())
                             return "(assigned to " + firstName + " " + lastName + ")";
@@ -206,7 +206,7 @@ public class OrdersView extends VerticalLayout {
             String username = authentication.getName();
 
             filteredOrders = filteredOrders.stream()
-                    .filter(order -> username.equals(order.getTableRelationId().getEmployeeId().getUsername()))
+                    .filter(order -> username.equals(order.getTableRelation().getEmployee().getUsername()))
                     .collect(Collectors.toList());
         }
 
@@ -214,7 +214,7 @@ public class OrdersView extends VerticalLayout {
         Set<String> selectedTables = tableFilter.getSelectedItems();
         if (!selectedTables.isEmpty()) {
             filteredOrders = filteredOrders.stream()
-                    .filter(order -> selectedTables.contains(order.getTableRelationId().getTableId().getTableNo()))
+                    .filter(order -> selectedTables.contains(order.getTableRelation().getTable().getTableNo()))
                     .collect(Collectors.toList());
         }
 

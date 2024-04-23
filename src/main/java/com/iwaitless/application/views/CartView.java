@@ -37,13 +37,13 @@ import java.util.Set;
 @AnonymousAllowed
 public class CartView extends VerticalLayout {
 
-    MenuCategoryService menuCategory;
-    MenuItemService menuItem;
-    RestaurantTableService restaurantTable;
-    OrdersService ordersService;
-    OrderDetailsService orderDetailsService;
-    TableEmployeeRelationService tableEmployeeRelation;
-    OrderStatusService orderStatusService;
+    private final MenuCategoryService menuCategory;
+    private final MenuItemService menuItem;
+    private final OrdersService ordersService;
+    private final OrderDetailsService orderDetailsService;
+    private final NotificationsService notificationsService;
+    private final TableEmployeeRelationService tableEmployeeRelation;
+    private final OrderStatusService orderStatusService;
 
 
     Span totalAmountLabel = new Span();
@@ -63,13 +63,14 @@ public class CartView extends VerticalLayout {
                     RestaurantTableService restaurantTable,
                     OrdersService ordersService,
                     OrderDetailsService orderDetailsService,
+                    NotificationsService notificationsService,
                     TableEmployeeRelationService tableEmployeeRelation,
                     OrderStatusService orderStatusService) {
         this.menuCategory = menuCategory;
         this.menuItem = menuItem;
-        this.restaurantTable = restaurantTable;
         this.ordersService = ordersService;
         this.orderDetailsService = orderDetailsService;
+        this.notificationsService = notificationsService;
         this.tableEmployeeRelation = tableEmployeeRelation;
         this.orderStatusService = orderStatusService;
 
@@ -105,7 +106,7 @@ public class CartView extends VerticalLayout {
                 currency = item.getCurrency().getCurrencyCode();
             }
 
-        return sum + " " + currency;
+        return String.format("%.2f", sum) + " " + currency;
     }
 
     private String getTotalTimeToProcess() {
@@ -235,8 +236,8 @@ public class CartView extends VerticalLayout {
         finalizeButton.getStyle().set("margin-right", "auto");
         dialog.getFooter().add(finalizeButton);
         finalizeButton.addClickListener(e -> {
-            new CreateOrder(ordersService, orderDetailsService, menuItem,
-                    tableEmployeeRelation, orderStatusService, table);
+            new CreateOrder(ordersService, orderDetailsService, notificationsService,
+                    menuItem, tableEmployeeRelation, orderStatusService, table);
 
             getUI().ifPresent(ui -> ui.navigate(OrderStatusView.class));
         });

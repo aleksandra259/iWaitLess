@@ -22,7 +22,7 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 
 import java.util.List;
 
-public class EmployeeForm extends FormLayout {
+public class EmployeePopup extends FormLayout {
     TextField firstName = new TextField("First Name");
     TextField lastName = new TextField("Last Name");
     EmailField email = new EmailField("Email");
@@ -39,8 +39,8 @@ public class EmployeeForm extends FormLayout {
     Button cancel = new Button("Cancel");
     Button close = new Button(new Icon(VaadinIcon.CLOSE));
 
-    public EmployeeForm(Staff staff,
-                        List<StaffRole> roles) {
+    public EmployeePopup(Staff staff,
+                         List<StaffRole> roles) {
         String name = staff.getFirstName();
         if (name == null || name.trim().isEmpty())
             dialog.setHeaderTitle("New employee");
@@ -81,6 +81,7 @@ public class EmployeeForm extends FormLayout {
         dialogHeader.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
         dialogHeader.setWidthFull();
         dialog.getHeader().add(dialogHeader);
+        dialog.setDraggable(true);
 
         dialog.open();
     }
@@ -126,10 +127,10 @@ public class EmployeeForm extends FormLayout {
     }
 
     // Events
-    public static abstract class EmployeeFormEvent extends ComponentEvent<EmployeeForm> {
+    public static abstract class EmployeeFormEvent extends ComponentEvent<EmployeePopup> {
         private final Staff staff;
 
-        protected EmployeeFormEvent(EmployeeForm source, Staff staff) {
+        protected EmployeeFormEvent(EmployeePopup source, Staff staff) {
             super(source, false);
             this.staff = staff;
         }
@@ -140,20 +141,20 @@ public class EmployeeForm extends FormLayout {
     }
 
     public static class SaveEvent extends EmployeeFormEvent {
-        SaveEvent(EmployeeForm source, Staff staff) {
+        SaveEvent(EmployeePopup source, Staff staff) {
             super(source, staff);
         }
     }
 
     public static class DeleteEvent extends EmployeeFormEvent {
-        DeleteEvent(EmployeeForm source, Staff staff) {
+        DeleteEvent(EmployeePopup source, Staff staff) {
             super(source, staff);
         }
 
     }
 
     public static class CloseEvent extends EmployeeFormEvent {
-        CloseEvent(EmployeeForm source) {
+        CloseEvent(EmployeePopup source) {
             super(source, null);
         }
     }

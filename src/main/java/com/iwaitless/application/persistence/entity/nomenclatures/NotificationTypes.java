@@ -4,7 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 
-@Table(name = "HT_NOTIFICATION_TYPES")
+@Table(name = "HT_NOTIFICATION_TYPE")
 @Entity
 @AllArgsConstructor
 public class NotificationTypes extends AbstractNomenclatureEntity {

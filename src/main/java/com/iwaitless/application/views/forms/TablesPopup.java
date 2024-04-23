@@ -26,7 +26,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class TablesForm extends FormLayout {
+public class TablesPopup extends FormLayout {
     TextField tableNo = new TextField("Table Number");
     TextField description = new TextField("Description");
 
@@ -39,7 +39,7 @@ public class TablesForm extends FormLayout {
     Button generateQR = new Button("Generate QR Code");
     private final Div output = new Div();
 
-    public TablesForm(RestaurantTable table) {
+    public TablesPopup(RestaurantTable table) {
         String header = String.valueOf(table.getTableId());
         if (header == null || header.trim().isEmpty())
             dialog.setHeaderTitle("Create new table");
@@ -102,6 +102,7 @@ public class TablesForm extends FormLayout {
         dialogHeader.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
         dialogHeader.setWidthFull();
         dialog.getHeader().add(dialogHeader);
+        dialog.setDraggable(true);
 
         dialog.open();
     }
@@ -161,10 +162,10 @@ public class TablesForm extends FormLayout {
     }
 
     // Events
-    public static abstract class TablesFormEvent extends ComponentEvent<TablesForm> {
+    public static abstract class TablesFormEvent extends ComponentEvent<TablesPopup> {
         private final RestaurantTable table;
 
-        protected TablesFormEvent(TablesForm source, RestaurantTable table) {
+        protected TablesFormEvent(TablesPopup source, RestaurantTable table) {
             super(source, false);
             this.table = table;
         }
@@ -175,13 +176,13 @@ public class TablesForm extends FormLayout {
     }
 
     public static class SaveEvent extends TablesFormEvent {
-        SaveEvent(TablesForm source, RestaurantTable table) {
+        SaveEvent(TablesPopup source, RestaurantTable table) {
             super(source, table);
         }
     }
 
     public static class CloseEvent extends TablesFormEvent {
-        CloseEvent(TablesForm source) {
+        CloseEvent(TablesPopup source) {
             super(source, null);
         }
     }

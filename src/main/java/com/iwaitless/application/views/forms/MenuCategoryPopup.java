@@ -16,7 +16,7 @@ import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 
-public class MenuCategoryForm extends FormLayout {
+public class MenuCategoryPopup extends FormLayout {
     TextField nameField = new TextField();
     IntegerField orderNo = new IntegerField();
 
@@ -27,7 +27,7 @@ public class MenuCategoryForm extends FormLayout {
     Button cancel = new Button("Cancel");
     Button close = new Button(new Icon(VaadinIcon.CLOSE));
 
-    public MenuCategoryForm(MenuCategory category) {
+    public MenuCategoryPopup(MenuCategory category) {
         addClassName("menu-category-form");
 
         String header = category.getName();
@@ -60,6 +60,7 @@ public class MenuCategoryForm extends FormLayout {
         dialogHeader.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
         dialogHeader.setWidthFull();
         dialog.getHeader().add(dialogHeader);
+        dialog.setDraggable(true);
 
         dialog.open();
     }
@@ -76,7 +77,7 @@ public class MenuCategoryForm extends FormLayout {
         cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         cancel.addClickShortcut(Key.ESCAPE);
         cancel.addClickListener(event -> {
-            fireEvent(new MenuCategoryForm.CloseEvent(this));
+            fireEvent(new MenuCategoryPopup.CloseEvent(this));
             dialog.close();
         });
 
@@ -98,7 +99,7 @@ public class MenuCategoryForm extends FormLayout {
 
     private void validateAndSave() {
         if(binder.isValid()) {
-            fireEvent(new MenuCategoryForm.SaveEvent(this, binder.getBean()));
+            fireEvent(new MenuCategoryPopup.SaveEvent(this, binder.getBean()));
             dialog.close();
         }
     }
@@ -108,10 +109,10 @@ public class MenuCategoryForm extends FormLayout {
     }
 
     // Events
-    public static abstract class MenuCategoryFormEvent extends ComponentEvent<MenuCategoryForm> {
+    public static abstract class MenuCategoryFormEvent extends ComponentEvent<MenuCategoryPopup> {
         private final MenuCategory category;
 
-        protected MenuCategoryFormEvent(MenuCategoryForm source, MenuCategory category) {
+        protected MenuCategoryFormEvent(MenuCategoryPopup source, MenuCategory category) {
             super(source, false);
             this.category = category;
         }
@@ -122,13 +123,13 @@ public class MenuCategoryForm extends FormLayout {
     }
 
     public static class SaveEvent extends MenuCategoryFormEvent {
-        SaveEvent(MenuCategoryForm source, MenuCategory category) {
+        SaveEvent(MenuCategoryPopup source, MenuCategory category) {
             super(source, category);
         }
     }
 
     public static class CloseEvent extends MenuCategoryFormEvent {
-        CloseEvent(MenuCategoryForm source) {
+        CloseEvent(MenuCategoryPopup source) {
             super(source, null);
         }
     }

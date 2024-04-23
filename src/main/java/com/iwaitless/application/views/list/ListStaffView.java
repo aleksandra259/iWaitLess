@@ -4,7 +4,7 @@ import com.iwaitless.application.persistence.entity.Staff;
 import com.iwaitless.application.persistence.entity.UserStaffRelation;
 import com.iwaitless.application.services.StaffService;
 import com.iwaitless.application.views.MainLayout;
-import com.iwaitless.application.views.forms.EmployeeForm;
+import com.iwaitless.application.views.forms.EmployeePopup;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 public class ListStaffView extends VerticalLayout {
     Grid<Staff> grid = new Grid<>(Staff.class, false);
     TextField filterText = new TextField();
-    EmployeeForm form;
+    EmployeePopup form;
     StaffService service;
 
     public ListStaffView(StaffService service) {
@@ -71,7 +71,7 @@ public class ListStaffView extends VerticalLayout {
                     return null;
                 })
                 .setHeader("Username")
-                .setAutoWidth(true).setFlexGrow(0);;
+                .setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, employee) -> {
                     button.addThemeVariants(ButtonVariant.LUMO_ICON,
@@ -130,14 +130,14 @@ public class ListStaffView extends VerticalLayout {
     }
 
     private void createEmployee(Staff staff) {
-        form = new EmployeeForm(staff, service.findAllRoles());
+        form = new EmployeePopup(staff, service.findAllRoles());
         form.addSaveListener(this::saveEmployee);
         form.addCloseListener(e -> closeEditor());
 
         setEmployeeData();
     }
 
-    private void saveEmployee(EmployeeForm.SaveEvent event) {
+    private void saveEmployee(EmployeePopup.SaveEvent event) {
         service.saveEmployee(event.getEmployee());
         setEmployeeData();
         closeEditor();

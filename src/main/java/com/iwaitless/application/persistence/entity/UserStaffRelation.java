@@ -25,5 +25,5 @@ public class UserStaffRelation {
 
     @OneToOne
     @JoinColumn(name = "EMPLOYEE_ID")
-    private Staff employeeId;
+    private Staff employee;
 }

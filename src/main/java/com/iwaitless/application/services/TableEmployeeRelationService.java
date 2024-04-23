@@ -26,21 +26,19 @@ public class TableEmployeeRelationService {
     public List<RestaurantTable> findAllAssignedTables(Staff employee) {
         List<RestaurantTable> tables = new ArrayList<>();
 
-        tableEmployeeRelationRepository.findAllByEmployeeId(employee)
+        tableEmployeeRelationRepository.findAllByEmployee(employee)
                 .stream()
                 .filter(rel -> "A".equals(rel.getStatus()))
-                .forEach(rel -> {
-                    tables.add(restaurantTableRepository
-                            .findById(rel.getTableId().getTableId())
-                            .orElse(null));
-                });
+                .forEach(rel -> tables.add(restaurantTableRepository
+                        .findById(rel.getTable().getTableId())
+                        .orElse(null)));
 
         return tables;
     }
 
     public TableEmployeeRelation findTableRelationByTable(RestaurantTable table) {
         return tableEmployeeRelationRepository
-                .findAllByTableId(table)
+                .findAllByTable(table)
                 .stream()
                 .filter(rel -> "A".equals(rel.getStatus()))
                 .findFirst()
@@ -49,13 +47,13 @@ public class TableEmployeeRelationService {
 
     public Staff findAssignedTo (RestaurantTable table) {
         TableEmployeeRelation relation = tableEmployeeRelationRepository
-                .findAllByTableId(table)
+                .findAllByTable(table)
                 .stream()
                 .filter(rel -> "A".equals(rel.getStatus()))
                 .findFirst()
                 .orElse(null);
 
-        return relation != null ? relation.getEmployeeId() : null;
+        return relation != null ? relation.getEmployee() : null;
     }
 
     public void assignTable(TableEmployeeRelation table) {

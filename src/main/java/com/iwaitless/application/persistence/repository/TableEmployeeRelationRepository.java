@@ -10,6 +10,6 @@ import java.util.List;
 
 public interface TableEmployeeRelationRepository extends JpaRepository<TableEmployeeRelation, Long> {
 
-    List<TableEmployeeRelation> findAllByEmployeeId(Staff employeeId);
-    List<TableEmployeeRelation> findAllByTableId(RestaurantTable table);
+    List<TableEmployeeRelation> findAllByEmployee(Staff employeeId);
+    List<TableEmployeeRelation> findAllByTable(RestaurantTable table);
 }

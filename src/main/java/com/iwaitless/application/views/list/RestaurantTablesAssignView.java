@@ -114,8 +114,8 @@ public class RestaurantTablesAssignView extends VerticalLayout {
         tableRelationService.saveAssignTable(relation);
 
         relation = new TableEmployeeRelation();
-        relation.setTableId(table);
-        relation.setEmployeeId(employee);
+        relation.setTable(table);
+        relation.setEmployee(employee);
         relation.setStatus("A");
 
         tableRelationService.assignTable(relation);

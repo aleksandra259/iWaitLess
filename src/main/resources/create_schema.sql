@@ -24,7 +24,7 @@ create table HT_NOTIFICATION_STATUS (
 id varchar(50) not null,
 name varchar(100) not null
 );
-create table HT_NOTIFICATION_TYPES (
+create table HT_NOTIFICATION_TYPE (
 id varchar(50) not null,
 name varchar(100) not null
 );
@@ -42,7 +42,7 @@ name varchar(100) not null
 );
 
 CREATE TABLE MENU_ITEM (
-  item_id int NOT NULL primary key,
+  item_id int AUTO_INCREMENT primary key,
   name VARCHAR(50),
   description VARCHAR(4000),
   category VARCHAR(50),
@@ -57,7 +57,7 @@ CREATE TABLE MENU_ITEM (
 );
 
 CREATE TABLE STAFF (
-  employee_id int NOT NULL primary key,
+  employee_id int AUTO_INCREMENT primary key,
   first_name varchar(50),
   last_name varchar(50),
   email varchar(50),
@@ -70,21 +70,21 @@ CREATE TABLE STAFF (
 );
 
 CREATE TABLE USER_STAFF_RELATION (
-  id int NOT NULL primary key,
+  id int AUTO_INCREMENT primary key,
   username varchar(50),
   employee_id int,
   constraint fk_staff_employee foreign key(employee_id) references staff(employee_id)
 );
 
 CREATE TABLE RESTAURANT_TABLE (
-  table_id int NOT NULL primary key,
+  table_id int AUTO_INCREMENT primary key,
   table_no varchar(50) not null,
   description varchar(250),
   qr_code varchar(250)
 );
 
 CREATE TABLE TABLE_EMPLOYEE_RELATION (
-  id int NOT NULL primary key,
+  id int AUTO_INCREMENT primary key,
   table_id int,
   employee_id int,
   status varchar(2),
@@ -93,7 +93,7 @@ CREATE TABLE TABLE_EMPLOYEE_RELATION (
 );
 
 CREATE TABLE ORDERS (
-  order_no int NOT NULL primary key,
+  order_no int AUTO_INCREMENT primary key,
   table_relation_id int,
   ordered_on DATETIME,
   status varchar(50),
@@ -104,7 +104,7 @@ CREATE TABLE ORDERS (
 );
 
 CREATE TABLE ORDER_DETAILS (
-  detail_id int NOT NULL primary key,
+  detail_id int AUTO_INCREMENT primary key,
   order_no int,
   item_id int,
   quantity int,
@@ -114,11 +114,14 @@ CREATE TABLE ORDER_DETAILS (
 );
 
 CREATE TABLE NOTIFICATIONS (
-  id int NOT NULL primary key,
+  notif_id int AUTO_INCREMENT primary key,
   employee_id int,
   type varchar(50),
   status varchar(50),
+  table_id int,
+  order_no int,
   constraint fk_employee_notification foreign key(employee_id) references staff(employee_id),
-  constraint fk_notification_status foreign key(status) references ht_notification_status(id),
+  constraint fk_notification_table foreign key(table_id) references restaurant_table(table_id),
+  constraint fk_notification_order foreign key(order_no) references orders(order_no),
   constraint fk_notification_type foreign key(type) references ht_notification_type(id)
 );

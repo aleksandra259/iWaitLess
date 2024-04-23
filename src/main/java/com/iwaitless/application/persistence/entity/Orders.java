@@ -25,7 +25,7 @@ public class Orders {
 
     @ManyToOne
     @JoinColumn(name = "TABLE_RELATION_ID")
-    private TableEmployeeRelation tableRelationId;
+    private TableEmployeeRelation tableRelation;
 
     @NotNull
     @Column(name = "ORDERED_ON")

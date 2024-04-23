@@ -32,6 +32,7 @@ public class CallWaiterPopup extends VerticalLayout {
         this.tableNo = (String)vaadinSession.getAttribute("tableNo");
 
         Dialog dialog = createDialog();
+        dialog.setDraggable(true);
         dialog.open();
     }
 

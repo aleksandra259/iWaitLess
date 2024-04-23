@@ -70,6 +70,7 @@ public class OrderDetailsPopup extends FormLayout {
         dialogHeader.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
         dialogHeader.setWidthFull();
         dialog.getHeader().add(dialogHeader);
+        dialog.setDraggable(true);
 
         dialog.open();
     }
@@ -160,8 +161,8 @@ public class OrderDetailsPopup extends FormLayout {
 
     void configureLayout() {
         Paragraph description = new Paragraph("for table: "
-                + order.getTableRelationId().getTableId().getTableNo()
-                + " (" + order.getTableRelationId().getTableId().getDescription() + ")");
+                + order.getTableRelation().getTable().getTableNo()
+                + " (" + order.getTableRelation().getTable().getDescription() + ")");
         description.addClassNames(LumoUtility.FontSize.LARGE);
 
         Grid<OrderDetails> gridDetails = new Grid<>(OrderDetails.class, false);
@@ -173,8 +174,8 @@ public class OrderDetailsPopup extends FormLayout {
         gridDetails.addColumn(createOrderDetailRenderer()).setHeader("Item");
         gridDetails.addColumn(e -> "Qty: " + e.getQuantity()).setHeader("Quantity")
                 .setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
-        gridDetails.addColumn(e -> String.format("%.2f", e.getItemId().getPrice())
-                        + " " + e.getItemId().getCurrency()).setHeader("Price")
+        gridDetails.addColumn(e -> String.format("%.2f", e.getItem().getPrice())
+                        + " " + e.getItem().getCurrency()).setHeader("Price")
                 .setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
 
 
@@ -193,7 +194,7 @@ public class OrderDetailsPopup extends FormLayout {
                                 + "      ${item.comment}" + "    </span>"
                                 + "  </vaadin-vertical-layout>"
                                 + "</vaadin-horizontal-layout>")
-                .withProperty("name", e -> e.getItemId().getName())
+                .withProperty("name", e -> e.getItem().getName())
                 .withProperty("comment", e -> {
                     String comment = e.getComment();
                     if (comment != null && !comment.isEmpty())
@@ -210,11 +211,11 @@ public class OrderDetailsPopup extends FormLayout {
         if (orderDetails != null)
             for (OrderDetails detail : orderDetails) {
                 BigDecimal quantity = BigDecimal.valueOf(detail.getQuantity());
-                BigDecimal price = BigDecimal.valueOf(detail.getItemId().getPrice());
+                BigDecimal price = BigDecimal.valueOf(detail.getItem().getPrice());
                 BigDecimal subtotal = quantity.multiply(price);
 
                 sum = sum.add(subtotal);
-                currency = detail.getItemId().getCurrency().getCurrencyCode();
+                currency = detail.getItem().getCurrency().getCurrencyCode();
             }
 
         return String.format("%.2f", sum) + " " + currency;

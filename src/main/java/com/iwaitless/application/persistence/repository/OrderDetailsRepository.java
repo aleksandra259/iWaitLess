@@ -7,6 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface OrderDetailsRepository extends JpaRepository<OrderDetails, Long> {
-    List<OrderDetails> findByOrderNo_OrderNo(Long orderNo);
-    int countByOrderNoOrderNo(Long orderNo);
+    List<OrderDetails> findByOrder_OrderNo(Long orderNo);
 }

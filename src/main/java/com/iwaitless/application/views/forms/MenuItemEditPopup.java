@@ -24,7 +24,7 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 
 import java.util.Currency;
 
-public class MenuItemForm extends FormLayout {
+public class MenuItemEditPopup extends FormLayout {
     TextField itemNameField = new TextField("Name");
     TextArea description = new TextArea("Description");
     NumberField size = new NumberField("Size");
@@ -41,7 +41,7 @@ public class MenuItemForm extends FormLayout {
     Button cancel = new Button("Cancel");
     Button close = new Button(new Icon(VaadinIcon.CLOSE));
 
-    public MenuItemForm(MenuItems item) {
+    public MenuItemEditPopup(MenuItems item) {
         addClassName("menu-item-form");
 
         String header = item.getName();
@@ -98,6 +98,7 @@ public class MenuItemForm extends FormLayout {
         dialogHeader.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
         dialogHeader.setWidthFull();
         dialog.getHeader().add(dialogHeader);
+        dialog.setDraggable(true);
 
         dialog.open();
     }
@@ -116,11 +117,11 @@ public class MenuItemForm extends FormLayout {
 
         save.addClickListener(event -> validateAndSave());
         cancel.addClickListener(event -> {
-            fireEvent(new MenuItemForm.CloseEvent(this));
+            fireEvent(new MenuItemEditPopup.CloseEvent(this));
             dialog.close();
         });
         close.addClickListener(event -> {
-            fireEvent(new MenuItemForm.CloseEvent(this));
+            fireEvent(new MenuItemEditPopup.CloseEvent(this));
             dialog.close();
         });
 
@@ -134,7 +135,7 @@ public class MenuItemForm extends FormLayout {
 
     private void validateAndSave() {
         if(binder.isValid()) {
-            fireEvent(new MenuItemForm.SaveEvent(this, binder.getBean()));
+            fireEvent(new MenuItemEditPopup.SaveEvent(this, binder.getBean()));
             dialog.close();
         }
     }
@@ -144,10 +145,10 @@ public class MenuItemForm extends FormLayout {
     }
 
     // Events
-    public static abstract class MenuItemFormEvent extends ComponentEvent<MenuItemForm> {
+    public static abstract class MenuItemFormEvent extends ComponentEvent<MenuItemEditPopup> {
         private final MenuItems item;
 
-        protected MenuItemFormEvent(MenuItemForm source, MenuItems item) {
+        protected MenuItemFormEvent(MenuItemEditPopup source, MenuItems item) {
             super(source, false);
             this.item = item;
         }
@@ -158,13 +159,13 @@ public class MenuItemForm extends FormLayout {
     }
 
     public static class SaveEvent extends MenuItemFormEvent {
-        SaveEvent(MenuItemForm source, MenuItems item) {
+        SaveEvent(MenuItemEditPopup source, MenuItems item) {
             super(source, item);
         }
     }
 
     public static class CloseEvent extends MenuItemFormEvent {
-        CloseEvent(MenuItemForm source) {
+        CloseEvent(MenuItemEditPopup source) {
             super(source, null);
         }
     }

@@ -24,11 +24,11 @@ public class OrderDetails {
 
     @ManyToOne
     @JoinColumn(name = "ORDER_NO")
-    private Orders orderNo;
+    private Orders order;
 
     @ManyToOne
     @JoinColumn(name = "ITEM_ID")
-    private MenuItems itemId;
+    private MenuItems item;
 
     @NotNull
     @Column(name = "QUANTITY")
