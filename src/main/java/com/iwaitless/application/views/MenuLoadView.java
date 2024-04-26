@@ -4,7 +4,6 @@ import com.iwaitless.application.persistence.entity.RestaurantTable;
 import com.iwaitless.application.persistence.entity.nomenclatures.MenuCategory;
 import com.iwaitless.application.services.MenuCategoryService;
 import com.iwaitless.application.services.MenuItemService;
-import com.iwaitless.application.services.RestaurantTableService;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.UI;
@@ -28,29 +27,24 @@ import static com.iwaitless.application.views.MenuPreviewView.createAnchorLink;
 public class MenuLoadView extends VerticalLayout
         implements HasComponents, HasStyle {
 
-    MenuCategoryService menuCategory;
-    RestaurantTableService restaurantTable;
-    MenuItemService menuItem;
-    List<MenuCategory> categorySorted;
-    RestaurantTable table;
+    private final MenuItemService menuItem;
+    private final RestaurantTable table;
+    private final boolean tableExists;
+    private final boolean showSearch;
+    private final boolean showVegetarian;
+    private final boolean showVegan;
 
     TextField searchField = new TextField();
     VerticalLayout menuLayout = new VerticalLayout();
-    boolean tableExists;
-    boolean showSearch;
-    boolean showVegetarian;
-    boolean showVegan;
+    List<MenuCategory> categorySorted;
 
     public MenuLoadView(MenuCategoryService menuCategory,
                         MenuItemService menuItem,
-                        RestaurantTableService restaurantTable,
                         RestaurantTable table,
                         boolean search,
                         boolean isVegetarian,
                         boolean isVegan) {
-        this.menuCategory = menuCategory;
         this.menuItem = menuItem;
-        this.restaurantTable = restaurantTable;
         this.table = table;
         this.showSearch = search;
         this.showVegetarian = isVegetarian;

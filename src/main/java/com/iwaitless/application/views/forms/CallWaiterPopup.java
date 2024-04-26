@@ -1,5 +1,12 @@
 package com.iwaitless.application.views.forms;
 
+import com.iwaitless.application.persistence.entity.Notifications;
+import com.iwaitless.application.persistence.entity.RestaurantTable;
+import com.iwaitless.application.persistence.entity.nomenclatures.NotificationStatus;
+import com.iwaitless.application.persistence.entity.nomenclatures.NotificationTypes;
+import com.iwaitless.application.services.NotificationsService;
+import com.iwaitless.application.services.RestaurantTableService;
+import com.iwaitless.application.services.TableEmployeeRelationService;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -17,19 +24,30 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+
 @PageTitle("iWaitLess|Call Waiter")
 @Route("call-waiter-popup")
 @AnonymousAllowed
 public class CallWaiterPopup extends VerticalLayout {
 
+    private final NotificationsService notificationsService;
+    private final RestaurantTableService tableService;
+    private final TableEmployeeRelationService tableEmployeeRelService;
+    private final String tableNo;
+
     Dialog dialog;
     Button close = new Button(new Icon(VaadinIcon.CLOSE));
-    String tableNo;
 
-    VaadinSession vaadinSession = VaadinSession.getCurrent();
 
-    public CallWaiterPopup() {
-        this.tableNo = (String)vaadinSession.getAttribute("tableNo");
+    public CallWaiterPopup(NotificationsService notificationsService,
+                           RestaurantTableService tableService,
+                           TableEmployeeRelationService tableEmployeeRelService) {
+        this.tableNo = (String)VaadinSession.getCurrent().getAttribute("tableNo");
+        this.notificationsService = notificationsService;
+        this.tableService = tableService;
+        this.tableEmployeeRelService = tableEmployeeRelService;
 
         Dialog dialog = createDialog();
         dialog.setDraggable(true);
@@ -38,7 +56,6 @@ public class CallWaiterPopup extends VerticalLayout {
 
     private Dialog createDialog() {
         dialog = new Dialog();
-        dialog.setCloseOnEsc(false);
         dialog.setCloseOnOutsideClick(false);
         dialog.setHeaderTitle("Contact your waiter");
         dialog.add(createButtonsLayout());
@@ -66,6 +83,7 @@ public class CallWaiterPopup extends VerticalLayout {
         callWaitressButton.addClickListener(e -> {
             dialog.close();
             navigateBack();
+            saveNotification("2");
             Notification.show("Your waitress is notified", 3000,
                             Notification.Position.TOP_STRETCH)
                     .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
@@ -77,12 +95,31 @@ public class CallWaiterPopup extends VerticalLayout {
         askBillButton.addClickListener(e -> {
             dialog.close();
             navigateBack();
+            saveNotification("3");
             Notification.show("Your waitress is notified", 3000,
                             Notification.Position.TOP_STRETCH)
                     .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         });
 
         return new VerticalLayout(callWaitressButton, askBillButton);
+    }
+
+    private void saveNotification (String type) {
+        RestaurantTable table = tableService.findTableByTableNo(tableNo);
+
+        NotificationTypes notificationType = new NotificationTypes();
+        notificationType.setId(type);
+        NotificationStatus notificationStatus = new NotificationStatus();
+        notificationStatus.setId("U");
+
+        Notifications notification = new Notifications();
+        notification.setEmployee(tableEmployeeRelService.findTableRelationByTable(table).getEmployee());
+        notification.setType(notificationType);
+        notification.setStatus(notificationStatus);
+        notification.setTable(table);
+        notification.setRegistrationDate(Timestamp.from(Instant.now()));
+
+        notificationsService.saveNotification(notification);
     }
 
     private void navigateBack() {

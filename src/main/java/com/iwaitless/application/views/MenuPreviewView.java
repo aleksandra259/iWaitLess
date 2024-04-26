@@ -20,9 +20,9 @@ import java.util.Map;
 public class MenuPreviewView extends VerticalLayout
         implements HasComponents, HasStyle, HasUrlParameter<String> {
 
-    MenuCategoryService menuCategory;
-    MenuItemService menuItem;
-    RestaurantTableService restaurantTable;
+    private final MenuCategoryService menuCategory;
+    private final MenuItemService menuItem;
+    private final RestaurantTableService restaurantTable;
     MenuLoadView menuLoad;
 
     VaadinSession vaadinSession = VaadinSession.getCurrent();
@@ -52,12 +52,12 @@ public class MenuPreviewView extends VerticalLayout
         List<String> values = parametersMap.get("table");
         if (values != null) {
             RestaurantTable table = restaurantTable.findTableByTableNo(values.get(0));
-            menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable, table,
+            menuLoad = new MenuLoadView(menuCategory, menuItem, table,
                     false, false, false);
 
             vaadinSession.setAttribute("tableNo", values.get(0));
         } else {
-            menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable, null,
+            menuLoad = new MenuLoadView(menuCategory, menuItem, null,
                     false, false, false);
         }
 

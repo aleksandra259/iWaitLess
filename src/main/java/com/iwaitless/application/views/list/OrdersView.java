@@ -6,6 +6,7 @@ import com.iwaitless.application.persistence.entity.nomenclatures.OrderStatus;
 import com.iwaitless.application.services.*;
 import com.iwaitless.application.views.MainLayout;
 import com.iwaitless.application.views.forms.OrderDetailsPopup;
+import com.iwaitless.application.views.utility.Renderers;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
@@ -18,8 +19,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.SortDirection;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.data.renderer.LitRenderer;
-import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -86,14 +85,11 @@ public class OrdersView extends VerticalLayout {
             return null;
         });
 
-        grid.addColumn(createOrderRenderer()).setHeader("Order");
+        grid.addColumn(Renderers.createOrderRenderer()).setHeader("Order");
         grid.addColumn(order -> detailsService.getPriceByOrder(order.getOrderNo()))
                 .setHeader("Total price")
                 .setAutoWidth(true);
-        Grid.Column<Orders> orderedOn = grid.addColumn(order -> {
-                    SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-                    return formatter.format(order.getOrderedOn());
-                })
+        grid.addColumn(Renderers.createOrderDateRenderer())
                 .setHeader("Ordered On").setSortable(true)
                 .setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(order -> order.getStatus().getName())
@@ -107,34 +103,13 @@ public class OrdersView extends VerticalLayout {
                         new OrderDetailsPopup(order, service, detailsService, statusService, grid));
                 })).setTextAlign(ColumnTextAlign.END);
 
+        Grid.Column<Orders> orderedOn = grid.addColumn(order -> {
+            SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+            return formatter.format(order.getOrderedOn());
+        });
+        orderedOn.setVisible(false);
         GridSortOrder<Orders> order = new GridSortOrder<>(orderedOn, SortDirection.DESCENDING);
         grid.sort(List.of(order));
-    }
-
-    private static Renderer<Orders> createOrderRenderer() {
-        return LitRenderer.<Orders> of(
-                        "<vaadin-horizontal-layout class=\"item-container\" style=\"align-items: center;\" theme=\"spacing\">"
-                                + "  <vaadin-vertical-layout style=\"line-height: var(--lumo-line-height-m);\">"
-                                + "    <span> ${item.name} </span>"
-                                + "    <span style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">"
-                                + "      ${item.table}" + "    </span>"
-                                + "    <span style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">"
-                                + "      ${item.assignee}" + "    </span>"
-                                + "  </vaadin-vertical-layout>"
-                                + "</vaadin-horizontal-layout>")
-                .withProperty("name", e -> "Order #" + e.getOrderNo())
-                .withProperty("table", e -> "for table: " + e.getTableRelation().getTable().getTableNo())
-                .withProperty("assignee", e -> {
-                    if (e.getTableRelation().getEmployee().getEmployeeId() != 999999L) {
-                        String firstName = e.getTableRelation().getEmployee().getFirstName();
-                        String lastName = e.getTableRelation().getEmployee().getLastName();
-
-                        if (firstName != null && !firstName.isEmpty())
-                            return "(assigned to " + firstName + " " + lastName + ")";
-                    }
-
-                    return "(table not assigned)";
-                });
     }
 
     private VerticalLayout getToolbar() {

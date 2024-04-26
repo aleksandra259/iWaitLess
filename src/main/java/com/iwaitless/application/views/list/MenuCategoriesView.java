@@ -36,6 +36,7 @@ public class MenuCategoriesView extends VerticalLayout {
     Grid<MenuCategory> grid = new Grid<>(MenuCategory.class, false);
     MenuCategoryPopup form;
 
+
     public MenuCategoriesView(MenuCategoryService menuCategory,
                               MenuItemService menuItem,
                               MenuItemsView items) {

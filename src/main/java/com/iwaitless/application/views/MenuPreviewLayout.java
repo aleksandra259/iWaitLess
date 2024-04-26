@@ -29,11 +29,13 @@ import static com.iwaitless.application.views.MenuPreviewView.createAnchorLink;
 @AnonymousAllowed
 public class MenuPreviewLayout extends AppLayout {
 
-    MenuCategoryService menuCategory;
-    MenuItemService menuItem;
+    private final MenuCategoryService menuCategory;
+    private final MenuItemService menuItem;
+    private final RestaurantTable table;
+
     VerticalLayout categories = new VerticalLayout();
     HorizontalLayout navigation = new HorizontalLayout();
-    RestaurantTable table;
+
 
     public MenuPreviewLayout(MenuCategoryService menuCategory,
                              MenuItemService menuItem,

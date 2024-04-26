@@ -18,19 +18,17 @@ public class MenuItemService {
         this.menuItemRepository = menuItemRepository;
     }
 
-    public List<MenuItems> findAllItems() {
-        return menuItemRepository.findAll();
-    }
-
     public List<MenuItems> findAvailableItems() {
         return menuItemRepository.findAll()
                     .stream()
                     .filter(MenuItems::isAvailable)
                     .collect(Collectors.toList());
     }
+
     public MenuItems findItemById(Long itemId) {
         return menuItemRepository.findById(itemId).orElse(null);
     }
+
     public List<MenuItems> findItemsByCategory(MenuCategory menuCategory,
                                                String stringFilter) {
         if (menuCategory == null)

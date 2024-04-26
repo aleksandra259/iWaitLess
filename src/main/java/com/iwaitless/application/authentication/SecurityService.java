@@ -20,5 +20,4 @@ public class SecurityService {
     public void logout() {
         authenticationContext.logout();
     }
-
 }

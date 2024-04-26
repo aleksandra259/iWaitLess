@@ -27,10 +27,6 @@ public class OrdersService {
         return ordersRepository.findById(orderNo).orElse(null);
     }
 
-    public void deleteOrder(Orders order) {
-        ordersRepository.delete(order);
-    }
-
     public void saveOrder(Orders order) {
         if (order == null) {
             System.err.println("Order save failed");

@@ -25,6 +25,7 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import java.util.Currency;
 
 public class MenuItemEditPopup extends FormLayout {
+
     TextField itemNameField = new TextField("Name");
     TextArea description = new TextArea("Description");
     NumberField size = new NumberField("Size");
@@ -40,6 +41,7 @@ public class MenuItemEditPopup extends FormLayout {
     Button save = new Button("Save");
     Button cancel = new Button("Cancel");
     Button close = new Button(new Icon(VaadinIcon.CLOSE));
+
 
     public MenuItemEditPopup(MenuItems item) {
         addClassName("menu-item-form");
@@ -144,6 +146,7 @@ public class MenuItemEditPopup extends FormLayout {
         binder.setBean(item);
     }
 
+
     // Events
     public static abstract class MenuItemFormEvent extends ComponentEvent<MenuItemEditPopup> {
         private final MenuItems item;
@@ -173,6 +176,7 @@ public class MenuItemEditPopup extends FormLayout {
     public void addSaveListener(ComponentEventListener<SaveEvent> listener) {
         addListener(SaveEvent.class, listener);
     }
+
     public void addCloseListener(ComponentEventListener<CloseEvent> listener) {
         addListener(CloseEvent.class, listener);
     }

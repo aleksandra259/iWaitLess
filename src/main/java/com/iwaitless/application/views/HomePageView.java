@@ -4,6 +4,7 @@ import com.iwaitless.application.persistence.entity.Orders;
 import com.iwaitless.application.services.OrderDetailsService;
 import com.iwaitless.application.services.OrdersService;
 import com.iwaitless.application.views.utility.CustomChart;
+import com.iwaitless.application.views.utility.Renderers;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridSortOrder;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -24,8 +25,8 @@ import java.util.List;
 @PermitAll
 public class HomePageView extends VerticalLayout {
 
-    private final OrderDetailsService detailsService;
 
+    private final OrderDetailsService detailsService;
     private final OrdersService service;
 
     Grid<Orders> grid = new Grid<>(Orders.class, false);
@@ -51,19 +52,18 @@ public class HomePageView extends VerticalLayout {
                 new H2("Order Statistics"),
                 new CustomChart()
         );
-
-        // Set the size of the layout components
-        welcomeLayout.setWidth("33%");
-        orderStatsLayout.setWidth("67%");
-
         HorizontalLayout dashboard = new HorizontalLayout(
                 welcomeLayout,
                 orderStatsLayout
         );
+
+        // Set the size of the layout components
+        welcomeLayout.setWidth("33%");
+        orderStatsLayout.setWidth("67%");
         dashboard.setWidthFull();
         dashboard.setHeight("50%");
-        add(dashboard, new H2("Orders"), grid);
 
+        add(dashboard, new H2("Orders"), grid);
     }
 
     private void createOrderGrid() {
@@ -82,21 +82,22 @@ public class HomePageView extends VerticalLayout {
         grid.addColumn(order -> detailsService.getPriceByOrder(order.getOrderNo()))
                 .setHeader("Total price")
                 .setAutoWidth(true);
-        Grid.Column<Orders> orderedOn = grid.addColumn(order -> {
-                    SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-                    return formatter.format(order.getOrderedOn());
-                })
+        grid.addColumn(Renderers.createOrderDateRenderer())
                 .setHeader("Ordered On").setSortable(true)
                 .setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(order -> order.getStatus().getName())
                 .setHeader("Status").setSortable(true)
                 .setAutoWidth(true).setFlexGrow(0);
 
+
+        Grid.Column<Orders> orderedOn = grid.addColumn(order -> {
+            SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+            return formatter.format(order.getOrderedOn());
+        });
+        orderedOn.setVisible(false);
         GridSortOrder<Orders> order = new GridSortOrder<>(orderedOn, SortDirection.DESCENDING);
         grid.sort(List.of(order));
-
         List<Orders> filteredOrders = service.findAllOrders();
         grid.setItems(filteredOrders);
     }
-
 }

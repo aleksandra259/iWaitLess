@@ -31,13 +31,14 @@ import java.util.Objects;
 @RolesAllowed("ROLE_USER_ST")
 public class RestaurantTablesAssignView extends VerticalLayout {
 
-    RestaurantTableService restaurantTable;
-    TableEmployeeRelationService tableRelationService;
-    StaffService staffService;
+    private final RestaurantTableService restaurantTable;
+    private final TableEmployeeRelationService tableRelationService;
+    private final StaffService staffService;
 
     private final String username;
     TextField filterText = new TextField();
     Grid<RestaurantTable> grid = new Grid<>(RestaurantTable.class, false);
+
 
     public RestaurantTablesAssignView(RestaurantTableService restaurantTable,
                                       TableEmployeeRelationService tableRelationService,
@@ -64,7 +65,8 @@ public class RestaurantTablesAssignView extends VerticalLayout {
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
         getThemeList().add("spacing-xs");
 
-        grid.addColumn(RestaurantTable::getTableId).setHeader("Table No").setAutoWidth(true).setFlexGrow(0);
+        grid.addColumn(RestaurantTable::getTableId)
+                .setHeader("Table No").setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(RestaurantTable::getDescription).setHeader("Description");
         grid.addColumn(table -> {
                 String assigned = getAssignedEmployee(table);
@@ -74,7 +76,6 @@ public class RestaurantTablesAssignView extends VerticalLayout {
                 return "Not Assigned";
             }).setHeader("Assigned to")
               .setAutoWidth(true).setFlexGrow(0);
-
 
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, table) -> {
@@ -158,5 +159,4 @@ public class RestaurantTablesAssignView extends VerticalLayout {
 
         return null;
     }
-
 }

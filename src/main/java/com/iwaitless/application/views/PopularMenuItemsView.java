@@ -25,13 +25,15 @@ import java.util.Set;
 @Route("menu-preview-popular")
 @PageTitle("Menu Preview")
 @AnonymousAllowed
-public class PopularMenuItemsView extends VerticalLayout implements HasComponents, HasStyle{
-    MenuItemService menuItem;
-    OrderDetailsService orderDetailsService;
+public class PopularMenuItemsView extends VerticalLayout
+        implements HasComponents, HasStyle {
+
+    private final MenuItemService menuItem;
+    private final OrderDetailsService orderDetailsService;
 
     RestaurantTable table = new RestaurantTable();
-    VaadinSession vaadinSession = VaadinSession.getCurrent();
     VerticalLayout popularItems = new VerticalLayout();
+
 
     public PopularMenuItemsView(MenuCategoryService menuCategory,
                                 MenuItemService menuItem,
@@ -40,7 +42,7 @@ public class PopularMenuItemsView extends VerticalLayout implements HasComponent
         this.menuItem = menuItem;
         this.orderDetailsService = orderDetailsService;
 
-        String tableNo = (String)vaadinSession.getAttribute("tableNo");
+        String tableNo = (String)VaadinSession.getCurrent().getAttribute("tableNo");
         if (tableNo != null) {
             table = restaurantTable.findTableByTableNo(tableNo);
         }
@@ -84,9 +86,7 @@ public class PopularMenuItemsView extends VerticalLayout implements HasComponent
 
                 uniqueItems.stream()
                         .limit(20)
-                        .forEach(item -> {
-                            imageContainer.add(new MenuItemViewCard(item, table));
-                        });
+                        .forEach(item -> imageContainer.add(new MenuItemViewCard(item, table)));
 
                 popularItems.add(imageContainer);
             }

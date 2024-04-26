@@ -9,10 +9,10 @@ public class CustomChart extends HorizontalLayout {
         Image foodChart = new Image("images/ordered_food_chart.png", "");
         Image revenueChart = new Image("images/revenue_chart.png", "");
 
-        foodChart.setWidth("70%");
+        foodChart.setWidth("43%");
         foodChart.setHeight("70%");
-        revenueChart.setWidth("60%");
-        revenueChart.setHeight("70%");
+        revenueChart.setWidth("55%");
+        revenueChart.setHeight("65%");
 
         add(revenueChart, foodChart);
     }

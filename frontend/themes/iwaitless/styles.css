@@ -148,3 +148,21 @@ vaadin-grid.orders-grid::part(cancelled) {
   background-color: var(--lumo-error-color-10pct);
 }
 
+
+vaadin-grid.notifications-grid::part(not-read) {
+  font-weight: bold;
+  background-color: #F5F5F5;
+}
+
+.notifications-popup {
+  margin: 0em;
+  position: fixed;
+  top: -8.2em;
+  right: -61.5em;
+  bottom: 0em;
+  left: 0em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+

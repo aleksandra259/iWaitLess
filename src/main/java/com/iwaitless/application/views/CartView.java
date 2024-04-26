@@ -5,6 +5,7 @@ import com.iwaitless.application.persistence.entity.MenuItemsOrder;
 import com.iwaitless.application.persistence.entity.RestaurantTable;
 import com.iwaitless.application.services.*;
 import com.iwaitless.application.views.utility.CreateOrder;
+import com.iwaitless.application.views.utility.Renderers;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -18,8 +19,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.data.renderer.LitRenderer;
-import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
@@ -43,7 +42,6 @@ public class CartView extends VerticalLayout {
     private final OrderDetailsService orderDetailsService;
     private final NotificationsService notificationsService;
     private final TableEmployeeRelationService tableEmployeeRelation;
-    private final OrderStatusService orderStatusService;
 
 
     Span totalAmountLabel = new Span();
@@ -64,15 +62,13 @@ public class CartView extends VerticalLayout {
                     OrdersService ordersService,
                     OrderDetailsService orderDetailsService,
                     NotificationsService notificationsService,
-                    TableEmployeeRelationService tableEmployeeRelation,
-                    OrderStatusService orderStatusService) {
+                    TableEmployeeRelationService tableEmployeeRelation) {
         this.menuCategory = menuCategory;
         this.menuItem = menuItem;
         this.ordersService = ordersService;
         this.orderDetailsService = orderDetailsService;
         this.notificationsService = notificationsService;
         this.tableEmployeeRelation = tableEmployeeRelation;
-        this.orderStatusService = orderStatusService;
 
         String tableNo = (String)vaadinSession.getAttribute("tableNo");
         if (tableNo != null)
@@ -172,7 +168,7 @@ public class CartView extends VerticalLayout {
         grid.setWidthFull();
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
 
-        grid.addColumn(createItemRenderer());
+        grid.addColumn(Renderers.createItemOrderRenderer());
         grid.addColumn(new ComponentRenderer<>(this::quantityField))
                 .setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
         grid.addColumn(
@@ -237,7 +233,7 @@ public class CartView extends VerticalLayout {
         dialog.getFooter().add(finalizeButton);
         finalizeButton.addClickListener(e -> {
             new CreateOrder(ordersService, orderDetailsService, notificationsService,
-                    menuItem, tableEmployeeRelation, orderStatusService, table);
+                    menuItem, tableEmployeeRelation, table);
 
             getUI().ifPresent(ui -> ui.navigate(OrderStatusView.class));
         });
@@ -307,21 +303,5 @@ public class CartView extends VerticalLayout {
             updateContent();
         });
         return quantity;
-    }
-
-    private static Renderer<MenuItemsOrder> createItemRenderer() {
-        return LitRenderer.<MenuItemsOrder>of(
-                        "<vaadin-horizontal-layout class=\"item-container\" style=\"align-items: center;\" theme=\"spacing\">"
-                                + "  <vaadin-vertical-layout style=\"line-height: var(--lumo-line-height-m);\">"
-                                + "    <span> ${item.name} </span>"
-                                + "    <span style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">"
-                                + "      ${item.description}" + "    </span>"
-                                + "    <span> ${item.price} ${item.currency} </span>"
-                                + "  </vaadin-vertical-layout>"
-                                + "</vaadin-horizontal-layout>")
-                .withProperty("name", MenuItemsOrder::getName)
-                .withProperty("description", MenuItemsOrder::getDescription)
-                .withProperty("price", e -> String.format("%.2f", e.getPrice()))
-                .withProperty("currency", e -> e.getCurrency().getCurrencyCode());
     }
 }

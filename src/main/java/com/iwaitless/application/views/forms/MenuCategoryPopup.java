@@ -17,6 +17,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 
 public class MenuCategoryPopup extends FormLayout {
+
     TextField nameField = new TextField();
     IntegerField orderNo = new IntegerField();
 
@@ -26,6 +27,7 @@ public class MenuCategoryPopup extends FormLayout {
     Button save = new Button("Save");
     Button cancel = new Button("Cancel");
     Button close = new Button(new Icon(VaadinIcon.CLOSE));
+
 
     public MenuCategoryPopup(MenuCategory category) {
         addClassName("menu-category-form");
@@ -107,6 +109,7 @@ public class MenuCategoryPopup extends FormLayout {
     public void setMenuCategory(MenuCategory category) {
         binder.setBean(category);
     }
+
 
     // Events
     public static abstract class MenuCategoryFormEvent extends ComponentEvent<MenuCategoryPopup> {

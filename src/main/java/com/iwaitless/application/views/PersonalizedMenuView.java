@@ -27,11 +27,11 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 @AnonymousAllowed
 public class PersonalizedMenuView extends VerticalLayout {
 
-    RestaurantTable table = new RestaurantTable();
+    private final MenuCategoryService menuCategory;
+    private final MenuItemService menuItem;
+
+    RestaurantTable table;
     MenuLoadView menuLoad;
-    MenuCategoryService menuCategory;
-    MenuItemService menuItem;
-    RestaurantTableService restaurantTable;
     VaadinSession vaadinSession = VaadinSession.getCurrent();
 
 
@@ -45,7 +45,6 @@ public class PersonalizedMenuView extends VerticalLayout {
                                 RestaurantTableService restaurantTable) {
         this.menuCategory = menuCategory;
         this.menuItem = menuItem;
-        this.restaurantTable = restaurantTable;
 
         String tableNo = (String)vaadinSession.getAttribute("tableNo");
         if (tableNo != null) {
@@ -64,7 +63,6 @@ public class PersonalizedMenuView extends VerticalLayout {
         menuLayout.add(title);
         menuLayout.addClassName("fixed-menu-bar");
         menuLayout.addClassNames(LumoUtility.Background.CONTRAST_5);
-
 
         add(menuLayout, createPersonalizeComponent(), content,
                 new MenuPreviewLayout(menuCategory, menuItem, table));
@@ -149,13 +147,13 @@ public class PersonalizedMenuView extends VerticalLayout {
         }
 
         if (filterAll.getValue()) {
-            menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable,
+            menuLoad = new MenuLoadView(menuCategory, menuItem,
                 table, false, false, false);
         } else if (filterVegan.getValue()) {
-            menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable,
+            menuLoad = new MenuLoadView(menuCategory, menuItem,
                     table, false, true, true);
         } else if (filterVegetarian.getValue()) {
-            menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable,
+            menuLoad = new MenuLoadView(menuCategory, menuItem,
                     table, false, true, false);
         }
 

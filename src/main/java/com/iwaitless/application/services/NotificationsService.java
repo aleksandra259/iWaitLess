@@ -17,22 +17,19 @@ public class NotificationsService {
         this.notificationsRepository = notificationsRepository;
     }
 
-    public List<Notifications> findAllNotifications() {
-        return notificationsRepository.findAll();
-    }
-
     public List<Notifications> findNotificationsByEmployee(Staff employee) {
         return notificationsRepository
                 .findAll()
                 .stream()
                 .filter(notification ->
-                        notification.getEmployee().getEmployeeId().equals(employee.getEmployeeId()))
+                         notification
+                                 .getEmployee()
+                                 .getEmployeeId()
+                                 .equals(employee.getEmployeeId())
+                        || notification
+                                 .getEmployee()
+                                 .getEmployeeId() == 999999L)
                 .collect(Collectors.toList());
-    }
-    public Notifications findNotificationById(Long id) {
-        return notificationsRepository
-                .findById(id)
-                .orElse(null);
     }
 
     public void saveNotification(Notifications notification) {

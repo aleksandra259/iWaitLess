@@ -16,13 +16,13 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 @AnonymousAllowed
 public class MenuCatalogueView extends VerticalLayout implements HasUrlParameter<String> {
 
-    MenuCategoryService menuCategory;
-    MenuItemService menuItem;
-    RestaurantTableService restaurantTable;
+    private final MenuCategoryService menuCategory;
+    private final MenuItemService menuItem;
+    private final RestaurantTableService restaurantTable;
     MenuLoadView menuLoad;
 
     Div content = new Div();
-    RestaurantTable table;
+
 
     public MenuCatalogueView(MenuCategoryService menuCategory,
                              MenuItemService menuItem,
@@ -44,17 +44,16 @@ public class MenuCatalogueView extends VerticalLayout implements HasUrlParameter
         String tableNo = MenuPreviewLayout.getTableNo(parameter);
         VaadinSession.getCurrent().setAttribute("tableNo", tableNo);
         if (!tableNo.isEmpty()) {
-            table = restaurantTable.findTableByTableNo(tableNo);
+            RestaurantTable table = restaurantTable.findTableByTableNo(tableNo);
 
             VaadinSession vaadinSession = VaadinSession.getCurrent();
             vaadinSession.setAttribute("consistFilter", "");
             vaadinSession.setAttribute("notConsistFilter", "");
 
-            menuLoad = new MenuLoadView(menuCategory, menuItem, restaurantTable,
+            menuLoad = new MenuLoadView(menuCategory, menuItem,
                         table, true, false, false);
             content.add(new MenuPreviewLayout(menuCategory, menuItem, table));
         }
-
 
         content.add(menuLoad);
     }

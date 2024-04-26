@@ -23,6 +23,7 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import java.util.List;
 
 public class EmployeePopup extends FormLayout {
+
     TextField firstName = new TextField("First Name");
     TextField lastName = new TextField("Last Name");
     EmailField email = new EmailField("Email");
@@ -126,6 +127,7 @@ public class EmployeePopup extends FormLayout {
         binder.setBean(employee);
     }
 
+
     // Events
     public static abstract class EmployeeFormEvent extends ComponentEvent<EmployeePopup> {
         private final Staff staff;
@@ -150,7 +152,6 @@ public class EmployeePopup extends FormLayout {
         DeleteEvent(EmployeePopup source, Staff staff) {
             super(source, staff);
         }
-
     }
 
     public static class CloseEvent extends EmployeeFormEvent {
@@ -162,6 +163,7 @@ public class EmployeePopup extends FormLayout {
     public void addSaveListener(ComponentEventListener<SaveEvent> listener) {
         addListener(SaveEvent.class, listener);
     }
+
     public void addCloseListener(ComponentEventListener<CloseEvent> listener) {
         addListener(CloseEvent.class, listener);
     }

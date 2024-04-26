@@ -1,6 +1,8 @@
 package com.iwaitless.application.views;
 
 import com.iwaitless.application.authentication.SecurityService;
+import com.iwaitless.application.services.*;
+import com.iwaitless.application.views.list.NotificationsView;
 import com.iwaitless.application.views.list.ListStaffView;
 import com.iwaitless.application.views.list.OrdersView;
 import com.iwaitless.application.views.list.RestaurantTablesAssignView;
@@ -9,6 +11,7 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -18,11 +21,28 @@ import jakarta.annotation.security.PermitAll;
 
 @PermitAll
 public class MainLayout extends AppLayout {
-    private final SecurityService securityService;
-    String authorities;
 
-    public MainLayout(SecurityService securityService) {
+    private final SecurityService securityService;
+    private final NotificationsService notificationService;
+    private final StaffService staffService;
+    private final OrdersService orderService;
+    private final OrderDetailsService orderDetailService;
+    private final OrderStatusService statusService;
+    private final String authorities;
+
+
+    public MainLayout(SecurityService securityService,
+                      NotificationsService notificationService,
+                      StaffService staffService,
+                      OrdersService orderService,
+                      OrderDetailsService orderDetailService,
+                      OrderStatusService statusService) {
         this.securityService = securityService;
+        this.notificationService = notificationService;
+        this.staffService = staffService;
+        this.orderService = orderService;
+        this.orderDetailService = orderDetailService;
+        this.statusService = statusService;
         authorities = securityService.getAuthenticatedUser().getAuthorities().toString();
 
         createHeader();
@@ -50,6 +70,19 @@ public class MainLayout extends AppLayout {
             RouterLink menuPreview = new RouterLink("Menu Preview", MenuPreviewView.class);
             getUI().ifPresent(ui -> ui.getPage().open(menuPreview.getHref()));
             header.add(menuPreview);
+        }
+        if (authorities.contains("ROLE_USER_ST")) {
+            NotificationsView notificationsPopup =
+                    new NotificationsView(notificationService,
+                            staffService,
+                            orderService,
+                            orderDetailService,
+                            statusService);
+            notificationsPopup.addClassName("notifications-popup");
+
+            Button notificationButton = new Button(VaadinIcon.BELL.create());
+            notificationButton.addClickListener(e -> notificationsPopup.open());
+            header.add(notificationButton);
         }
 
         header.add(logout);

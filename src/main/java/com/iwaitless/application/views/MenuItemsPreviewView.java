@@ -21,12 +21,13 @@ import java.util.List;
 public class MenuItemsPreviewView extends Main
         implements HasComponents, HasStyle {
 
-    MenuItemService menuItem;
-    List<MenuCategory> categorySorted;
-    String searchField;
-    RestaurantTable table;
-    boolean showVegetarian;
-    boolean showVegan;
+    private final MenuItemService menuItem;
+    private final List<MenuCategory> categorySorted;
+    private final String searchField;
+    private final RestaurantTable table;
+    private final boolean showVegetarian;
+    private final boolean showVegan;
+
 
     public MenuItemsPreviewView(MenuItemService menuItem,
                                 List<MenuCategory> categorySorted,

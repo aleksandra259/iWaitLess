@@ -24,16 +24,12 @@ import java.util.HashMap;
 @Route("order-status")
 @AnonymousAllowed
 public class OrderStatusView extends VerticalLayout {
-    private final OrdersService ordersService;
-    String tableNo;
-    RestaurantTable table;
-    VaadinSession vaadinSession = VaadinSession.getCurrent();
 
-    VerticalLayout orderStatusLayout = new VerticalLayout();
+    private final OrdersService ordersService;
+    private final Long orderNo;
+
     HashMap<ProgressBar, Integer> progressBarList = new HashMap<>();
 
-    Long orderNo;
-    Orders order;
 
     public OrderStatusView(MenuCategoryService menuCategory,
                            MenuItemService menuItem,
@@ -41,14 +37,19 @@ public class OrderStatusView extends VerticalLayout {
                            OrdersService ordersService) {
         this.ordersService = ordersService;
 
-        orderNo = (Long)vaadinSession.getAttribute("orderNo");
-        tableNo = (String)vaadinSession.getAttribute("tableNo");
+        VaadinSession vaadinSession = VaadinSession.getCurrent();
+        orderNo = (Long) vaadinSession.getAttribute("orderNo");
+
+        String tableNo = (String) vaadinSession.getAttribute("tableNo");
+        RestaurantTable table = new RestaurantTable();
         if (tableNo != null)
             table = restaurantTable.findTableByTableNo(tableNo);
 
         if (orderNo != null) {
             H2 header = new H2("Order #" + orderNo + " tracker");
             header.addClassName("tables-grid");
+
+            VerticalLayout orderStatusLayout = new VerticalLayout();
             orderStatusLayout.add(createOrderStatusComponent("Order Received"));
             orderStatusLayout.add(createOrderStatusComponent("Order Accepted"));
             orderStatusLayout.add(createOrderStatusComponent("Preparing"));
@@ -102,10 +103,11 @@ public class OrderStatusView extends VerticalLayout {
             }
         });
     }
+
     private void notifyProgressBarUpdate() {
         String status = "0";
         if (orderNo != null) {
-            order = ordersService.findOrderByOrderNo(orderNo);
+            Orders order = ordersService.findOrderByOrderNo(orderNo);
             if (order != null) {
                 status = order.getStatus().getId();
             }

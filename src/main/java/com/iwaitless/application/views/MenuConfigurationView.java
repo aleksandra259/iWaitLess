@@ -16,10 +16,11 @@ import jakarta.annotation.security.RolesAllowed;
 @RolesAllowed("ROLE_ADMIN")
 public class MenuConfigurationView extends VerticalLayout {
 
-    MenuItemService menuItem;
-    MenuCategoryService menuCategory;
+    private final MenuItemService menuItem;
+    private final MenuCategoryService menuCategory;
     MenuItemsView items;
     MenuCategoriesView categories;
+
 
     public MenuConfigurationView(MenuItemService menuItem,
                                  MenuCategoryService menuCategory) {

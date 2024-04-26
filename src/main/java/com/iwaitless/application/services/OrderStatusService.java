@@ -19,6 +19,7 @@ public class OrderStatusService {
     public OrderStatus findStatusById(String id) {
         return orderStatusRepository.findById(id).orElse(null);
     }
+
     public OrderStatus findStatusByName(String name) {
         return orderStatusRepository.findAll()
                 .stream()

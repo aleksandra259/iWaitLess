@@ -5,6 +5,7 @@ import com.iwaitless.application.persistence.entity.UserStaffRelation;
 import com.iwaitless.application.services.StaffService;
 import com.iwaitless.application.views.MainLayout;
 import com.iwaitless.application.views.forms.EmployeePopup;
+import com.iwaitless.application.views.utility.Renderers;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -17,8 +18,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.data.renderer.LitRenderer;
-import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -31,10 +30,12 @@ import java.util.stream.Collectors;
 @Route(value="staff", layout = MainLayout.class)
 @RolesAllowed("ROLE_ADMIN")
 public class ListStaffView extends VerticalLayout {
+
     Grid<Staff> grid = new Grid<>(Staff.class, false);
     TextField filterText = new TextField();
     EmployeePopup form;
-    StaffService service;
+    private final StaffService service;
+
 
     public ListStaffView(StaffService service) {
         this.service = service;
@@ -53,7 +54,7 @@ public class ListStaffView extends VerticalLayout {
         grid.setSizeFull();
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
 
-        grid.addColumn(createEmployeeRenderer()).setHeader("Employee");
+        grid.addColumn(Renderers.createEmployeeRenderer()).setHeader("Employee");
         grid.addColumn(Staff::getEmail).setHeader("Email").setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(Staff::getPhone).setHeader("Phone").setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(Staff::getAddress).setHeader("Address").setAutoWidth(true).setFlexGrow(0);
@@ -91,21 +92,6 @@ public class ListStaffView extends VerticalLayout {
                     button.addClickListener(e ->
                             deleteEmployee(employee));
                 })).setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
-
-    }
-
-    private static Renderer<Staff> createEmployeeRenderer() {
-        return LitRenderer.<Staff> of(
-                        "<vaadin-horizontal-layout style=\"align-items: center;\" theme=\"spacing\">"
-                                + "<vaadin-avatar name=\"${item.name}\" alt=\"User avatar\"></vaadin-avatar>"
-                                + "  <vaadin-vertical-layout style=\"line-height: var(--lumo-line-height-m);\">"
-                                + "    <span> ${item.name} </span>"
-                                + "    <span style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">"
-                                + "      ${item.role}" + "    </span>"
-                                + "  </vaadin-vertical-layout>"
-                                + "</vaadin-horizontal-layout>")
-                .withProperty("name", employee -> employee.getFirstName() + " " + employee.getLastName())
-                .withProperty("role", employee -> employee.getRole().getName());
     }
 
     private HorizontalLayout getToolbar() {

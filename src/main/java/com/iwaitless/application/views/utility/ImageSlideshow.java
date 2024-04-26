@@ -30,23 +30,19 @@ public class ImageSlideshow extends VerticalLayout {
         this.currentIndex = 0;
         this.output = output;
 
-        // Create next button
         nextButton.addClickListener(event -> {
             currentIndex++;
             showImage();
         });
-        // Create previous button
         previousButton.addClickListener(event -> {
             currentIndex--;
             showImage();
         });
 
-        // Display the initial image
         showImage();
     }
 
     private void showImage() {
-        // Clear the current content
         removeAll();
 
         StreamResource imageResource = new StreamResource("item", () -> {
@@ -58,7 +54,6 @@ public class ImageSlideshow extends VerticalLayout {
                     }
                 });
 
-        // Use substring to extract the value of currentFile.getName()
         int startIndex = imageUrls.get(currentIndex).lastIndexOf("\\") + 1;
         Image image = new Image(imageResource, imageUrls.get(currentIndex).substring(startIndex));
         image.addClassName("max-width-image");

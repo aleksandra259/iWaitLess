@@ -24,21 +24,6 @@ public class RestaurantTableService {
         }
     }
 
-    public RestaurantTable findTableByDesc(String description) {
-        return restaurantTableRepository
-                .findAll()
-                .stream()
-                .filter(table -> table.getDescription().contains(description))
-                .findFirst()
-                .orElse(null);
-    }
-
-    public RestaurantTable findTableById(Long id) {
-        return restaurantTableRepository
-                .findById(id)
-                .orElse(null);
-    }
-
     public RestaurantTable findTableByTableNo(String tableNo) {
         return restaurantTableRepository
                 .findByTableNo(tableNo);
@@ -55,7 +40,4 @@ public class RestaurantTableService {
         }
         restaurantTableRepository.save(table);
     }
-
-
-
 }

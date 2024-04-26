@@ -67,7 +67,4 @@ public class TableEmployeeRelationService {
     public void saveAssignTable(TableEmployeeRelation table) {
         tableEmployeeRelationRepository.save(table);
     }
-
-
-
 }

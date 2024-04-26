@@ -5,7 +5,6 @@ import com.iwaitless.application.persistence.entity.MenuItemsOrder;
 import com.iwaitless.application.persistence.entity.RestaurantTable;
 import com.iwaitless.application.views.utility.UploadImage;
 import com.vaadin.flow.component.ComponentEvent;
-import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -32,10 +31,12 @@ public class MenuItemPopup extends FormLayout {
     Dialog dialog = new Dialog();
     Button close = new Button(new Icon(VaadinIcon.CLOSE));
 
-    MenuItems item;
-    MenuItemsOrder itemOrder = new MenuItemsOrder();
-    RestaurantTable table;
+    private final MenuItems item;
+    private final RestaurantTable table;
+
     TextArea comments = new TextArea("Comments");
+    MenuItemsOrder itemOrder = new MenuItemsOrder();
+
 
     public MenuItemPopup(MenuItems item,
                          RestaurantTable table) {
@@ -176,6 +177,7 @@ public class MenuItemPopup extends FormLayout {
         add(verticalLayout);
     }
 
+
     // Events
     public static abstract class MenuItemPopupEvent extends ComponentEvent<MenuItemPopup> {
         private final MenuItems item;
@@ -194,10 +196,6 @@ public class MenuItemPopup extends FormLayout {
         CloseEvent(MenuItemPopup source) {
             super(source, null);
         }
-    }
-
-    public void addCloseListener(ComponentEventListener<MenuItemPopup.CloseEvent> listener) {
-        addListener(MenuItemPopup.CloseEvent.class, listener);
     }
 }
 

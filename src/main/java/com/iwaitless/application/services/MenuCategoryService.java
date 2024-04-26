@@ -20,20 +20,6 @@ public class MenuCategoryService {
         return menuCategoryRepository.findAll();
     }
 
-    public MenuCategory findCategoryByName(String name) {
-        return menuCategoryRepository
-                .findAll()
-                .stream()
-                .filter(category -> category.getName().equals(name))
-                .findFirst()
-                .orElse(null);
-    }
-    public MenuCategory findCategoryById(String id) {
-        return menuCategoryRepository
-                .findById(id)
-                .orElse(null);
-    }
-
     public void deleteCategory(MenuCategory category) {
         menuCategoryRepository.delete(category);
     }
@@ -45,7 +31,4 @@ public class MenuCategoryService {
         }
         menuCategoryRepository.save(category);
     }
-
-
-
 }

@@ -27,17 +27,19 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class TablesPopup extends FormLayout {
+
     TextField tableNo = new TextField("Table Number");
     TextField description = new TextField("Description");
 
     BeanValidationBinder<RestaurantTable> binder = new BeanValidationBinder<>(RestaurantTable.class);
     Dialog dialog = new Dialog();
+    Div output = new Div();
 
     Button save = new Button("Save");
     Button cancel = new Button("Cancel");
     Button close = new Button(new Icon(VaadinIcon.CLOSE));
     Button generateQR = new Button("Generate QR Code");
-    private final Div output = new Div();
+
 
     public TablesPopup(RestaurantTable table) {
         String header = String.valueOf(table.getTableId());
@@ -74,7 +76,7 @@ public class TablesPopup extends FormLayout {
                     qr.generateImageQRCode(150, 150);
 
                     Image image = getImage(table);
-                    table.setQrCode(qr.getQrCodeData());
+                    table.setQrCode(qr.qrCodeData());
                     validateAndSave();
 
                     add(image);
@@ -161,6 +163,7 @@ public class TablesPopup extends FormLayout {
         binder.setBean(table);
     }
 
+
     // Events
     public static abstract class TablesFormEvent extends ComponentEvent<TablesPopup> {
         private final RestaurantTable table;
@@ -190,6 +193,7 @@ public class TablesPopup extends FormLayout {
     public void addSaveListener(ComponentEventListener<SaveEvent> listener) {
         addListener(SaveEvent.class, listener);
     }
+
     public void addCloseListener(ComponentEventListener<CloseEvent> listener) {
         addListener(CloseEvent.class, listener);
     }

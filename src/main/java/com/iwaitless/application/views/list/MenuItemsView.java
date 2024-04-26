@@ -4,7 +4,7 @@ import com.iwaitless.application.persistence.entity.MenuItems;
 import com.iwaitless.application.persistence.entity.nomenclatures.MenuCategory;
 import com.iwaitless.application.services.MenuItemService;
 import com.iwaitless.application.views.forms.MenuItemEditPopup;
-import com.vaadin.flow.component.Text;
+import com.iwaitless.application.views.utility.Renderers;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -12,9 +12,9 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -22,8 +22,6 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.data.renderer.LitRenderer;
-import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.server.StreamResource;
 
 import java.io.File;
@@ -31,11 +29,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class MenuItemsView extends VerticalLayout {
-    Grid<MenuItems> grid = new Grid<>(MenuItems.class, false);
-    Button newFood = new Button();
-    H2 foodListHeader = new H2();
 
-    MenuItemService menuItem;
+    Grid<MenuItems> grid = new Grid<>(MenuItems.class, false);
+    Button newFood = new Button("New");
+    H2 foodListHeader = new H2("Food list");
+
+    private final MenuItemService menuItem;
+
     MenuCategory category;
     MenuItemEditPopup form;
 
@@ -48,7 +48,6 @@ public class MenuItemsView extends VerticalLayout {
         setSizeFull();
         configureGrid();
 
-        newFood.setText("New");
         newFood.setWidth("min-content");
         newFood.setMaxWidth("100px");
         newFood.addClickListener(e -> {
@@ -61,14 +60,14 @@ public class MenuItemsView extends VerticalLayout {
                         Notification notification = new Notification();
                         notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
 
-                        Div text = new Div(new Text("To be able to create item you should select category first."));
-
                         Button closeButton = new Button(new Icon("lumo", "cross"));
                         closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
                         closeButton.setAriaLabel("Close");
                         closeButton.addClickListener(event -> notification.close());
 
-                        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+                        HorizontalLayout layout = new HorizontalLayout(
+                                new Span("To be able to create item you should select category first."),
+                                closeButton);
                         layout.setAlignItems(Alignment.CENTER);
 
                         notification.add(layout);
@@ -76,12 +75,7 @@ public class MenuItemsView extends VerticalLayout {
                     }
                 });
 
-        foodListHeader.setText("Food list");
-        foodListHeader.setWidth("max-content");
-        foodListHeader.setMaxWidth("150px");
-
-        HorizontalLayout categories = new HorizontalLayout(foodListHeader, newFood);
-        add(categories, grid);
+        add(new HorizontalLayout(foodListHeader, newFood), grid);
     }
 
     public void setMenuItemData(MenuCategory menuCategory) {
@@ -99,7 +93,6 @@ public class MenuItemsView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassNames("menu-item-grid");
         grid.setWidthFull();
-        grid.setAllRowsVisible(true);
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
         getThemeList().add("spacing-xs");
 
@@ -110,7 +103,7 @@ public class MenuItemsView extends VerticalLayout {
 
             return image;
         }).setAutoWidth(true).setFlexGrow(0);
-        grid.addColumn(createItemRenderer());
+        grid.addColumn(Renderers.createItemRenderer());
         grid.addColumn(item -> String.format("%.2f", item.getPrice()) + " " + item.getCurrency());
         grid.addColumn(item -> item.getSize() + " gram");
         grid.addColumn(item -> item.isAvailable() ? "Available" : "Not Available");
@@ -134,19 +127,6 @@ public class MenuItemsView extends VerticalLayout {
                     button.addClickListener(e ->
                         deleteMenuItem(item));
                 })).setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
-    }
-
-    private static Renderer<MenuItems> createItemRenderer() {
-        return LitRenderer.<MenuItems> of(
-                        "<vaadin-horizontal-layout style=\"align-items: center;\" theme=\"spacing\">"
-                                + "  <vaadin-vertical-layout style=\"line-height: var(--lumo-line-height-m);\">"
-                                + "    <span> ${item.name} </span>"
-                                + "    <span style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">"
-                                + "      ${item.description}" + "    </span>"
-                                + "  </vaadin-vertical-layout>"
-                                + "</vaadin-horizontal-layout>")
-                .withProperty("name", MenuItems::getName)
-                .withProperty("description", MenuItems::getDescription);
     }
 
     private void deleteMenuItem (MenuItems item) {

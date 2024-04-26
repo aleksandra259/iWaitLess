@@ -29,8 +29,8 @@ import jakarta.annotation.security.RolesAllowed;
 @RolesAllowed("ROLE_ADMIN")
 public class RestaurantTablesConfigurationView extends VerticalLayout {
 
-    RestaurantTableService restaurantTable;
-    TableEmployeeRelationService tableRelationService;
+    private final RestaurantTableService restaurantTable;
+    private final TableEmployeeRelationService tableRelationService;
     TextField filterText = new TextField();
     Grid<RestaurantTable> grid = new Grid<>(RestaurantTable.class, false);
     TablesPopup form;

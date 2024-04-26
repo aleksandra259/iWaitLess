@@ -8,7 +8,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.MultiFileReceiver;
 import com.vaadin.flow.component.upload.Upload;
-import com.vaadin.flow.router.Route;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,7 +15,6 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-@Route("upload-image-to-file")
 public class UploadImage extends VerticalLayout {
 
     private File folder;
@@ -38,11 +36,9 @@ public class UploadImage extends VerticalLayout {
             }
         });
         upload.setSizeFull();
-
         output.setWidthFull();
         add(upload, output);
-
-        // Configure upload component
+        
         upload.setAcceptedFileTypes("image/jpeg", "image/png", "image/gif", "image/jpg");
         upload.addSucceededListener(event -> {
             output.removeAll();
