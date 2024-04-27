@@ -32,6 +32,14 @@ public class NotificationsService {
                 .collect(Collectors.toList());
     }
 
+    public int countUnreadNotificationsByEmployee (Staff employee) {
+        return findNotificationsByEmployee(employee)
+                .stream()
+                .filter(e -> "U".equals(e.getStatus().getId()))
+                .toList()
+                .size();
+    }
+
     public void saveNotification(Notifications notification) {
         if (notification == null) {
             System.err.println("Notification save failed");

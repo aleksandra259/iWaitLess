@@ -99,29 +99,26 @@ public class MenuCategoriesView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassNames("menu-category-grid");
         grid.setWidthFull();
-        grid.setAllRowsVisible(true);
-        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
-        getThemeList().add("spacing-xs");
+        grid.setHeightFull();
+        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT,
+                GridVariant.LUMO_NO_BORDER);
 
         Grid.Column<MenuCategory> orderNo = grid.addColumn(MenuCategory::getOrderNo).setSortProperty();
         orderNo.setVisible(false);
         grid.addColumn(MenuCategory::getName);
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, category) -> {
-                    button.addThemeVariants(ButtonVariant.LUMO_ICON,
-                            ButtonVariant.LUMO_SMALL);
                     button.getElement().setAttribute("aria-label", "Edit category");
                     button.addClickListener(e ->
                             createMenuCategory(category));
                     button.setIcon(new Icon(VaadinIcon.EDIT));
+                    button.addClassName("edit-button");
                 })).setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
         grid.addColumn(
             new ComponentRenderer<>(Button::new, (button, category) -> {
-                button.addThemeVariants(ButtonVariant.LUMO_ICON,
-                        ButtonVariant.LUMO_ERROR,
-                        ButtonVariant.LUMO_SMALL);
                 button.getElement().setAttribute("aria-label", "Delete category");
                 button.setIcon(new Icon(VaadinIcon.TRASH));
+                button.addClassName("delete-button");
                 button.addClickListener(e -> deleteMenuCategory(category));
             })).setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
 

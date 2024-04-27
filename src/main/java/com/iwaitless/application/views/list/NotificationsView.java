@@ -4,7 +4,10 @@ package com.iwaitless.application.views.list;
 import com.iwaitless.application.persistence.entity.Notifications;
 import com.iwaitless.application.persistence.entity.Staff;
 import com.iwaitless.application.persistence.entity.nomenclatures.NotificationStatus;
-import com.iwaitless.application.services.*;
+import com.iwaitless.application.services.NotificationsService;
+import com.iwaitless.application.services.OrderDetailsService;
+import com.iwaitless.application.services.OrderStatusService;
+import com.iwaitless.application.services.OrdersService;
 import com.iwaitless.application.views.forms.NotificationPopup;
 import com.iwaitless.application.views.forms.OrderDetailsPopup;
 import com.iwaitless.application.views.utility.Renderers;
@@ -14,8 +17,6 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridSortOrder;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.data.provider.SortDirection;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.sql.Timestamp;
 import java.time.Duration;
@@ -33,12 +34,11 @@ public class NotificationsView extends Dialog {
     private final OrderStatusService statusService;
 
     public NotificationsView(NotificationsService service,
-                             StaffService staffService,
                              OrdersService orderService,
                              OrderDetailsService orderDetailService,
-                             OrderStatusService statusService) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        this.staff = staffService.findEmployeeByUsername(authentication.getName());
+                             OrderStatusService statusService,
+                             Staff staff) {
+        this.staff = staff;
         this.service = service;
         this.orderService = orderService;
         this.orderDetailService = orderDetailService;
@@ -53,9 +53,10 @@ public class NotificationsView extends Dialog {
 
     private void loadNotifications() {
         Grid<Notifications> grid = new Grid<>(Notifications.class, false);
+        grid.addClassName("notifications-grid");
         grid.setWidthFull();
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
-        grid.addClassName("notifications-grid");
+
         grid.setPartNameGenerator(notification -> {
             if ("R".equals(notification.getStatus().getId()))
                 return "read";

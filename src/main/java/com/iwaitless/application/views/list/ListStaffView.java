@@ -40,7 +40,6 @@ public class ListStaffView extends VerticalLayout {
     public ListStaffView(StaffService service) {
         this.service = service;
 
-        addClassName("list-employee-view");
         setSizeFull();
         configureGrid();
         setEmployeeData();
@@ -51,11 +50,14 @@ public class ListStaffView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassNames("staff-grid");
         grid.setWidthFull();
-        grid.setSizeFull();
-        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
+        grid.setHeightFull();
+        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT,
+                GridVariant.LUMO_NO_BORDER);
 
-        grid.addColumn(Renderers.createEmployeeRenderer()).setHeader("Employee");
-        grid.addColumn(Staff::getEmail).setHeader("Email").setAutoWidth(true).setFlexGrow(0);
+        grid.addColumn(Renderers.createEmployeeRenderer())
+                .setComparator(Staff::getFirstName).setHeader("Employee");
+        grid.addColumn(Staff::getEmail).setComparator(Staff::getEmail)
+                .setHeader("Email").setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(Staff::getPhone).setHeader("Phone").setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(Staff::getAddress).setHeader("Address").setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(employee -> {
@@ -72,25 +74,21 @@ public class ListStaffView extends VerticalLayout {
                     return null;
                 })
                 .setHeader("Username")
+                .setComparator(Staff::getUsername)
                 .setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, employee) -> {
-                    button.addThemeVariants(ButtonVariant.LUMO_ICON,
-                            ButtonVariant.LUMO_SMALL);
                     button.getElement().setAttribute("aria-label", "Edit employee");
-                    button.addClickListener(e ->
-                            createEmployee(employee));
+                    button.addClickListener(e -> createEmployee(employee));
                     button.setIcon(new Icon(VaadinIcon.EDIT));
+                    button.addClassName("edit-button");
                 })).setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, employee) -> {
-                    button.addThemeVariants(ButtonVariant.LUMO_ICON,
-                            ButtonVariant.LUMO_ERROR,
-                            ButtonVariant.LUMO_SMALL);
                     button.getElement().setAttribute("aria-label", "Delete employee");
                     button.setIcon(new Icon(VaadinIcon.TRASH));
-                    button.addClickListener(e ->
-                            deleteEmployee(employee));
+                    button.addClickListener(e -> deleteEmployee(employee));
+                    button.addClassName("delete-button");
                 })).setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
     }
 

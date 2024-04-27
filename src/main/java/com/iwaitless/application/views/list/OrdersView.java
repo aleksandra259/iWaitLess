@@ -14,14 +14,13 @@ import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridSortOrder;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.SortDirection;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.auth.AnonymousAllowed;
+import jakarta.annotation.security.PermitAll;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -32,7 +31,7 @@ import java.util.stream.Collectors;
 
 @PageTitle("Orders")
 @Route(value = "orders", layout = MainLayout.class)
-@AnonymousAllowed
+@PermitAll
 public class OrdersView extends VerticalLayout {
     Grid<Orders> grid = new Grid<>(Orders.class, false);
     CheckboxGroup<String> statusFilter = new CheckboxGroup<>();
@@ -59,24 +58,19 @@ public class OrdersView extends VerticalLayout {
         this.tableEmployeeService = tableEmployeeService;
         this.staffService = staffService;
 
-        addClassName("list-order-view");
         setSizeFull();
         configureGrid();
         setOrderData();
 
-        Div gridContainer = new Div();
-        gridContainer.addClassNames("order-grid");
-        gridContainer.setWidthFull();
-        gridContainer.getStyle().set("overflow", "auto");
-        gridContainer.add(grid);
-
-        add(getToolbar(), gridContainer);
+        add(getToolbar(), grid);
     }
 
     private void configureGrid() {
+        grid.addClassName("order-grid");
         grid.setWidthFull();
-        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
-        grid.addClassName("orders-grid");
+        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT,
+                GridVariant.LUMO_NO_BORDER);
+
         grid.setPartNameGenerator(order -> {
             if ("-1".equals(order.getStatus().getId()))
                 return "cancelled";

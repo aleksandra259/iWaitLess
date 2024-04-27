@@ -1,8 +1,3 @@
-@import "theme-editor.css";
-a[highlight] {
-    font-weight: bold;
-    text-decoration: underline;
-}
 @media (min-width: 801px) {
    .image-gallery-view ol {
      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -39,6 +34,82 @@ a[highlight] {
      margin-top: 55px;
    }
 }
+
+a {
+  text-decoration: none;
+  color: #EA5141;
+}
+a:hover {
+  font-weight: bold;
+  text-decoration: none;
+}
+body {
+  height: var(--field-height);
+  line-height: 2;
+  background: var(--field-background-color);
+  border: 0px;
+  padding: var(--space-xs);
+  border-radius: var(--roundness-sm);
+  transition: all 0.2s ease-in;
+}
+p, h1, h2, h3, h4, h5, h6, span, div {
+  color: #000000;
+}
+
+.main-layout, .main-drawer {
+  background-color: #F9F6ED;
+  border: 6px solid #F9F6ED;
+}
+.logo {
+  flex-grow: 0;
+  width: 10%;
+  margin: 0px;
+  margin-right: 70%;
+  border: 0px;
+}
+vaadin-side-nav-item::part(link) {
+  color: #21272D;
+}
+vaadin-side-nav-item > vaadin-icon {
+  color: #EA5141;
+}
+vaadin-drawer-toggle::part(icon) {
+  color: #EA5141;
+}
+vaadin-dialog-overlay::part(footer) {
+  background-color: #F9F6ED;
+}
+vaadin-dialog-overlay::part(header) {
+  color: #EA5141;
+  background-color: #F9F6ED;
+}
+
+vaadin-button {
+  background: #E0E0E0;
+  color: #21272D;
+}
+vaadin-button[theme~="primary"] {
+  background: #EA5141;
+  color: #FFFFFF;
+}
+vaadin-button[disabled] {
+  background: #DCDCDC;
+  color: white;
+}
+vaadin-button.edit-button {
+  color: #21272D;
+  background: none;
+  font-weight: bold;
+}
+vaadin-button.delete-button {
+  color: #EA5141;
+  background: none;
+  font-weight: bold;
+}
+
+
+
+
 
 .image-gallery-view li {
   transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -119,20 +190,6 @@ a[highlight] {
 
 .order-grid {
   margin-top: 180px;
-  display: flex;
-  position: sticky;
-}
-
-.order-status-finalized, .order-status-cancelled {
-  margin: auto;
-  font-weight: bold;
-  font-size: 17px;
-}
-.order-status-cancelled {
-  color: red;
-}
-.order-status-finalized {
-  color: green;
 }
 
 .total-amount-text {
@@ -140,11 +197,10 @@ a[highlight] {
   font-size: 18px;
 }
 
-vaadin-grid.orders-grid::part(done) {
+vaadin-grid.orders-grid::part(done), vaadin-grid.order-grid::part(done) {
   background-color: var(--lumo-success-color-10pct);
 }
-
-vaadin-grid.orders-grid::part(cancelled) {
+vaadin-grid.orders-grid::part(cancelled), vaadin-grid.order-grid::part(cancelled) {
   background-color: var(--lumo-error-color-10pct);
 }
 
@@ -165,4 +221,3 @@ vaadin-grid.notifications-grid::part(not-read) {
   align-items: center;
   justify-content: center;
 }
-

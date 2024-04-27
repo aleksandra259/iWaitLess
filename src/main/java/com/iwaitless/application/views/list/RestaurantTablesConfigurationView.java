@@ -51,8 +51,10 @@ public class RestaurantTablesConfigurationView extends VerticalLayout {
 
     private void configureGrid() {
         grid.addClassNames("tables-grid");
-        grid.setSizeFull();
-        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
+        grid.setWidthFull();
+        grid.setHeightFull();
+        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT,
+                GridVariant.LUMO_NO_BORDER);
 
         grid.addColumn(RestaurantTable::getTableNo).setHeader("Table No").setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(RestaurantTable::getDescription).setHeader("Description");
@@ -61,22 +63,17 @@ public class RestaurantTablesConfigurationView extends VerticalLayout {
                         ? "Generated" : "Not Generated").setHeader("QR Code").setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, table) -> {
-                    button.addThemeVariants(ButtonVariant.LUMO_ICON,
-                            ButtonVariant.LUMO_SMALL);
                     button.getElement().setAttribute("aria-label", "Edit table");
-                    button.addClickListener(e ->
-                            createTable(table));
+                    button.addClickListener(e -> createTable(table));
                     button.setIcon(new Icon(VaadinIcon.EDIT));
+                    button.addClassName("edit-button");
             })).setHeader("").setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, table) -> {
-                    button.addThemeVariants(ButtonVariant.LUMO_ICON,
-                            ButtonVariant.LUMO_ERROR,
-                            ButtonVariant.LUMO_SMALL);
                     button.getElement().setAttribute("aria-label", "Delete table");
                     button.setIcon(new Icon(VaadinIcon.TRASH));
-                    button.addClickListener(e ->
-                            deleteTable(table));
+                    button.addClickListener(e -> deleteTable(table));
+                    button.addClassName("delete-button");
             })).setHeader("").setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
     }
 

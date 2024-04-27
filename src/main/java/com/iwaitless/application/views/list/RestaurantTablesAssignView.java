@@ -62,8 +62,9 @@ public class RestaurantTablesAssignView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassNames("tables-grid");
         grid.setWidthFull();
-        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
-        getThemeList().add("spacing-xs");
+        grid.setHeightFull();
+        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT,
+                GridVariant.LUMO_NO_BORDER);
 
         grid.addColumn(RestaurantTable::getTableId)
                 .setHeader("Table No").setAutoWidth(true).setFlexGrow(0);
@@ -79,13 +80,12 @@ public class RestaurantTablesAssignView extends VerticalLayout {
 
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, table) -> {
-                    button.addThemeVariants(ButtonVariant.LUMO_PRIMARY,
+                    button.addThemeVariants(ButtonVariant.LUMO_TERTIARY,
                             ButtonVariant.LUMO_SMALL);
                     button.setText("Assign to me");
                     button.getElement().setAttribute("aria-label", "Assign to me");
                     button.addClickListener(e ->
                             createTableRelation(table, staffService.findEmployeeByUsername(username)));
-
                     String assigned = getAssignedEmployee(table);
                     button.setEnabled(assigned == null || assigned.trim().isEmpty());
                 })).setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
@@ -93,7 +93,7 @@ public class RestaurantTablesAssignView extends VerticalLayout {
                 new ComponentRenderer<>(Button::new, (button, table) -> {
                     button.setText("Remove Assignment");
                     button.addThemeVariants(ButtonVariant.LUMO_PRIMARY,
-                        ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_SMALL);
+                            ButtonVariant.LUMO_SMALL);
                     button.getElement().setAttribute("aria-label", "Remove my Assignment");
                     button.addClickListener(e -> {
                             Staff staff = new Staff();

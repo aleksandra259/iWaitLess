@@ -162,7 +162,8 @@ public class OrderDetailsPopup extends FormLayout {
         gridDetails.setItems(orderDetails);
 
         gridDetails.setWidthFull();
-        gridDetails.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
+        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT,
+                GridVariant.LUMO_NO_BORDER);
 
         gridDetails.addColumn(Renderers.createOrderDetailRenderer()).setHeader("Item");
         gridDetails.addColumn(e -> "Qty: " + e.getQuantity()).setHeader("Quantity")

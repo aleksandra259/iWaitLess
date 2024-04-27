@@ -30,7 +30,7 @@ public class NotificationPopup extends FormLayout {
 
         Paragraph description;
         if ("2".equals(notification.getType().getId())) {
-            description = new Paragraph("Table "
+            description = new Paragraph("Table #"
                     + notification.getTable().getTableNo()
                     + " needs your service.");
         } else {

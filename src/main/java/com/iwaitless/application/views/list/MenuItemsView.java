@@ -93,8 +93,9 @@ public class MenuItemsView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassNames("menu-item-grid");
         grid.setWidthFull();
-        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
-        getThemeList().add("spacing-xs");
+        grid.setHeightFull();
+        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT,
+                GridVariant.LUMO_NO_BORDER);
 
         grid.addComponentColumn(item -> {
             Image image = MenuItemsView.returnImage(item);
@@ -110,22 +111,17 @@ public class MenuItemsView extends VerticalLayout {
 
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, item) -> {
-                    button.addThemeVariants(ButtonVariant.LUMO_ICON,
-                            ButtonVariant.LUMO_SMALL);
                     button.getElement().setAttribute("aria-label", "Edit item");
-                    button.addClickListener(e ->
-                            createMenuItem(item));
+                    button.addClickListener(e -> createMenuItem(item));
                     button.setIcon(new Icon(VaadinIcon.EDIT));
+                    button.addClassName("edit-button");
                 })).setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, item) -> {
-                    button.addThemeVariants(ButtonVariant.LUMO_ICON,
-                            ButtonVariant.LUMO_ERROR,
-                            ButtonVariant.LUMO_SMALL);
                     button.getElement().setAttribute("aria-label", "Delete item");
                     button.setIcon(new Icon(VaadinIcon.TRASH));
-                    button.addClickListener(e ->
-                        deleteMenuItem(item));
+                    button.addClassName("delete-button");
+                    button.addClickListener(e -> deleteMenuItem(item));
                 })).setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
     }
 
