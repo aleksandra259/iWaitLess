@@ -33,6 +33,7 @@ public class NotificationsView extends Dialog {
     private final OrderDetailsService orderDetailService;
     private final OrderStatusService statusService;
 
+
     public NotificationsView(NotificationsService service,
                              OrdersService orderService,
                              OrderDetailsService orderDetailService,
@@ -44,7 +45,7 @@ public class NotificationsView extends Dialog {
         this.orderDetailService = orderDetailService;
         this.statusService = statusService;
 
-        setWidth("20rem");
+        setWidth("24rem");
         setCloseOnEsc(true);
         setCloseOnOutsideClick(true);
 
@@ -55,7 +56,8 @@ public class NotificationsView extends Dialog {
         Grid<Notifications> grid = new Grid<>(Notifications.class, false);
         grid.addClassName("notifications-grid");
         grid.setWidthFull();
-        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
+        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT,
+                GridVariant.LUMO_NO_BORDER);
 
         grid.setPartNameGenerator(notification -> {
             if ("R".equals(notification.getStatus().getId()))
@@ -117,27 +119,27 @@ public class NotificationsView extends Dialog {
 
         if (duration.toDays() >= 365) {
             long years = duration.toDays() / 365;
-            return years + (years == 1 ? " year ago" : " years ago");
+            return "преди " + (years == 1 ? "година" : years + " години");
         }
 
         long seconds = duration.getSeconds();
         if (seconds < 60) {
-            return seconds + " sec ago";
+            return "преди " + seconds + " сек.";
         } else if (seconds < 3600) {
             long minutes = seconds / 60;
-            return minutes + " min ago";
+            return "преди " + minutes + " мин.";
         } else if (seconds < 86400) {
             long hours = seconds / 3600;
-            return hours + " hr ago";
+            return "преди " + (hours == 1 ? "час" : hours + " часа");
         } else if (seconds < 604800) {
             long days = seconds / 86400;
-            return days + (days == 1 ? " day ago" : " days ago");
+            return "преди " + (days == 1 ? "ден" : days + " дни");
         } else if (seconds < 2419200) {
             long weeks = seconds / 604800;
-            return weeks + (weeks == 1 ? " week ago" : " weeks ago");
+            return "преди " + weeks + " седм.";
         } else {
             long months = seconds / 2419200;
-            return months + (months == 1 ? " month ago" : " months ago");
+            return "преди " + (months == 1 ? "месец" : months + " месеца");
         }
     }
 }

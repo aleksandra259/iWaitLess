@@ -14,7 +14,6 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -31,8 +30,8 @@ import java.io.FileNotFoundException;
 public class MenuItemsView extends VerticalLayout {
 
     Grid<MenuItems> grid = new Grid<>(MenuItems.class, false);
-    Button newFood = new Button("New");
-    H2 foodListHeader = new H2("Food list");
+    Button newFood = new Button("Нов");
+    H2 foodListHeader = new H2("Артикули");
 
     private final MenuItemService menuItem;
 
@@ -51,26 +50,16 @@ public class MenuItemsView extends VerticalLayout {
         newFood.setWidth("min-content");
         newFood.setMaxWidth("100px");
         newFood.addClickListener(e -> {
-                    if (category.getId() != null) {
+                    if (category != null && category.getId() != null) {
                         MenuItems item = new MenuItems();
                         item.setCategory(category);
                         createMenuItem(item);
                     }
                     else {
-                        Notification notification = new Notification();
+                        Notification notification = new Notification(
+                                "За да създадете атрибут, първо трябва да изберете категория.",
+                                3000);
                         notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-
-                        Button closeButton = new Button(new Icon("lumo", "cross"));
-                        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
-                        closeButton.setAriaLabel("Close");
-                        closeButton.addClickListener(event -> notification.close());
-
-                        HorizontalLayout layout = new HorizontalLayout(
-                                new Span("To be able to create item you should select category first."),
-                                closeButton);
-                        layout.setAlignItems(Alignment.CENTER);
-
-                        notification.add(layout);
                         notification.open();
                     }
                 });
@@ -106,19 +95,19 @@ public class MenuItemsView extends VerticalLayout {
         }).setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(Renderers.createItemRenderer());
         grid.addColumn(item -> String.format("%.2f", item.getPrice()) + " " + item.getCurrency());
-        grid.addColumn(item -> item.getSize() + " gram");
-        grid.addColumn(item -> item.isAvailable() ? "Available" : "Not Available");
+        grid.addColumn(item -> item.getSize() + " гр.");
+        grid.addColumn(item -> item.isAvailable() ? "Наличен" : "Не е наличен");
 
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, item) -> {
-                    button.getElement().setAttribute("aria-label", "Edit item");
+                    button.getElement().setAttribute("aria-label", "Редактиране на артикул");
                     button.addClickListener(e -> createMenuItem(item));
                     button.setIcon(new Icon(VaadinIcon.EDIT));
                     button.addClassName("edit-button");
                 })).setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, item) -> {
-                    button.getElement().setAttribute("aria-label", "Delete item");
+                    button.getElement().setAttribute("aria-label", "Изтрий артикул");
                     button.setIcon(new Icon(VaadinIcon.TRASH));
                     button.addClassName("delete-button");
                     button.addClickListener(e -> deleteMenuItem(item));
@@ -129,11 +118,11 @@ public class MenuItemsView extends VerticalLayout {
         Dialog dialog = new Dialog();
 
         dialog.setHeaderTitle(
-                String.format("Delete item \"%s\"?",
+                String.format("Изтрий на артикул \"%s\"?",
                               item.getName()));
-        dialog.add("Are you sure you want to delete this item permanently?");
+        dialog.add("Сигурни ли сте, че искате да изтриете този артикул завинаги?");
 
-        Button deleteButton = new Button("Delete", (e) -> dialog.close());
+        Button deleteButton = new Button("Изтрий", (e) -> dialog.close());
         deleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY,
                 ButtonVariant.LUMO_ERROR);
         deleteButton.getStyle().set("margin-right", "auto");
@@ -143,7 +132,7 @@ public class MenuItemsView extends VerticalLayout {
             setMenuItemData(category);
         });
 
-        Button cancelButton = new Button("Cancel", (e) -> dialog.close());
+        Button cancelButton = new Button("Отказ", (e) -> dialog.close());
         cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         dialog.getFooter().add(cancelButton);
         dialog.open();

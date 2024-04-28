@@ -28,25 +28,25 @@ import java.io.IOException;
 
 public class TablesPopup extends FormLayout {
 
-    TextField tableNo = new TextField("Table Number");
-    TextField description = new TextField("Description");
+    TextField tableNo = new TextField("Номер на маса");
+    TextField description = new TextField("Описание");
 
     BeanValidationBinder<RestaurantTable> binder = new BeanValidationBinder<>(RestaurantTable.class);
     Dialog dialog = new Dialog();
     Div output = new Div();
 
-    Button save = new Button("Save");
-    Button cancel = new Button("Cancel");
+    Button save = new Button("Запази");
+    Button cancel = new Button("Отказ");
     Button close = new Button(new Icon(VaadinIcon.CLOSE));
-    Button generateQR = new Button("Generate QR Code");
+    Button generateQR = new Button("Генериране на QR код");
 
 
     public TablesPopup(RestaurantTable table) {
         String header = String.valueOf(table.getTableId());
         if (header == null || header.trim().isEmpty())
-            dialog.setHeaderTitle("Create new table");
+            dialog.setHeaderTitle("Създаване на нова таблица");
         else
-            dialog.setHeaderTitle("Edit table number " + header);
+            dialog.setHeaderTitle("Редактиране на маса " + header);
 
 
         binder.bind(tableNo, RestaurantTable::getTableNo, RestaurantTable::setTableNo);
@@ -84,7 +84,7 @@ public class TablesPopup extends FormLayout {
                     throw new RuntimeException(e);
                 }
             } else {
-                output.add(new Text("To be able to generate QR code you should first create the table."));
+                output.add(new Text("За да генерирате QR код, първо трябва да създадете маса."));
                 output.getStyle().set("color","red");
             }
         });

@@ -14,13 +14,12 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-import com.vaadin.flow.theme.lumo.LumoUtility;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
 
-@PageTitle("iWaitLess | Order Status")
+@PageTitle("iWaitLess | Статус на поръчката")
 @Route("order-status")
 @AnonymousAllowed
 public class OrderStatusView extends VerticalLayout {
@@ -46,28 +45,28 @@ public class OrderStatusView extends VerticalLayout {
             table = restaurantTable.findTableByTableNo(tableNo);
 
         if (orderNo != null) {
-            H2 header = new H2("Order #" + orderNo + " tracker");
+            H2 header = new H2("Проследяване на поръчка #" + orderNo);
             header.addClassName("tables-grid");
 
             VerticalLayout orderStatusLayout = new VerticalLayout();
-            orderStatusLayout.add(createOrderStatusComponent("Order Received"));
-            orderStatusLayout.add(createOrderStatusComponent("Order Accepted"));
-            orderStatusLayout.add(createOrderStatusComponent("Preparing"));
-            orderStatusLayout.add(createOrderStatusComponent("Quality Check"));
-            orderStatusLayout.add(createOrderStatusComponent("Ready to be served"));
+            orderStatusLayout.add(createOrderStatusComponent("Получена"));
+            orderStatusLayout.add(createOrderStatusComponent("Приета"));
+            orderStatusLayout.add(createOrderStatusComponent("Подготовка"));
+            orderStatusLayout.add(createOrderStatusComponent("Проверка на качеството"));
+            orderStatusLayout.add(createOrderStatusComponent("Готова за сервиране"));
 
             notifyProgressBarUpdate();
 
             add(setMenuLayout(), header, orderStatusLayout,
                 new MenuPreviewLayout(menuCategory, menuItem, table));
         } else {
-            H3 header = new H3("No orders found");
-            Span emptyOrder = new Span("Looks like you have not made any order yet. "
-                    + "Add something to the cart and finalize your order to see its status.");
+            H3 header = new H3("Няма намерени поръчки");
+            Span emptyOrder = new Span("Изглежда, че все още не сте направили поръчка. "
+                    + "Добавете нещо в количката и завършете поръчката си, за да видите нейния статус.");
             emptyOrder.getStyle().set("font-size", "18px");
             emptyOrder.getStyle().set("text-align", "center");
 
-            Image emptyOrderImage = new Image("images/no-order-made.png", "No data available");
+            Image emptyOrderImage = new Image("images/no-order-made.png", "Няма налични данни");
             emptyOrderImage.setWidth("100%");
 
             add(setMenuLayout(),
@@ -117,26 +116,23 @@ public class OrderStatusView extends VerticalLayout {
     }
 
     private VerticalLayout setMenuLayout () {
-        VerticalLayout menuLayout = new VerticalLayout();
+        Image logo = new Image("images/logo.png", "iWaitLess Logo");
+        logo.setWidth("50%");
+
+        VerticalLayout menuLayout = new VerticalLayout(logo);
         menuLayout.setWidthFull();
-        H1 title = new H1("iWaitLess | Order status");
-        title.getStyle().set("font-size", "var(--lumo-font-size-xl)")
-                .set("margin", "var(--lumo-space-xs) var(--lumo-space-xs)")
-                .set("padding", "var(--lumo-space-xs) var(--lumo-space-xs)");
-        menuLayout.add(title);
         menuLayout.addClassName("fixed-menu-bar");
-        menuLayout.addClassNames(LumoUtility.Background.CONTRAST_5);
 
         return menuLayout;
     }
 
     private int getOrderStatusValue (String status) {
         return switch (status) {
-            case "Order Received" -> ProgressBarStatus.ORDER_RECEIVED.getValue();
-            case "Order Accepted" -> ProgressBarStatus.ORDER_ACCEPTED.getValue();
-            case "Preparing" -> ProgressBarStatus.PREPARING.getValue();
-            case "Quality Check" -> ProgressBarStatus.QUALITY_CHECK.getValue();
-            case "Ready to be served" -> ProgressBarStatus.DELIVERED.getValue();
+            case "Получена" -> ProgressBarStatus.ORDER_RECEIVED.getValue();
+            case "Приета" -> ProgressBarStatus.ORDER_ACCEPTED.getValue();
+            case "Подготовка" -> ProgressBarStatus.PREPARING.getValue();
+            case "Проверка на качеството" -> ProgressBarStatus.QUALITY_CHECK.getValue();
+            case "Готова за сервиране" -> ProgressBarStatus.DELIVERED.getValue();
             default -> 0;
         };
     }

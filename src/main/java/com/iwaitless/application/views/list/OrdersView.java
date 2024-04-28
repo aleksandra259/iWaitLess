@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@PageTitle("Orders")
+@PageTitle("iWaitLess | Поръчки")
 @Route(value = "orders", layout = MainLayout.class)
 @PermitAll
 public class OrdersView extends VerticalLayout {
@@ -79,20 +79,20 @@ public class OrdersView extends VerticalLayout {
             return null;
         });
 
-        grid.addColumn(Renderers.createOrderRenderer()).setHeader("Order");
+        grid.addColumn(Renderers.createOrderRenderer()).setHeader("Поръчка");
         grid.addColumn(order -> detailsService.getPriceByOrder(order.getOrderNo()))
-                .setHeader("Total price")
+                .setHeader("Цена")
                 .setAutoWidth(true);
         grid.addColumn(Renderers.createOrderDateRenderer())
-                .setHeader("Ordered On").setSortable(true)
+                .setHeader("Поръчана на").setSortable(true)
                 .setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(order -> order.getStatus().getName())
-                .setHeader("Status").setSortable(true)
+                .setHeader("Статус").setSortable(true)
                 .setAutoWidth(true).setFlexGrow(0);
 
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, order) -> {
-                    button.setText("Check order details");
+                    button.setText("Детайли");
                     button.addClickListener(e ->
                         new OrderDetailsPopup(order, service, detailsService, statusService, grid));
                 })).setTextAlign(ColumnTextAlign.END);
@@ -116,15 +116,15 @@ public class OrdersView extends VerticalLayout {
                 .map(RestaurantTable::getTableNo)
                 .collect(Collectors.toList());
 
-        statusFilter.setLabel("Status");
+        statusFilter.setLabel("Статус");
         statusFilter.setItems(statusNames);
         statusFilter.addValueChangeListener(e -> setOrderData());
 
-        tableFilter.setLabel("Table");
+        tableFilter.setLabel("Маса");
         tableFilter.setItems(tableNames);
         tableFilter.addValueChangeListener(e -> setOrderData());
 
-        myOrders.setLabel("Filter my orders");
+        myOrders.setLabel("Филтриране на моите поръчки");
         myOrders.addValueChangeListener(e -> setOrderData());
 
         HorizontalLayout buttonLayout = getHorizontalLayout();
@@ -146,7 +146,7 @@ public class OrdersView extends VerticalLayout {
                 .map(RestaurantTable::getTableNo)
                 .collect(Collectors.toSet());
 
-        Button myTablesButton = new Button("Filter my tables");
+        Button myTablesButton = new Button("Филтриране на моите маси");
         myTablesButton.addClickListener(e -> tableFilter.select(myTables));
 
         if (myTables.isEmpty())

@@ -9,15 +9,11 @@ import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.theme.lumo.LumoUtility;
-import com.vaadin.flow.theme.lumo.LumoUtility.FontSize;
-import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
 
 import java.util.Comparator;
 import java.util.List;
@@ -38,6 +34,7 @@ public class MenuLoadView extends VerticalLayout
     VerticalLayout menuLayout = new VerticalLayout();
     List<MenuCategory> categorySorted;
 
+
     public MenuLoadView(MenuCategoryService menuCategory,
                         MenuItemService menuItem,
                         RestaurantTable table,
@@ -55,15 +52,13 @@ public class MenuLoadView extends VerticalLayout
         tableExists = (table != null && table.getTableId() != null);
         HorizontalLayout menuBar = new HorizontalLayout();
 
-        searchField.setPlaceholder("Search by name or ingredient...");
+        searchField.setPlaceholder("Търсене по име или съставка...");
         searchField.addValueChangeListener(event -> setMenuData());
         searchField.setWidthFull();
         if (showSearch && tableExists) {
-            H1 title = new H1("iWaitLess | Menu");
-            title.getStyle().set("font-size", "var(--lumo-font-size-l)")
-                    .set("margin", "var(--lumo-space-xs) var(--lumo-space-xs)")
-                    .set("padding", "var(--lumo-space-xs) var(--lumo-space-xs)");
-            menuLayout.add(title, searchField);
+            Image logo = new Image("images/logo.png", "iWaitLess Logo");
+            logo.setWidth("50%");
+            menuLayout.add(logo, searchField);
         }
 
         categorySorted = menuCategory.findAllCategories();
@@ -83,11 +78,11 @@ public class MenuLoadView extends VerticalLayout
         }
 
         if (!tableExists) {
-            H2 header = new H2("Menu");
-            header.addClassNames(Margin.Bottom.NONE, Margin.Top.SMALL, FontSize.XXLARGE);
+            Image logo = new Image("images/logo.png", "iWaitLess Logo");
+            logo.setWidth("15%");
 
             SplitLayout splitLayout = new SplitLayout(searchField, menuBar);
-            menuLayout.add(header, splitLayout);
+            menuLayout.add(logo, splitLayout);
         }
 
         setMenuData();
@@ -103,7 +98,6 @@ public class MenuLoadView extends VerticalLayout
         if (!tableExists || showSearch) {
             itemsPreview.addClassName("menu-categories-page");
             menuLayout.addClassName("fixed-menu-bar");
-            menuLayout.addClassNames(LumoUtility.Background.CONTRAST_5);
             add(menuLayout);
         }
 

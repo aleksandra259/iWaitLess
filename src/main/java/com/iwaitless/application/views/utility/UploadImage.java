@@ -46,7 +46,7 @@ public class UploadImage extends VerticalLayout {
         });
         upload.addFailedListener(event -> {
             output.removeAll();
-            output.add(new TextField("Upload failed: " + event.getReason()));
+            output.add(new TextField("Качването не бе успешно: " + event.getReason()));
         });
     }
 

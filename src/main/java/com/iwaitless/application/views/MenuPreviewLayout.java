@@ -50,14 +50,8 @@ public class MenuPreviewLayout extends AppLayout {
 
     private HorizontalLayout getNavigation() {
         DrawerToggle subMenu = new DrawerToggle();
+        navigation.setClassName("main-drawer");
 
-        navigation.addClassNames(LumoUtility.Width.FULL,
-                LumoUtility.JustifyContent.EVENLY,
-                LumoUtility.AlignSelf.STRETCH);
-        navigation.getStyle().set("position", "fixed");
-        navigation.getStyle().set("bottom", "0");
-        navigation.setPadding(false);
-        navigation.setSpacing(false);
         navigation.add(subMenu,
                 createLink(VaadinIcon.HOME, "Home"),
                 createLink(VaadinIcon.COMMENT_ELLIPSIS, "Call Waitress"),
@@ -93,20 +87,22 @@ public class MenuPreviewLayout extends AppLayout {
     }
 
     private void setSubMenuData () {
-        H3 orderHeader = new H3("Orders");
-        H3 categoriesHeader = new H3("Categories");
-        H3 personalizeHeader = new H3("Personalize menu");
+        H3 orderHeader = new H3("Поръчки");
+        H3 categoriesHeader = new H3("Категории");
+        H3 personalizeHeader = new H3("Персонализиране на менюто");
         orderHeader.getStyle().set("margin-top", "30px");
         categoriesHeader.getStyle().set("margin-top", "30px");
         personalizeHeader.getStyle().set("margin-top", "30px");
         categories.getStyle().set("padding-top", "20px");
         categories.setSpacing(false);
+        categories.setHeightFull();
+        categories.setClassName("main-drawer");
 
-        RouterLink orderStatus = new RouterLink("Check Order Status", OrderStatusView.class);
+        RouterLink orderStatus = new RouterLink("Състояние на поръчката", OrderStatusView.class);
         orderStatus.addClassName("order-status-link-button");
-        RouterLink mostPopular = new RouterLink("Popular", PopularMenuItemsView.class);
+        RouterLink mostPopular = new RouterLink("Популярни", PopularMenuItemsView.class);
         mostPopular.addClassName("order-status-link-button");
-        RouterLink personalize = new RouterLink("Personalize", PersonalizedMenuView.class);
+        RouterLink personalize = new RouterLink("Персонализиране", PersonalizedMenuView.class);
         personalize.addClassName("order-status-link-button");
 
         categories.add(orderHeader, orderStatus, personalizeHeader,
@@ -120,9 +116,7 @@ public class MenuPreviewLayout extends AppLayout {
                 String anchorLink = createAnchorLink(category.getId());
                 Button button = new Button(category.getName(), event ->
                         UI.getCurrent().getPage().executeJs("window.location.hash = $0", anchorLink));
-                button.addThemeVariants(ButtonVariant.LUMO_CONTRAST, ButtonVariant.LUMO_TERTIARY);
-                button.getStyle().set("color", "black");
-                button.getStyle().set("font-size", "18px");
+                button.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
                 categories.add(button);
             }

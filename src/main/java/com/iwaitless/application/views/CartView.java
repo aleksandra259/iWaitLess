@@ -31,7 +31,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@PageTitle("iWaitLess | Cart")
+@PageTitle("iWaitLess | Количка")
 @Route(value = "cart")
 @AnonymousAllowed
 public class CartView extends VerticalLayout {
@@ -49,7 +49,7 @@ public class CartView extends VerticalLayout {
     H3 header = new H3();
     List<MenuItemsOrder> cartItems;
     RestaurantTable table = new RestaurantTable();
-    Button finalizeOrderButton = new Button("Finalize Order");
+    Button finalizeOrderButton = new Button("Завърши поръчката");
 
     Grid<MenuItemsOrder> grid = new Grid<>();
     VerticalLayout suggestedItems = new VerticalLayout();
@@ -78,9 +78,9 @@ public class CartView extends VerticalLayout {
         createButtonsLayout();
         suggestedItemsData();
 
-        header.setText("Cart " + getTotalItemsCount());
-        totalAmountLabel.setText("Total amount to pay: " + getTotalPrice());
-        totalTimeToProcess.setText("Total time to process: " +  getTotalTimeToProcess());
+        header.setText("Количка " + getTotalItemsCount());
+        totalAmountLabel.setText("Обща сума за плащане: " + getTotalPrice());
+        totalTimeToProcess.setText("Общо време за обработка: " +  getTotalTimeToProcess());
 
         totalAmountLabel.addClassName("bold-span");
         totalTimeToProcess.addClassName("bold-span");
@@ -107,18 +107,18 @@ public class CartView extends VerticalLayout {
 
     private String getTotalTimeToProcess() {
         if (cartItems != null && !cartItems.isEmpty()) {
-            double maxTimeToProcess = cartItems.get(0).getTimeToProcess() == null ?
-                    0.0d : cartItems.get(0).getTimeToProcess();
+            double maxTimeToProcess = cartItems.get(0).getTimeToProcess() == null
+                    ? 0.0d : cartItems.get(0).getTimeToProcess();
 
             for (MenuItemsOrder item : cartItems)
                 if (item.getTimeToProcess() != null && item.getTimeToProcess() > maxTimeToProcess)
                     maxTimeToProcess = item.getTimeToProcess();
 
             return maxTimeToProcess == 0.0d ?
-                    "Undefined" : maxTimeToProcess + " minutes";
+                    "Неопределен" : String.format("%.0f", maxTimeToProcess) + " мин.";
         }
 
-        return "Undefined";
+        return "Неопределен";
     }
 
     private String getTotalItemsCount() {
@@ -127,7 +127,7 @@ public class CartView extends VerticalLayout {
             for (MenuItemsOrder ignored : cartItems)
                 itemsCount += 1;
 
-        return "(" + itemsCount + " elements)";
+        return "(" + itemsCount + " елемента)";
     }
 
     private void updateContent() {
@@ -146,11 +146,11 @@ public class CartView extends VerticalLayout {
     }
 
     private Component createEmptyStateComponent() {
-        Span emptyCart = new Span("The cart is empty. Add something to make an order.");
+        Span emptyCart = new Span("Количката е празна. Добавете нещо, за да направите поръчка.");
         emptyCart.getStyle().set("font-size", "18px");
         emptyCart.getStyle().set("text-align", "center");
 
-        Image emptyStateImage = new Image("images/cart-is-empty.png", "No data available");
+        Image emptyStateImage = new Image("images/cart-is-empty.png", "Няма налични данни");
         emptyStateImage.setWidth("100%");
 
         return new VerticalLayout(emptyStateImage, emptyCart);
@@ -164,28 +164,26 @@ public class CartView extends VerticalLayout {
         if (cartItems != null && !cartItems.isEmpty())
             grid.setItems(cartItems);
 
-        grid.addClassName("cart-items-grid");
         grid.setWidthFull();
-        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
+        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT,
+                GridVariant.LUMO_NO_BORDER);
 
         grid.addColumn(Renderers.createItemOrderRenderer());
         grid.addColumn(new ComponentRenderer<>(this::quantityField))
-                .setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
+                .setTextAlign(ColumnTextAlign.END);
         grid.addColumn(
             new ComponentRenderer<>(Button::new, (button, item) -> {
-                button.addThemeVariants(ButtonVariant.LUMO_ICON,
-                        ButtonVariant.LUMO_ERROR,
-                        ButtonVariant.LUMO_SMALL);
                 button.getElement().setAttribute("aria-label", "Delete");
+                button.addClassName("delete-button");
                 button.setIcon(new Icon(VaadinIcon.TRASH));
                 button.addClickListener(e -> {
                     assert cartItems != null;
                     cartItems.remove(item);
                     grid.getDataProvider().refreshAll();
 
-                    totalAmountLabel.setText("Total amount to pay: " + getTotalPrice());
-                    totalTimeToProcess.setText("Total time to process: " +  getTotalTimeToProcess());
-                    header.setText("Cart " + getTotalItemsCount());
+                    totalAmountLabel.setText("Обща сума за плащане: " + getTotalPrice());
+                    totalTimeToProcess.setText("Общо време за обработка: " +  getTotalTimeToProcess());
+                    header.setText("Количка " + getTotalItemsCount());
 
                     suggestedItemsData();
                     updateContent();
@@ -203,19 +201,15 @@ public class CartView extends VerticalLayout {
                 finalizeOrder();
             }
         });
-
     }
 
     private VerticalLayout setMenuLayout () {
-        VerticalLayout menuLayout = new VerticalLayout();
+        Image logo = new Image("images/logo.png", "iWaitLess Logo");
+        logo.setWidth("50%");
+
+        VerticalLayout menuLayout = new VerticalLayout(logo);
         menuLayout.setWidthFull();
-        H1 title = new H1("iWaitLess | Cart");
-        title.getStyle().set("font-size", "var(--lumo-font-size-xl)")
-                .set("margin", "var(--lumo-space-xs) var(--lumo-space-xs)")
-                .set("padding", "var(--lumo-space-xs) var(--lumo-space-xs)");
-        menuLayout.add(title);
         menuLayout.addClassName("fixed-menu-bar");
-        menuLayout.addClassNames(LumoUtility.Background.CONTRAST_5);
 
         return menuLayout;
     }
@@ -223,10 +217,10 @@ public class CartView extends VerticalLayout {
     private void finalizeOrder() {
         Dialog dialog = new Dialog();
 
-        dialog.setHeaderTitle("Finalize order");
-        dialog.add("Are you sure you want to finalize order?");
+        dialog.setHeaderTitle("Завърши поръчка");
+        dialog.add("Сигурни ли сте, че искате да завършите поръчката?");
 
-        Button finalizeButton = new Button("Finalize", (e) -> dialog.close());
+        Button finalizeButton = new Button("Завърши", (e) -> dialog.close());
         finalizeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY,
                 ButtonVariant.LUMO_SUCCESS);
         finalizeButton.getStyle().set("margin-right", "auto");
@@ -238,7 +232,7 @@ public class CartView extends VerticalLayout {
             getUI().ifPresent(ui -> ui.navigate(OrderStatusView.class));
         });
 
-        Button cancelButton = new Button("Cancel", (e) -> dialog.close());
+        Button cancelButton = new Button("Отказ", (e) -> dialog.close());
         cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         dialog.getFooter().add(cancelButton);
         dialog.open();
@@ -257,8 +251,11 @@ public class CartView extends VerticalLayout {
 
         if (items != null && !items.isEmpty()) {
             OrderedList imageContainer = new OrderedList();
+            imageContainer.addClassNames("image-gallery-view");
+            imageContainer.setWidthFull();
             imageContainer.addClassNames(LumoUtility.Gap.SMALL, LumoUtility.Display.GRID,
-                    LumoUtility.ListStyleType.NONE, LumoUtility.Margin.NONE, LumoUtility.Padding.NONE);
+                    LumoUtility.MaxWidth.SCREEN_LARGE, LumoUtility.Margin.Bottom.XLARGE,
+                    LumoUtility.Margin.NONE, LumoUtility.Padding.NONE);
 
             for (MenuItems item : items)
                 commonItems.addAll(orderDetailsService.findCommonOrderedItems(item));
@@ -279,7 +276,7 @@ public class CartView extends VerticalLayout {
                         .forEach(item -> imageContainer.add(new MenuItemViewCard(item, table)));
 
                 if (!uniqueCommonItems.isEmpty())
-                    suggestedItems.add(new Span("You may also like:"), imageContainer);
+                    suggestedItems.add(new Span("Може да харесате и:"), imageContainer);
             }
         }
     }
@@ -297,8 +294,8 @@ public class CartView extends VerticalLayout {
             order.setQuantity(e.getValue());
             grid.getDataProvider().refreshAll();
 
-            totalAmountLabel.setText("Total amount to pay: " + getTotalPrice());
-            totalTimeToProcess.setText("Total time to process: " +  getTotalTimeToProcess());
+            totalAmountLabel.setText("Обща сума за плащане: " + getTotalPrice());
+            totalTimeToProcess.setText("Общо време за обработка: " +  getTotalTimeToProcess());
 
             updateContent();
         });

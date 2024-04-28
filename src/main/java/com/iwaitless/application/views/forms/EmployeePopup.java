@@ -24,29 +24,29 @@ import java.util.List;
 
 public class EmployeePopup extends FormLayout {
 
-    TextField firstName = new TextField("First Name");
-    TextField lastName = new TextField("Last Name");
-    EmailField email = new EmailField("Email");
-    TextField phone = new TextField("Phone number");
-    TextArea address = new TextArea("Address");
-    DatePicker birthdate = new DatePicker("Birthdate");
-    ComboBox<StaffRole> role = new ComboBox<>("Role");
+    TextField firstName = new TextField("Име");
+    TextField lastName = new TextField("Фамилия");
+    EmailField email = new EmailField("Имейл");
+    TextField phone = new TextField("Телефонен номер");
+    TextArea address = new TextArea("Адрес");
+    DatePicker birthdate = new DatePicker("Рождена дата");
+    ComboBox<StaffRole> role = new ComboBox<>("Роля");
 
     BeanValidationBinder<Staff> binder = new BeanValidationBinder<>(Staff.class);
     Dialog dialog = new Dialog();
 
-    Button save = new Button("Save");
-    Button delete = new Button("Delete");
-    Button cancel = new Button("Cancel");
+    Button save = new Button("Запази");
+    Button delete = new Button("Изтрий");
+    Button cancel = new Button("Отказ");
     Button close = new Button(new Icon(VaadinIcon.CLOSE));
 
     public EmployeePopup(Staff staff,
                          List<StaffRole> roles) {
         String name = staff.getFirstName();
         if (name == null || name.trim().isEmpty())
-            dialog.setHeaderTitle("New employee");
+            dialog.setHeaderTitle("Нов служител");
         else
-            dialog.setHeaderTitle("Edit " + name +"'s profile");
+            dialog.setHeaderTitle("Редактиране на профила на " + name);
 
         role.setItems(roles);
         role.setItemLabelGenerator(StaffRole::getName);

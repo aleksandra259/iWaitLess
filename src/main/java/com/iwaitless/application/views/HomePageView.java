@@ -20,7 +20,7 @@ import jakarta.annotation.security.PermitAll;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-@PageTitle("Home Page")
+@PageTitle("iWaitLess | Начална страница")
 @Route(value = "", layout = MainLayout.class)
 @PermitAll
 public class HomePageView extends VerticalLayout {
@@ -30,6 +30,7 @@ public class HomePageView extends VerticalLayout {
     private final OrdersService service;
 
     Grid<Orders> grid = new Grid<>(Orders.class, false);
+
 
     public HomePageView(OrdersService service,
                         OrderDetailsService detailsService) {
@@ -43,13 +44,13 @@ public class HomePageView extends VerticalLayout {
         createOrderGrid();
 
         VerticalLayout welcomeLayout = new VerticalLayout(
-                new H2("Welcome to iWaitLess Employee Dashboard"),
-                new Paragraph("This dashboard provides an overview of created "
-                        + "orders and statistics for the last 7 days.")
+                new H2("Добре дошли в iWaitLess"),
+                new Paragraph("Това табло за управление предоставя преглед "
+                        + "на създадените поръчки и статистически данни за последните 7 дни.")
         );
 
         VerticalLayout orderStatsLayout = new VerticalLayout(
-                new H2("Order Statistics"),
+                new H2("Статистика на поръчките"),
                 new CustomChart()
         );
         HorizontalLayout dashboard = new HorizontalLayout(
@@ -63,7 +64,7 @@ public class HomePageView extends VerticalLayout {
         dashboard.setWidthFull();
         dashboard.setHeight("50%");
 
-        add(dashboard, new H2("Orders"), grid);
+        add(dashboard, new H2("Поръчки"), grid);
     }
 
     private void createOrderGrid() {
@@ -78,15 +79,15 @@ public class HomePageView extends VerticalLayout {
             return null;
         });
 
-        grid.addColumn(Orders::getOrderNo).setHeader("Order No");
+        grid.addColumn(Orders::getOrderNo).setHeader("Номер на поръчка");
         grid.addColumn(order -> detailsService.getPriceByOrder(order.getOrderNo()))
-                .setHeader("Total price")
+                .setHeader("Цена")
                 .setAutoWidth(true);
         grid.addColumn(Renderers.createOrderDateRenderer())
-                .setHeader("Ordered On").setSortable(true)
+                .setHeader("Поръчана на").setSortable(true)
                 .setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(order -> order.getStatus().getName())
-                .setHeader("Status").setSortable(true)
+                .setHeader("Статус").setSortable(true)
                 .setAutoWidth(true).setFlexGrow(0);
 
 

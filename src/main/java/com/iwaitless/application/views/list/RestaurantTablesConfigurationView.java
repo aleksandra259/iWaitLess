@@ -24,7 +24,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
 
-@PageTitle("Tables Configuration")
+@PageTitle("iWaitLess | Конфигурация на маси")
 @Route(value = "tables-configuration", layout = MainLayout.class)
 @RolesAllowed("ROLE_ADMIN")
 public class RestaurantTablesConfigurationView extends VerticalLayout {
@@ -56,21 +56,21 @@ public class RestaurantTablesConfigurationView extends VerticalLayout {
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT,
                 GridVariant.LUMO_NO_BORDER);
 
-        grid.addColumn(RestaurantTable::getTableNo).setHeader("Table No").setAutoWidth(true).setFlexGrow(0);
-        grid.addColumn(RestaurantTable::getDescription).setHeader("Description");
+        grid.addColumn(RestaurantTable::getTableNo).setHeader("Номер на маса").setAutoWidth(true).setFlexGrow(0);
+        grid.addColumn(RestaurantTable::getDescription).setHeader("Описание");
         grid.addColumn(table ->
                 (table.getQrCode() != null && !table.getQrCode().trim().isEmpty())
-                        ? "Generated" : "Not Generated").setHeader("QR Code").setAutoWidth(true).setFlexGrow(0);
+                        ? "Генериран" : "Не е генериран").setHeader("QR код").setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, table) -> {
-                    button.getElement().setAttribute("aria-label", "Edit table");
+                    button.getElement().setAttribute("aria-label", "Редактиране на маса");
                     button.addClickListener(e -> createTable(table));
                     button.setIcon(new Icon(VaadinIcon.EDIT));
                     button.addClassName("edit-button");
             })).setHeader("").setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, table) -> {
-                    button.getElement().setAttribute("aria-label", "Delete table");
+                    button.getElement().setAttribute("aria-label", "Изтрий маса");
                     button.setIcon(new Icon(VaadinIcon.TRASH));
                     button.addClickListener(e -> deleteTable(table));
                     button.addClassName("delete-button");
@@ -78,12 +78,12 @@ public class RestaurantTablesConfigurationView extends VerticalLayout {
     }
 
     private HorizontalLayout getToolbar() {
-        filterText.setPlaceholder("Filter by description...");
+        filterText.setPlaceholder("Филтриране по описание...");
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
         filterText.addValueChangeListener(e -> setTablesData());
 
-        Button addContactButton = new Button("Add table");
+        Button addContactButton = new Button("Добави маса");
         addContactButton.addClickListener(click -> createTable(new RestaurantTable()));
 
         var toolbar = new HorizontalLayout(filterText, addContactButton);
@@ -122,10 +122,10 @@ public class RestaurantTablesConfigurationView extends VerticalLayout {
         Dialog dialog = new Dialog();
 
         dialog.setHeaderTitle(
-                String.format("Delete employee \"%s\"?", table.getTableId()));
-        dialog.add("Are you sure you want to delete this table permanently?");
+                String.format("Изтрий маса \"%s\"?", table.getTableId()));
+        dialog.add("Сигурни ли сте, че искате да изтриете тази маса завинаги??");
 
-        Button deleteButton = new Button("Delete", (e) -> dialog.close());
+        Button deleteButton = new Button("Изтрий", (e) -> dialog.close());
         deleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY,
                 ButtonVariant.LUMO_ERROR);
         deleteButton.getStyle().set("margin-right", "auto");
@@ -135,7 +135,7 @@ public class RestaurantTablesConfigurationView extends VerticalLayout {
             setTablesData();
         });
 
-        Button cancelButton = new Button("Cancel", (e) -> dialog.close());
+        Button cancelButton = new Button("Отказ", (e) -> dialog.close());
         cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         dialog.getFooter().add(cancelButton);
         dialog.open();

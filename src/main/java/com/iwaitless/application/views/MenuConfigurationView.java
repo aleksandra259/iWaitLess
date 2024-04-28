@@ -11,7 +11,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
 
-@PageTitle("Menu Configuration")
+@PageTitle("iWaitLess | Конфигуриране на маси")
 @Route(value = "menu-configuration", layout = MainLayout.class)
 @RolesAllowed("ROLE_ADMIN")
 public class MenuConfigurationView extends VerticalLayout {

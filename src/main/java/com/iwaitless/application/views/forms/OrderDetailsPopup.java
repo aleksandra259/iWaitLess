@@ -53,12 +53,10 @@ public class OrderDetailsPopup extends FormLayout {
 
         this.orderDetails = orderDetailService.findOrderDetailsByOrderNo(order.getOrderNo());
 
-        getStyle().set("width", "30rem").set("max-width", "100%");
-        addClassNames(LumoUtility.Background.CONTRAST_5, LumoUtility.Display.FLEX,
-                LumoUtility.AlignItems.START, LumoUtility.BorderRadius.NONE,
-                LumoUtility.Margin.NONE);
+        addClassNames(LumoUtility.Display.FLEX, LumoUtility.AlignItems.START,
+                LumoUtility.BorderRadius.NONE, LumoUtility.Margin.NONE);
 
-        dialog.setHeaderTitle("Order #" + order.getOrderNo());
+        dialog.setHeaderTitle("Поръчка #" + order.getOrderNo());
         configureLayout();
         createButtonsLayout();
 
@@ -80,8 +78,8 @@ public class OrderDetailsPopup extends FormLayout {
 
         switch (orderStatus) {
             case "1" -> {  // Cancel order, Approve order
-                Button cancelOrderButton = new Button("Cancel order");
-                Button approveOrderButton = new Button("Approve order");
+                Button cancelOrderButton = new Button("Откажи поръчка");
+                Button approveOrderButton = new Button("Потвърди поръчка");
 
                 approveOrderButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
                 cancelOrderButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
@@ -107,17 +105,17 @@ public class OrderDetailsPopup extends FormLayout {
                 dialog.getFooter().add(buttonLayout);
             }
             case "6" -> {  // Order Status: Finalized
-                Span statusSpan = new Span("Order status: Finalized");
+                Span statusSpan = new Span("Статус на поръчката: Завършена");
                 statusSpan.setClassName("order-status-finalized");
                 dialog.getFooter().add(statusSpan);
             }
             case "-1" -> {  // Order Status: Cancelled
-                Span statusSpan = new Span("Order status: Cancelled");
+                Span statusSpan = new Span("Статус на поръчката: Отказана");
                 statusSpan.setClassName("order-status-cancelled");
                 dialog.getFooter().add(statusSpan);
             }
             default -> {  // Order status: dropdown menu to update status, Cancel order
-                Button cancelOrderButton = new Button("Cancel order");
+                Button cancelOrderButton = new Button("Откажи поръчка");
                 cancelOrderButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
                 cancelOrderButton.addClickListener(event -> {
                     order.setStatus(statusService.findStatusById("-1"));
@@ -126,7 +124,7 @@ public class OrderDetailsPopup extends FormLayout {
                     grid.getDataProvider().refreshAll();
                 });
 
-                Span status = new Span("Order status: ");
+                Span status = new Span("Статус на поръчка: ");
                 Select<String> selectStatus = new Select<>();
                 selectStatus.setItems(statusService.findAllStatuses()
                         .stream()
@@ -153,7 +151,7 @@ public class OrderDetailsPopup extends FormLayout {
     }
 
     void configureLayout() {
-        Paragraph description = new Paragraph("for table: "
+        Paragraph description = new Paragraph("за маса: "
                 + order.getTableRelation().getTable().getTableNo()
                 + " (" + order.getTableRelation().getTable().getDescription() + ")");
         description.addClassNames(LumoUtility.FontSize.LARGE);
@@ -165,15 +163,15 @@ public class OrderDetailsPopup extends FormLayout {
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT,
                 GridVariant.LUMO_NO_BORDER);
 
-        gridDetails.addColumn(Renderers.createOrderDetailRenderer()).setHeader("Item");
-        gridDetails.addColumn(e -> "Qty: " + e.getQuantity()).setHeader("Quantity")
+        gridDetails.addColumn(Renderers.createOrderDetailRenderer()).setHeader("Артикул");
+        gridDetails.addColumn(e -> "Qty: " + e.getQuantity()).setHeader("Количество")
                 .setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
         gridDetails.addColumn(e -> String.format("%.2f", e.getItem().getPrice())
-                        + " " + e.getItem().getCurrency()).setHeader("Price")
+                        + " " + e.getItem().getCurrency()).setHeader("Цена")
                 .setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
 
 
-        Paragraph totalAmountLabel = new Paragraph("Total price: " + getTotalPrice());
+        Paragraph totalAmountLabel = new Paragraph("Обща стойност: " + getTotalPrice());
         totalAmountLabel.setClassName("total-amount-text");
 
         dialog.add(description, gridDetails, totalAmountLabel);

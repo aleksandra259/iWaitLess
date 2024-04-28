@@ -69,7 +69,6 @@ public class MenuItemsPreviewView extends Main
             notConsistElements = new String[0];
         }
 
-
         categorySorted.forEach(category -> {
             final int[] counter = {0};
             List<MenuItems> items = menuItem

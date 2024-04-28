@@ -10,7 +10,7 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
-@PageTitle("iWaitLess | Menu")
+@PageTitle("iWaitLess | Меню")
 @Route(value = "menu-catalogue")
 @PreserveOnRefresh
 @AnonymousAllowed

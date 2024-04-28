@@ -26,7 +26,7 @@ import jakarta.annotation.security.RolesAllowed;
 import java.text.SimpleDateFormat;
 import java.util.stream.Collectors;
 
-@PageTitle("Staff List")
+@PageTitle("iWaitLess | Служители")
 @Route(value="staff", layout = MainLayout.class)
 @RolesAllowed("ROLE_ADMIN")
 public class ListStaffView extends VerticalLayout {
@@ -55,16 +55,16 @@ public class ListStaffView extends VerticalLayout {
                 GridVariant.LUMO_NO_BORDER);
 
         grid.addColumn(Renderers.createEmployeeRenderer())
-                .setComparator(Staff::getFirstName).setHeader("Employee");
+                .setComparator(Staff::getFirstName).setHeader("Служител");
         grid.addColumn(Staff::getEmail).setComparator(Staff::getEmail)
-                .setHeader("Email").setAutoWidth(true).setFlexGrow(0);
-        grid.addColumn(Staff::getPhone).setHeader("Phone").setAutoWidth(true).setFlexGrow(0);
-        grid.addColumn(Staff::getAddress).setHeader("Address").setAutoWidth(true).setFlexGrow(0);
+                .setHeader("Имейл").setAutoWidth(true).setFlexGrow(0);
+        grid.addColumn(Staff::getPhone).setHeader("Телефонен номер").setAutoWidth(true).setFlexGrow(0);
+        grid.addColumn(Staff::getAddress).setHeader("Адрес").setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(employee -> {
                     SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
                     return formatter.format(employee.getBirthdate());
                 })
-                .setHeader("Birthdate")
+                .setHeader("Рождена дата")
                 .setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(employee -> {
                     UserStaffRelation user = service.finsUserByEmployeeId(employee.getEmployeeId());
@@ -73,19 +73,19 @@ public class ListStaffView extends VerticalLayout {
 
                     return null;
                 })
-                .setHeader("Username")
+                .setHeader("Потребителско име")
                 .setComparator(Staff::getUsername)
                 .setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, employee) -> {
-                    button.getElement().setAttribute("aria-label", "Edit employee");
+                    button.getElement().setAttribute("aria-label", "Редактиране на служител");
                     button.addClickListener(e -> createEmployee(employee));
                     button.setIcon(new Icon(VaadinIcon.EDIT));
                     button.addClassName("edit-button");
                 })).setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, employee) -> {
-                    button.getElement().setAttribute("aria-label", "Delete employee");
+                    button.getElement().setAttribute("aria-label", "Изтрий служител");
                     button.setIcon(new Icon(VaadinIcon.TRASH));
                     button.addClickListener(e -> deleteEmployee(employee));
                     button.addClassName("delete-button");
@@ -93,12 +93,12 @@ public class ListStaffView extends VerticalLayout {
     }
 
     private HorizontalLayout getToolbar() {
-        filterText.setPlaceholder("Filter by name...");
+        filterText.setPlaceholder("Филтриране по име...");
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
         filterText.addValueChangeListener(e -> setEmployeeData());
 
-        Button addContactButton = new Button("Add employee");
+        Button addContactButton = new Button("Добави служител");
         addContactButton.addClickListener(click -> createEmployee(new Staff()));
 
         var toolbar = new HorizontalLayout(filterText, addContactButton);
@@ -131,11 +131,11 @@ public class ListStaffView extends VerticalLayout {
         Dialog dialog = new Dialog();
 
         dialog.setHeaderTitle(
-                String.format("Delete employee \"%s\"?",
+                String.format("Изтрий служител \"%s\"?",
                         staff.getFirstName() + " " + staff.getLastName()));
-        dialog.add("Are you sure you want to delete this employee permanently?");
+        dialog.add("Сигурни ли сте, че искате да изтриете този служител завинаги?");
 
-        Button deleteButton = new Button("Delete", (e) -> dialog.close());
+        Button deleteButton = new Button("Изтрий", (e) -> dialog.close());
         deleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY,
                 ButtonVariant.LUMO_ERROR);
         deleteButton.getStyle().set("margin-right", "auto");
@@ -145,7 +145,7 @@ public class ListStaffView extends VerticalLayout {
             setEmployeeData();
         });
 
-        Button cancelButton = new Button("Cancel", (e) -> dialog.close());
+        Button cancelButton = new Button("Отказ", (e) -> dialog.close());
         cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         dialog.getFooter().add(cancelButton);
         dialog.open();

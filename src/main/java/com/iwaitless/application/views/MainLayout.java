@@ -9,6 +9,7 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -61,7 +62,7 @@ public class MainLayout extends AppLayout {
         Image logo = new Image("images/logo.png", "iWaitLess Logo");
         logo.addClassNames("logo");
 
-        Button logout = new Button("Log out", e -> securityService.logout());
+        Button logout = new Button("Изход", e -> securityService.logout());
 
         var header = new HorizontalLayout(new DrawerToggle(), logo);
         header.addClassName("main-layout");
@@ -69,9 +70,12 @@ public class MainLayout extends AppLayout {
         header.setWidthFull();
 
         if (authorities.contains("ROLE_ADMIN")) {
-            RouterLink menuPreview = new RouterLink("Menu Preview", MenuPreviewView.class);
-            getUI().ifPresent(ui -> ui.getPage().open(menuPreview.getHref()));
-            header.add(menuPreview);
+            Button eyeButton = new Button(new Icon(VaadinIcon.MODAL_LIST));
+            RouterLink menuPreview = new RouterLink("Преглед на меню", MenuPreviewView.class);
+            eyeButton.addClickListener(event ->
+                    getUI().ifPresent(ui -> ui.getPage().open(menuPreview.getHref())));
+
+            header.add(eyeButton);
         }
         if (authorities.contains("ROLE_USER_ST")) {
             NotificationsView notificationsPopup =
@@ -101,22 +105,22 @@ public class MainLayout extends AppLayout {
 
         if (authorities.contains("ROLE_ADMIN")) {
             nav.addItem(
-                    new SideNavItem("Home Page", HomePageView.class, VaadinIcon.HOME.create()),
-                    new SideNavItem("Staff List", ListStaffView.class, VaadinIcon.GROUP.create()),
-                    new SideNavItem("Menu Configuration", MenuConfigurationView.class, VaadinIcon.CUTLERY.create()),
-                    new SideNavItem("Tables Configuration", RestaurantTablesConfigurationView.class, VaadinIcon.LIST.create()),
-                    new SideNavItem("Orders", OrdersView.class, VaadinIcon.CART.create())
+                    new SideNavItem("Начална страница", HomePageView.class, VaadinIcon.HOME.create()),
+                    new SideNavItem("Служители", ListStaffView.class, VaadinIcon.GROUP.create()),
+                    new SideNavItem("Конфигуриране на меню", MenuConfigurationView.class, VaadinIcon.CUTLERY.create()),
+                    new SideNavItem("Конфигуриране на маси", RestaurantTablesConfigurationView.class, VaadinIcon.LIST.create()),
+                    new SideNavItem("Поръчки", OrdersView.class, VaadinIcon.CART.create())
             );
         } else if (authorities.contains("ROLE_USER_ST")) {
             nav.addItem(
-                    new SideNavItem("Home Page", HomePageView.class, VaadinIcon.HOME.create()),
-                    new SideNavItem("Tables Assignment", RestaurantTablesAssignView.class, VaadinIcon.LIST.create()),
-                    new SideNavItem("Orders", OrdersView.class, VaadinIcon.CART.create())
+                    new SideNavItem("Начална страница", HomePageView.class, VaadinIcon.HOME.create()),
+                    new SideNavItem("Разпределяне на маси", RestaurantTablesAssignView.class, VaadinIcon.LIST.create()),
+                    new SideNavItem("Поръчки", OrdersView.class, VaadinIcon.CART.create())
             );
         } else if (authorities.contains("ROLE_USER_KT")) {
             nav.addItem(
-                    new SideNavItem("Home Page", HomePageView.class, VaadinIcon.HOME.create()),
-                    new SideNavItem("Orders", OrdersView.class, VaadinIcon.CART.create())
+                    new SideNavItem("Начална страница", HomePageView.class, VaadinIcon.HOME.create()),
+                    new SideNavItem("Поръчки", OrdersView.class, VaadinIcon.CART.create())
             );
         }
         nav.setWidth("100%");

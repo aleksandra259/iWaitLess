@@ -22,7 +22,7 @@ public class Renderers {
                 .withProperty("comment", e -> {
                     String comment = e.getComment();
                     if (comment != null && !comment.isEmpty())
-                        comment = "Comment: " + comment;
+                        comment = "Коментар: " + comment;
 
                     return comment;
                 });
@@ -39,18 +39,18 @@ public class Renderers {
                                 + "      ${item.assignee}" + "    </span>"
                                 + "  </vaadin-vertical-layout>"
                                 + "</vaadin-horizontal-layout>")
-                .withProperty("name", e -> "Order #" + e.getOrderNo())
-                .withProperty("table", e -> "for table: " + e.getTableRelation().getTable().getTableNo())
+                .withProperty("name", e -> "Поръчка #" + e.getOrderNo())
+                .withProperty("table", e -> "за маса: " + e.getTableRelation().getTable().getTableNo())
                 .withProperty("assignee", e -> {
                     if (e.getTableRelation().getEmployee().getEmployeeId() != 999999L) {
                         String firstName = e.getTableRelation().getEmployee().getFirstName();
                         String lastName = e.getTableRelation().getEmployee().getLastName();
 
                         if (firstName != null && !firstName.isEmpty())
-                            return "(assigned to " + firstName + " " + lastName + ")";
+                            return "(възложена на " + firstName + " " + lastName + ")";
                     }
 
-                    return "(table not assigned)";
+                    return "(масата не е разпределена)";
                 });
     }
 
@@ -117,7 +117,7 @@ public class Renderers {
 
                     return notificationTypes.getName();
                 })
-                .withProperty("table", notification -> "for table " + notification.getTable().getTableNo());
+                .withProperty("table", notification -> "маса #" + notification.getTable().getTableNo());
     }
 
     public static Renderer<Staff> createEmployeeRenderer() {

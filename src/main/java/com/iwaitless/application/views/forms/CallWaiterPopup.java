@@ -27,7 +27,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import java.sql.Timestamp;
 import java.time.Instant;
 
-@PageTitle("iWaitLess|Call Waiter")
+@PageTitle("iWaitLess | Повикай сервитьор")
 @Route("call-waiter-popup")
 @AnonymousAllowed
 public class CallWaiterPopup extends VerticalLayout {
@@ -57,7 +57,7 @@ public class CallWaiterPopup extends VerticalLayout {
     private Dialog createDialog() {
         dialog = new Dialog();
         dialog.setCloseOnOutsideClick(false);
-        dialog.setHeaderTitle("Contact your waiter");
+        dialog.setHeaderTitle("Връзка със сервитьор");
         dialog.add(createButtonsLayout());
 
         HorizontalLayout dialogHeader = new HorizontalLayout();
@@ -77,26 +77,26 @@ public class CallWaiterPopup extends VerticalLayout {
             navigateBack();
         });
 
-        Button callWaitressButton = new Button("Call Waitress", VaadinIcon.PHONE.create());
+        Button callWaitressButton = new Button("Повикай сервитьор", VaadinIcon.PHONE.create());
         callWaitressButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         callWaitressButton.addClassName("order-status-link-button");
         callWaitressButton.addClickListener(e -> {
             dialog.close();
             navigateBack();
             saveNotification("2");
-            Notification.show("Your waitress is notified", 3000,
+            Notification.show("Вашият сервитьор е уведомен.", 3000,
                             Notification.Position.TOP_STRETCH)
                     .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         });
 
-        Button askBillButton = new Button("Ask Bill", VaadinIcon.DOLLAR.create());
+        Button askBillButton = new Button("Повикай сметката", VaadinIcon.DOLLAR.create());
         askBillButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         askBillButton.addClassName("order-status-link-button");
         askBillButton.addClickListener(e -> {
             dialog.close();
             navigateBack();
             saveNotification("3");
-            Notification.show("Your waitress is notified", 3000,
+            Notification.show("Вашият сервитьор е уведомен.", 3000,
                             Notification.Position.TOP_STRETCH)
                     .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         });

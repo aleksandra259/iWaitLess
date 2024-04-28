@@ -49,7 +49,7 @@ CREATE TABLE MENU_ITEM (
   price double,
   currency VARCHAR(3),
   size double,
-  time_to_process double,
+  time_to_process int,
   available boolean DEFAULT true,
   vegetarian boolean DEFAULT false,
   vegan boolean DEFAULT false,

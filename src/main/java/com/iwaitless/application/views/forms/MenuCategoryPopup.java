@@ -24,8 +24,8 @@ public class MenuCategoryPopup extends FormLayout {
     BeanValidationBinder<MenuCategory> binder = new BeanValidationBinder<>(MenuCategory.class);
     Dialog dialog = new Dialog();
 
-    Button save = new Button("Save");
-    Button cancel = new Button("Cancel");
+    Button save = new Button("Запази");
+    Button cancel = new Button("Отказ");
     Button close = new Button(new Icon(VaadinIcon.CLOSE));
 
 
@@ -34,11 +34,11 @@ public class MenuCategoryPopup extends FormLayout {
 
         String header = category.getName();
         if (header == null || header.trim().isEmpty())
-            dialog.setHeaderTitle("New category");
+            dialog.setHeaderTitle("Нова категория");
         else
-            dialog.setHeaderTitle("Edit category \"" + category.getName() + "\"");
+            dialog.setHeaderTitle("Редактиране на категория \"" + category.getName() + "\"");
 
-        orderNo.setHelperText("Order of categories in the menu");
+        orderNo.setHelperText("Подредба на категориите в менюто");
         orderNo.setValue(1);
         orderNo.setStepButtonsVisible(true);
         nameField.setRequired(true);
@@ -47,8 +47,8 @@ public class MenuCategoryPopup extends FormLayout {
         binder.bind(orderNo, MenuCategory::getOrderNo, MenuCategory::setOrderNo);
         setCategory(category);
 
-        addFormItem(nameField, "Category Name");
-        addFormItem(orderNo, "Order");
+        addFormItem(nameField, "Категория");
+        addFormItem(orderNo, "Подредба");
         getStyle().set("width", "20rem").set("max-width", "100%");
 
         dialog.add(this);

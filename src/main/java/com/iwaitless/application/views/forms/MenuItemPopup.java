@@ -4,6 +4,7 @@ import com.iwaitless.application.persistence.entity.MenuItems;
 import com.iwaitless.application.persistence.entity.MenuItemsOrder;
 import com.iwaitless.application.persistence.entity.RestaurantTable;
 import com.iwaitless.application.views.utility.UploadImage;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
@@ -34,7 +35,7 @@ public class MenuItemPopup extends FormLayout {
     private final MenuItems item;
     private final RestaurantTable table;
 
-    TextArea comments = new TextArea("Comments");
+    TextArea comments = new TextArea("Коментар");
     MenuItemsOrder itemOrder = new MenuItemsOrder();
 
 
@@ -43,23 +44,15 @@ public class MenuItemPopup extends FormLayout {
         this.item = item;
         this.table = table;
 
-        addClassName("menu-item-popup");
-        getStyle().set("width", "30rem").set("max-width", "100%");
-        addClassNames(LumoUtility.Background.CONTRAST_5, LumoUtility.Display.FLEX,
-                LumoUtility.AlignItems.START, LumoUtility.BorderRadius.NONE,
-                LumoUtility.Margin.NONE);
-
+        dialog.addClassName("menu-item-popup");
         dialog.setHeaderTitle(item.getName());
-        configureLayout();
-        dialog.add(this);
+        dialog.add(configureLayout());
         dialog.getFooter().add(createButtonsLayout());
 
-        HorizontalLayout dialogHeader = new HorizontalLayout();
-        dialogHeader.add(close);
+        HorizontalLayout dialogHeader = new HorizontalLayout(close);
         dialogHeader.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
         dialogHeader.setWidthFull();
         dialog.getHeader().add(dialogHeader);
-        dialog.setDraggable(true);
 
         dialog.open();
     }
@@ -84,17 +77,16 @@ public class MenuItemPopup extends FormLayout {
         }
 
         IntegerField quantity = new IntegerField();
+        quantity.addClassName("quantity-button");
         quantity.setValue(1);
         quantity.setStepButtonsVisible(true);
         quantity.setMin(0);
         quantity.setMax(9);
-        quantity.setWidth("25%");
 
-        Button addToCart = new Button( "Add to Cart",
+        Button addToCart = new Button( "Добави",
                 new Icon(VaadinIcon.CART));
         addToCart.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        addToCart.setWidth("45%");
-        addToCart.getStyle().set("border-radius", "0px");
+        addToCart.addClassName("add-to-cart-button");
         addToCart.addClickListener(event -> {
             setItemOrderData(comments.getValue(), quantity.getValue());
             cartItems.add(itemOrder);
@@ -102,9 +94,8 @@ public class MenuItemPopup extends FormLayout {
 
         Button priceButton = new Button();
         priceButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        priceButton.addClassName("price-button");
         priceButton.setText(String.format("%.2f", item.getPrice()) + " " + item.getCurrency());
-        priceButton.setWidth("30%");
-        priceButton.getStyle().set("border-radius", "0px");
 
         if (table == null || table.getTableId() == null) {
             addToCart.setEnabled(false);
@@ -132,49 +123,46 @@ public class MenuItemPopup extends FormLayout {
         itemOrder.setQuantity(count);
     }
 
-    void configureLayout() {
+    private Component configureLayout() {
         Div output = new Div();
+        output.setWidthFull();
         UploadImage.showImagesByItem(item, output);
 
         Paragraph description = new Paragraph(item.getDescription());
         description.addClassNames(LumoUtility.FontSize.LARGE);
 
-        Span size = new Span();
-        Span sizeHeader = new Span("Size:" );
-        sizeHeader.getStyle().set("font-size", "13.5px");
-        size.getElement().setAttribute("theme", "size");
-        size.setText(item.getSize() + " grams");
-        VerticalLayout sizeLayout = new VerticalLayout(sizeHeader, size);
-        sizeLayout.setSpacing(false);
-
-        Span timeToProcess = new Span();
-        Span timeToProcessHeader = new Span();
-        timeToProcessHeader.getStyle().set("font-size", "13.5px");
-        timeToProcess.getElement().setAttribute("theme", "time");
-        if (item.getTimeToProcess() != null ) {
-            timeToProcessHeader.setText("Time to process:");
-            timeToProcess.setText(item.getTimeToProcess() + " minutes");
-        }
-        VerticalLayout timeToProcessLayout = new VerticalLayout(timeToProcessHeader, timeToProcess);
-        timeToProcessLayout.setSpacing(false);
-        timeToProcessLayout.setAlignItems(FlexComponent.Alignment.END);
-
-        HorizontalLayout timeAndSize = new HorizontalLayout();
-        timeAndSize.setWidthFull();
-        timeAndSize.setSpacing(false);
-        timeAndSize.add(sizeLayout, timeToProcessLayout);
-        timeAndSize.setJustifyContentMode(FlexComponent.JustifyContentMode.AROUND);
-        timeAndSize.setAlignItems(FlexComponent.Alignment.BASELINE);
+        final HorizontalLayout timeAndSize = getSizeAndTimeLayout();
 
         comments.setWidthFull();
         comments.setMaxLength(2000);
-        comments.setPlaceholder("Here add additional comments for your order..");
+        comments.setPlaceholder("Тук добавете допълнителни коментари за вашата поръчка..");
 
         VerticalLayout verticalLayout =
                 new VerticalLayout(description, timeAndSize, output, comments);
-        verticalLayout.setWidthFull();
+        verticalLayout.addClassNames(LumoUtility.Margin.NONE, LumoUtility.Padding.NONE);
         verticalLayout.setSpacing(false);
-        add(verticalLayout);
+        return verticalLayout;
+    }
+
+    private HorizontalLayout getSizeAndTimeLayout() {
+        VerticalLayout sizeLayout = new VerticalLayout(
+                new Span("Размер:" ), new Span(item.getSize() + " гр."));
+        sizeLayout.setSpacing(false);
+        sizeLayout.setAlignItems(FlexComponent.Alignment.START);
+
+        VerticalLayout timeToProcessLayout = new VerticalLayout();
+        if (item.getTimeToProcess() != null) {
+            timeToProcessLayout.add(new Span("Време:"),
+                    new Span(item.getTimeToProcess() + " мин."));
+
+            timeToProcessLayout.setSpacing(false);
+            timeToProcessLayout.setAlignItems(FlexComponent.Alignment.END);
+        }
+
+        HorizontalLayout timeAndSize = new HorizontalLayout(sizeLayout, timeToProcessLayout);
+        timeAndSize.setWidthFull();
+
+        return timeAndSize;
     }
 
 

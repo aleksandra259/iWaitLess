@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @Route("menu-preview")
-@PageTitle("Menu Preview")
+@PageTitle("iWaitLess | Преглед на меню")
 @AnonymousAllowed
 public class MenuPreviewView extends VerticalLayout
         implements HasComponents, HasStyle, HasUrlParameter<String> {

@@ -17,7 +17,7 @@ public class NotificationPopup extends FormLayout {
 
     Dialog dialog = new Dialog();
     Button close = new Button(new Icon(VaadinIcon.CLOSE));
-    Button confirm = new Button("Confirm");
+    Button confirm = new Button("Потвърди");
 
 
     public NotificationPopup(Notifications notification) {
@@ -26,17 +26,17 @@ public class NotificationPopup extends FormLayout {
                 LumoUtility.AlignItems.START, LumoUtility.BorderRadius.NONE,
                 LumoUtility.Margin.NONE);
 
-        dialog.setHeaderTitle("Notification");
+        dialog.setHeaderTitle("Известие");
 
         Paragraph description;
         if ("2".equals(notification.getType().getId())) {
-            description = new Paragraph("Table #"
+            description = new Paragraph("Маса #"
                     + notification.getTable().getTableNo()
-                    + " needs your service.");
+                    + " има нужда от съдействие.");
         } else {
             description = new Paragraph("Table #"
                     + notification.getTable().getTableNo()
-                    + " asks for the bill.");
+                    + " иска сметката.");
         }
         description.addClassNames(LumoUtility.FontSize.LARGE);
 

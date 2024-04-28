@@ -10,7 +10,6 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -26,10 +25,10 @@ import java.util.Currency;
 
 public class MenuItemEditPopup extends FormLayout {
 
-    TextField itemNameField = new TextField("Name");
-    TextArea description = new TextArea("Description");
-    NumberField size = new NumberField("Size");
-    NumberField timeToProcess = new NumberField("Time to process");
+    TextField itemNameField = new TextField("Име");
+    TextArea description = new TextArea("Описание");
+    NumberField size = new NumberField("Размер");
+    NumberField timeToProcess = new NumberField("Време на приготвяне");
     UploadImage image;
     NumberField price = new NumberField();
     Select<Currency> currency = new Select<>();
@@ -38,8 +37,8 @@ public class MenuItemEditPopup extends FormLayout {
     BeanValidationBinder<MenuItems> binder = new BeanValidationBinder<>(MenuItems.class);
     Dialog dialog = new Dialog();
 
-    Button save = new Button("Save");
-    Button cancel = new Button("Cancel");
+    Button save = new Button("Запази");
+    Button cancel = new Button("Отказ");
     Button close = new Button(new Icon(VaadinIcon.CLOSE));
 
 
@@ -48,18 +47,18 @@ public class MenuItemEditPopup extends FormLayout {
 
         String header = item.getName();
         if (header == null || header.trim().isEmpty())
-            dialog.setHeaderTitle("New item");
+            dialog.setHeaderTitle("Нов артикул");
         else
-            dialog.setHeaderTitle("Edit item \"" + header + "\" ");
+            dialog.setHeaderTitle("Редактиране на артикул \"" + header + "\" ");
 
-        dialog.add(new H4(item.getCategory().getName()));
+        dialog.add(new Span("Категория: " + item.getCategory().getName()));
 
         itemNameField.setRequired(true);
         description.setRequired(true);
         price.setRequired(true);
-        size.setSuffixComponent(new Span("grams"));
-        available.setLabel("Is item available?");
-        timeToProcess.setSuffixComponent(new Span("minutes"));
+        size.setSuffixComponent(new Span("гр."));
+        available.setLabel("Наличен ли е артикулът?");
+        timeToProcess.setSuffixComponent(new Span("мин."));
         image = new UploadImage(item);
 
         currency.setItems(Currency.getInstance("BGN"),
@@ -78,16 +77,16 @@ public class MenuItemEditPopup extends FormLayout {
         binder.bind(itemNameField, MenuItems::getName, MenuItems::setName);
         binder.bind(description, MenuItems::getDescription, MenuItems::setDescription);
         binder.bind(size, MenuItems::getSize, MenuItems::setSize);
-        binder.bind(timeToProcess, MenuItems::getTimeToProcess, MenuItems::setTimeToProcess);
+        binder.forField(timeToProcess).bind(MenuItems::getTimeToProcess, MenuItems::setTimeToProcess);
         binder.bind(price, MenuItems::getPrice, MenuItems::setPrice);
         binder.forField(currency).bind(MenuItems::getCurrency, MenuItems::setCurrency);
         binder.forField(available).bind(MenuItems::isAvailable, MenuItems::setAvailable);
         setItem(item);
 
         add(itemNameField, description, available, sizeAndTime, priceAndCurrency);
-        addFormItem(priceAndCurrency, "Price");
-        addFormItem(available, "Availability");
-        addFormItem(image, "Image");
+        addFormItem(priceAndCurrency, "Цена");
+        addFormItem(available, "Наличност");
+        addFormItem(image, "Изображение");
         getStyle().set("width", "25rem").set("max-width", "100%");
 
         dialog.add(this);

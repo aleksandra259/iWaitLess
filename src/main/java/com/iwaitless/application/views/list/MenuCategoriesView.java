@@ -48,12 +48,12 @@ public class MenuCategoriesView extends VerticalLayout {
         setSizeFull();
         configureGrid();
 
-        newCategory.setText("New");
+        newCategory.setText("Нов");
         newCategory.setWidth("min-content");
         newCategory.setMaxWidth("100px");
         newCategory.addClickListener(e -> createMenuCategory(getCategory()));
 
-        categoriesHeader.setText("Categories");
+        categoriesHeader.setText("Категории");
         categoriesHeader.setWidth("max-content");
         categoriesHeader.setMaxWidth("150px");
 
@@ -108,7 +108,7 @@ public class MenuCategoriesView extends VerticalLayout {
         grid.addColumn(MenuCategory::getName);
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, category) -> {
-                    button.getElement().setAttribute("aria-label", "Edit category");
+                    button.getElement().setAttribute("aria-label", "Редактиране на категория");
                     button.addClickListener(e ->
                             createMenuCategory(category));
                     button.setIcon(new Icon(VaadinIcon.EDIT));
@@ -116,7 +116,7 @@ public class MenuCategoriesView extends VerticalLayout {
                 })).setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
         grid.addColumn(
             new ComponentRenderer<>(Button::new, (button, category) -> {
-                button.getElement().setAttribute("aria-label", "Delete category");
+                button.getElement().setAttribute("aria-label", "Изтрий категория");
                 button.setIcon(new Icon(VaadinIcon.TRASH));
                 button.addClassName("delete-button");
                 button.addClickListener(e -> deleteMenuCategory(category));
@@ -136,11 +136,11 @@ public class MenuCategoriesView extends VerticalLayout {
         Dialog dialog = new Dialog();
 
         dialog.setHeaderTitle(
-                String.format("Delete item \"%s\"?",
+                String.format("Изтриване на категория \"%s\"?",
                         category.getName()));
-        dialog.add("Are you sure you want to delete this category permanently?");
+        dialog.add("Сигурни ли сте, че искате да изтриете тази категория завинаги?");
 
-        Button deleteButton = new Button("Delete", (e) -> dialog.close());
+        Button deleteButton = new Button("Изтрий", (e) -> dialog.close());
         deleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY,
                 ButtonVariant.LUMO_ERROR);
         deleteButton.getStyle().set("margin-right", "auto");
@@ -153,7 +153,7 @@ public class MenuCategoriesView extends VerticalLayout {
             setMenuCategoryData();
         });
 
-        Button cancelButton = new Button("Cancel", (e) -> dialog.close());
+        Button cancelButton = new Button("Отказ", (e) -> dialog.close());
         cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         dialog.getFooter().add(cancelButton);
         dialog.open();

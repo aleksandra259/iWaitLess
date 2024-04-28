@@ -49,7 +49,7 @@ public class ImageSlideshow extends VerticalLayout {
                     try {
                         return new FileInputStream(imageUrls.get(currentIndex));
                     } catch (final FileNotFoundException e) {
-                        output.add(new TextField("Failed to load image"));
+                        output.add(new TextField("Неуспешно зареждане на изображение"));
                         return null;
                     }
                 });
@@ -65,9 +65,9 @@ public class ImageSlideshow extends VerticalLayout {
 
     private void createButtonsLayout() {
         nextButton.addThemeVariants(ButtonVariant.LUMO_ICON);
-        nextButton.setAriaLabel("Next item");
+        nextButton.setAriaLabel("Следващ");
         previousButton.addThemeVariants(ButtonVariant.LUMO_ICON);
-        previousButton.setAriaLabel("Previous item");
+        previousButton.setAriaLabel("Предишен");
 
         if (imageUrls.size() == 1){
             nextButton.setEnabled(false);

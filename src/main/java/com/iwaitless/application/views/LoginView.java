@@ -1,10 +1,9 @@
 package com.iwaitless.application.views;
 
-import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.login.LoginForm;
+import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -12,30 +11,33 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 @Route("login")
 @PageTitle("Login | iWaitLess")
 @AnonymousAllowed
-public class LoginView extends VerticalLayout implements BeforeEnterObserver {
+public class LoginView extends VerticalLayout {
 
-    private final LoginForm login = new LoginForm();
-
-
-    public LoginView(){
-        addClassName("login-view");
+    public LoginView() {
         setSizeFull();
+        setSpacing(false);
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
+        addClassName("login-view");
 
-        login.setAction("login");
+        LoginI18n i18n = LoginI18n.createDefault();
+        Image logo = new Image("images/logo.png", "iWaitLess Logo");
+        logo.setWidth("19.1%");
 
-        add(new H1("iWaitLess"), login);
-    }
+        LoginI18n.Form login = i18n.getForm();
+        login.setTitle("Вход в системата");
+        login.setUsername("Потребителско име");
+        login.setPassword("Парола");
+        login.setSubmit("Вход");
+        login.setForgotPassword("Забравена парола");
+        i18n.setForm(login);
 
-    @Override
-    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-        // inform the user about an authentication error
-        if(beforeEnterEvent.getLocation()
-                .getQueryParameters()
-                .getParameters()
-                .containsKey("error")) {
-            login.setError(true);
-        }
+
+        LoginForm loginForm = new LoginForm();
+        loginForm.setI18n(i18n);
+        add(logo, loginForm);
+        loginForm.setAction("login");
+
+        loginForm.getElement().setAttribute("no-autofocus", "");
     }
 }

@@ -26,7 +26,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.List;
 import java.util.Objects;
 
-@PageTitle("Tables Assignment")
+@PageTitle("iWaitLess | Маси")
 @Route(value = "tables-assignment", layout = MainLayout.class)
 @RolesAllowed("ROLE_USER_ST")
 public class RestaurantTablesAssignView extends VerticalLayout {
@@ -67,23 +67,22 @@ public class RestaurantTablesAssignView extends VerticalLayout {
                 GridVariant.LUMO_NO_BORDER);
 
         grid.addColumn(RestaurantTable::getTableId)
-                .setHeader("Table No").setAutoWidth(true).setFlexGrow(0);
-        grid.addColumn(RestaurantTable::getDescription).setHeader("Description");
+                .setHeader("Номер на маса").setAutoWidth(true).setFlexGrow(0);
+        grid.addColumn(RestaurantTable::getDescription).setHeader("Описание");
         grid.addColumn(table -> {
                 String assigned = getAssignedEmployee(table);
                 if (assigned != null && !assigned.trim().isEmpty())
                     return assigned;
 
-                return "Not Assigned";
-            }).setHeader("Assigned to")
+                return "Не е разпределена";
+            }).setHeader("Разпределение")
               .setAutoWidth(true).setFlexGrow(0);
 
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, table) -> {
-                    button.addThemeVariants(ButtonVariant.LUMO_TERTIARY,
-                            ButtonVariant.LUMO_SMALL);
-                    button.setText("Assign to me");
-                    button.getElement().setAttribute("aria-label", "Assign to me");
+                    button.addThemeVariants(ButtonVariant.LUMO_SMALL);
+                    button.setText("Възложи на мен");
+                    button.getElement().setAttribute("aria-label", "Възложи на мен");
                     button.addClickListener(e ->
                             createTableRelation(table, staffService.findEmployeeByUsername(username)));
                     String assigned = getAssignedEmployee(table);
@@ -91,10 +90,10 @@ public class RestaurantTablesAssignView extends VerticalLayout {
                 })).setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, table) -> {
-                    button.setText("Remove Assignment");
+                    button.setText("Премахни от мен");
                     button.addThemeVariants(ButtonVariant.LUMO_PRIMARY,
                             ButtonVariant.LUMO_SMALL);
-                    button.getElement().setAttribute("aria-label", "Remove my Assignment");
+                    button.getElement().setAttribute("aria-label", "Премахни от мен");
                     button.addClickListener(e -> {
                             Staff staff = new Staff();
                             staff.setEmployeeId(999999L);
@@ -124,12 +123,12 @@ public class RestaurantTablesAssignView extends VerticalLayout {
     }
 
     private HorizontalLayout getToolbar() {
-        filterText.setPlaceholder("Filter by description...");
+        filterText.setPlaceholder("Филтриране...");
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
         filterText.addValueChangeListener(e -> setTablesData());
 
-        Button button = new Button("Remove my assignments");
+        Button button = new Button("Премахни всички мои маси");
         button.addClickListener(click -> refreshAssignments());
 
         var toolbar = new HorizontalLayout(filterText, button);

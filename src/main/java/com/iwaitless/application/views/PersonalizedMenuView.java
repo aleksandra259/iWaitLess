@@ -9,21 +9,21 @@ import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.accordion.AccordionPanel;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.details.DetailsVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-import com.vaadin.flow.theme.lumo.LumoUtility;
 
 @Route("menu")
+@PageTitle("iWaitLess | Персонализиране")
 @AnonymousAllowed
 public class PersonalizedMenuView extends VerticalLayout {
 
@@ -36,9 +36,10 @@ public class PersonalizedMenuView extends VerticalLayout {
 
 
     Div content = new Div();
-    Checkbox filterAll = new Checkbox("All");
-    Checkbox filterVegetarian = new Checkbox("Vegetarian");
-    Checkbox filterVegan = new Checkbox("Vegan");
+    Checkbox filterAll = new Checkbox("Всички");
+    Checkbox filterVegetarian = new Checkbox("Вегетарианска");
+    Checkbox filterVegan = new Checkbox("Веган");
+
 
     public PersonalizedMenuView(MenuCategoryService menuCategory,
                                 MenuItemService menuItem,
@@ -54,15 +55,12 @@ public class PersonalizedMenuView extends VerticalLayout {
         vaadinSession.setAttribute("consistFilter", "");
         vaadinSession.setAttribute("notConsistFilter", "");
 
-        VerticalLayout menuLayout = new VerticalLayout();
+        Image logo = new Image("images/logo.png", "iWaitLess Logo");
+        logo.setWidth("50%");
+
+        VerticalLayout menuLayout = new VerticalLayout(logo);
         menuLayout.setWidthFull();
-        H1 title = new H1("iWaitLess | Menu");
-        title.getStyle().set("font-size", "var(--lumo-font-size-l)")
-                .set("margin", "var(--lumo-space-xs) var(--lumo-space-xs)")
-                .set("padding", "var(--lumo-space-xs) var(--lumo-space-xs)");
-        menuLayout.add(title);
         menuLayout.addClassName("fixed-menu-bar");
-        menuLayout.addClassNames(LumoUtility.Background.CONTRAST_5);
 
         add(menuLayout, createPersonalizeComponent(), content,
                 new MenuPreviewLayout(menuCategory, menuItem, table));
@@ -82,9 +80,9 @@ public class PersonalizedMenuView extends VerticalLayout {
             consistElements.add(consist.getValue());
             consist.setValue("");
 
-            if (text.equals("Consist")) {
+            if (text.equals("Съдържа")) {
                 vaadinSession.setAttribute("consistFilter", consistElements.getText());
-            } else if (text.equals("Does not consist")) {
+            } else if (text.equals("Не съдържа")) {
                 vaadinSession.setAttribute("notConsistFilter", consistElements.getText());
             }
             filterMenuItems();
@@ -105,11 +103,10 @@ public class PersonalizedMenuView extends VerticalLayout {
         accordion.addClassName("popular-items-page");
         accordion.setWidthFull();
 
-        FormLayout personalizeFormLayout =  new FormLayout();
+        FormLayout personalizeFormLayout = new FormLayout();
         VerticalLayout detailsPanel = new VerticalLayout();
-        AccordionPanel customDetailsPanel = accordion.add("Personalize",
+        AccordionPanel customDetailsPanel = accordion.add("Персонализиране",
                 personalizeFormLayout);
-        customDetailsPanel.addThemeVariants(DetailsVariant.FILLED);
         customDetailsPanel.addClassName("personalize-menu-layout");
         detailsPanel.setSpacing(false);
 
@@ -128,13 +125,14 @@ public class PersonalizedMenuView extends VerticalLayout {
         filterVegan.addValueChangeListener(event -> filterMenuItems());
 
         VerticalLayout kitchenTypeLayout = new VerticalLayout(
-                new Span("Kitchen Type"),
-                new HorizontalLayout(filterAll, filterVegetarian, filterVegan)
-        );
+                new Span("Вид кухня"),
+                filterAll,
+                new HorizontalLayout(filterVegetarian, filterVegan));
+        kitchenTypeLayout.setSpacing(false);
 
         detailsPanel.add(kitchenTypeLayout,
-                createTextLayout("Consist"),
-                createTextLayout("Does not consist"));
+                createTextLayout("Съдържа"),
+                createTextLayout("Не съдържа"));
         customDetailsPanel.add(detailsPanel);
 
         return accordion;
