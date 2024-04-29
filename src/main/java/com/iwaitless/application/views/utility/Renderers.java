@@ -77,12 +77,10 @@ public class Renderers {
                                 + "  <vaadin-vertical-layout style=\"line-height: var(--lumo-line-height-m);\">"
                                 + "    <span> ${item.name} </span>"
                                 + "    <span style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">"
-                                + "      ${item.description}" + "    </span>"
-                                + "    <span> ${item.price} ${item.currency} </span>"
+                                + "      ${item.price} ${item.currency}" + "    </span>"
                                 + "  </vaadin-vertical-layout>"
                                 + "</vaadin-horizontal-layout>")
                 .withProperty("name", MenuItemsOrder::getName)
-                .withProperty("description", MenuItemsOrder::getDescription)
                 .withProperty("price", e -> String.format("%.2f", e.getPrice()))
                 .withProperty("currency", e -> e.getCurrency().getCurrencyCode());
     }

@@ -64,7 +64,7 @@ public class RestaurantTablesAssignView extends VerticalLayout {
         grid.setWidthFull();
         grid.setHeightFull();
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT,
-                GridVariant.LUMO_NO_BORDER);
+                GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_COMPACT);
 
         grid.addColumn(RestaurantTable::getTableId)
                 .setHeader("Номер на маса").setAutoWidth(true).setFlexGrow(0);

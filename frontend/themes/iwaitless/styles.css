@@ -5,9 +5,6 @@
    .menu-item-card {
      font-size: 12pt;
    }
-   .menu-categories-page {
-     margin-top: 100px;
-   }
    .menu-item-popup {
      width: 30rem;
    }
@@ -17,24 +14,17 @@
    .list-view.editing .contact-grid {
      display: none;
    }
-   .image-gallery-view ol {
-     grid-template-columns: repeat(auto-fill, minmax(150px, 2fr));
-     margin-left:-22px;
-     margin-right: -22px;
-   }
    .menu-item-card {
      max-height: 85px;
      font-size: 11pt;
-   }
-   .menu-categories-page {
-     margin-top: 5px;
    }
    .quantity-integer-field {
      font-size: 9pt;
      width: 60px;
    }
-   .popular-items-page {
-     margin-top: 55px;
+   .menu-items-by-category {
+     margin-left:-30px;
+     margin-right: -30px;
    }
 }
 
@@ -54,6 +44,7 @@ body {
   padding: var(--space-xs);
   border-radius: var(--roundness-sm);
   transition: all 0.2s ease-in;
+  line-height: 1.5;
 }
 p, h1, h2, h3, h4, h5, h6, span, div {
   color: #000000;
@@ -167,16 +158,14 @@ vaadin-button.delete-button {
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 50%;
   background-color: #F9F6ED;
   display: flex;
-  flex-direction: column;
   align-items: center;
   z-index: 1;
   box-shadow: inset 0 -0.01px 0 0 #222;
 }
 .fixed-menu-bar vaadin-split-layout {
-  width: 70%;
+  width: 50%;
 }
 
 .bold-span {
@@ -252,4 +241,8 @@ vaadin-login-overlay-wrapper::part(brand) {
   background-size: contain;
   background-repeat: no-repeat;
   color: #F9F6ED;
+}
+
+.menu-category-grid, .menu-item-grid {
+  font-size: 14px;
 }

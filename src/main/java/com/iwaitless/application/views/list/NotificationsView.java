@@ -45,7 +45,7 @@ public class NotificationsView extends Dialog {
         this.orderDetailService = orderDetailService;
         this.statusService = statusService;
 
-        setWidth("24rem");
+        setWidth("22rem");
         setCloseOnEsc(true);
         setCloseOnOutsideClick(true);
 
@@ -90,7 +90,7 @@ public class NotificationsView extends Dialog {
                             orderService,
                             orderDetailService,
                             statusService,
-                            null);
+                            new Grid<>());
                 } else {
                     new NotificationPopup(notification);
                 }

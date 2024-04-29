@@ -82,9 +82,8 @@ public class MenuItemsView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassNames("menu-item-grid");
         grid.setWidthFull();
-        grid.setHeightFull();
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT,
-                GridVariant.LUMO_NO_BORDER);
+                GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_COMPACT);
 
         grid.addComponentColumn(item -> {
             Image image = MenuItemsView.returnImage(item);
@@ -94,9 +93,13 @@ public class MenuItemsView extends VerticalLayout {
             return image;
         }).setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(Renderers.createItemRenderer());
-        grid.addColumn(item -> String.format("%.2f", item.getPrice()) + " " + item.getCurrency());
-        grid.addColumn(item -> item.getSize() + " гр.");
-        grid.addColumn(item -> item.isAvailable() ? "Наличен" : "Не е наличен");
+        grid.addColumn(item -> String.format("%.2f", item.getPrice()) + " " + item.getCurrency())
+                .setAutoWidth(true).setFlexGrow(0);
+        grid.addColumn(item -> (item.getSize() != null && item.getSize() != 0.0d)
+                    ? item.getSize() + " гр." : null)
+                .setAutoWidth(true).setFlexGrow(0);
+        grid.addColumn(item -> item.isAvailable() ? "Наличен" : "Не е наличен")
+                .setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
 
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, item) -> {

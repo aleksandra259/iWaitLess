@@ -51,7 +51,7 @@ public class CartView extends VerticalLayout {
     RestaurantTable table = new RestaurantTable();
     Button finalizeOrderButton = new Button("Завърши поръчката");
 
-    Grid<MenuItemsOrder> grid = new Grid<>();
+    Grid<MenuItemsOrder> grid = new Grid<>(MenuItemsOrder.class, false);
     VerticalLayout suggestedItems = new VerticalLayout();
 
     VaadinSession vaadinSession = VaadinSession.getCurrent();
@@ -165,8 +165,9 @@ public class CartView extends VerticalLayout {
             grid.setItems(cartItems);
 
         grid.setWidthFull();
+        grid.setAllRowsVisible(true);
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT,
-                GridVariant.LUMO_NO_BORDER);
+                GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_COMPACT);
 
         grid.addColumn(Renderers.createItemOrderRenderer());
         grid.addColumn(new ComponentRenderer<>(this::quantityField))

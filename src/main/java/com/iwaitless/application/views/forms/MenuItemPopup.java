@@ -145,15 +145,17 @@ public class MenuItemPopup extends FormLayout {
     }
 
     private HorizontalLayout getSizeAndTimeLayout() {
-        VerticalLayout sizeLayout = new VerticalLayout(
-                new Span("Размер:" ), new Span(item.getSize() + " гр."));
+        VerticalLayout sizeLayout = new VerticalLayout();
+        if (item.getSize() != null)
+            sizeLayout.add(new Span("Размер:" ),
+                    new Span(String.format("%.0f", item.getSize()) + " гр."));
         sizeLayout.setSpacing(false);
         sizeLayout.setAlignItems(FlexComponent.Alignment.START);
 
         VerticalLayout timeToProcessLayout = new VerticalLayout();
         if (item.getTimeToProcess() != null) {
-            timeToProcessLayout.add(new Span("Време:"),
-                    new Span(item.getTimeToProcess() + " мин."));
+            timeToProcessLayout.add(new Span("Време за приготвяне:"),
+                    new Span(String.format("%.0f", item.getTimeToProcess()) + " мин."));
 
             timeToProcessLayout.setSpacing(false);
             timeToProcessLayout.setAlignItems(FlexComponent.Alignment.END);

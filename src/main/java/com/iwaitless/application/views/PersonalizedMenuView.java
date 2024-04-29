@@ -11,6 +11,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -62,7 +63,7 @@ public class PersonalizedMenuView extends VerticalLayout {
         menuLayout.setWidthFull();
         menuLayout.addClassName("fixed-menu-bar");
 
-        add(menuLayout, createPersonalizeComponent(), content,
+        add(menuLayout, new H1("^"), createPersonalizeComponent(), content,
                 new MenuPreviewLayout(menuCategory, menuItem, table));
     }
 
@@ -100,7 +101,6 @@ public class PersonalizedMenuView extends VerticalLayout {
 
     private Component createPersonalizeComponent() {
         Accordion accordion = new Accordion();
-        accordion.addClassName("popular-items-page");
         accordion.setWidthFull();
 
         FormLayout personalizeFormLayout = new FormLayout();
@@ -149,7 +149,7 @@ public class PersonalizedMenuView extends VerticalLayout {
                 table, false, false, false);
         } else if (filterVegan.getValue()) {
             menuLoad = new MenuLoadView(menuCategory, menuItem,
-                    table, false, true, true);
+                    table, false, false, true);
         } else if (filterVegetarian.getValue()) {
             menuLoad = new MenuLoadView(menuCategory, menuItem,
                     table, false, true, false);

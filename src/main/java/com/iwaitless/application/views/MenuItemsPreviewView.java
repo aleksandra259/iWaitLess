@@ -6,10 +6,7 @@ import com.iwaitless.application.persistence.entity.nomenclatures.MenuCategory;
 import com.iwaitless.application.services.MenuItemService;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasStyle;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.Main;
-import com.vaadin.flow.component.html.OrderedList;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
@@ -76,14 +73,16 @@ public class MenuItemsPreviewView extends Main
 
             Div categorySection = new Div();
             categorySection.setId(MenuPreviewView.createAnchorLink(category.getId()));
-            H1 description = new H1(category.getName());
-            description.addClassNames(Margin.Bottom.XSMALL, Margin.Top.XLARGE,
-                    LumoUtility.TextColor.HEADER, LumoUtility.FontSize.LARGE);
+            categorySection.addClassNames("image-gallery-view", "menu-items-by-category");
+            categorySection.addClassNames(LumoUtility.MaxWidth.SCREEN_LARGE, LumoUtility.Margin.Horizontal.AUTO,
+                    LumoUtility.Margin.Bottom.LARGE, LumoUtility.Padding.Horizontal.SMALL);
+
 
             if (!items.isEmpty()) {
                 OrderedList imageContainer = new OrderedList();
-                imageContainer.addClassNames(LumoUtility.Gap.SMALL, LumoUtility.Display.GRID,
-                        LumoUtility.ListStyleType.NONE, Margin.NONE, Padding.NONE);
+                imageContainer.addClassNames(LumoUtility.Gap.XSMALL, LumoUtility.Display.GRID,
+                        LumoUtility.ListStyleType.NONE, Margin.NONE, Padding.NONE,
+                        Padding.Bottom.LARGE);
 
                 items.forEach(item -> {
                     if (item.isAvailable()
@@ -106,7 +105,7 @@ public class MenuItemsPreviewView extends Main
                 });
 
                 if (counter[0] > 0) {
-                    categorySection.add(description, imageContainer);
+                    categorySection.add(new H3(category.getName()), imageContainer);
                     add(categorySection);
                 }
             }

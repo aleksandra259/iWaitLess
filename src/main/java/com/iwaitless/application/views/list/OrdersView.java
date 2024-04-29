@@ -88,7 +88,7 @@ public class OrdersView extends VerticalLayout {
                 .setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(order -> order.getStatus().getName())
                 .setHeader("Статус").setSortable(true)
-                .setAutoWidth(true).setFlexGrow(0);
+                .setAutoWidth(true);
 
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, order) -> {

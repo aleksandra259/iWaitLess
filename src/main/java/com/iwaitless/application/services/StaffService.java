@@ -63,10 +63,13 @@ public class StaffService {
             return;
         }
         staffRepository.save(contact);
-        saveUserRelation(contact);
+
+        contact.setUsername(saveUserRelation(contact));
+        if (contact.getUsername() != null)
+            staffRepository.save(contact);
     }
 
-    private void saveUserRelation(Staff staff) {
+    private String saveUserRelation(Staff staff) {
         long userCounter = userStaffRepository
                 .findAll()
                 .stream()
@@ -87,8 +90,8 @@ public class StaffService {
             num0 = Integer.parseInt(formatter.format(staff.getBirthdate()).substring(1,2));
             //to ensure username is unique
 
-            String username = staff.getLastName().charAt(0)
-                    + staff.getFirstName()
+            int atIndex = staff.getEmail().indexOf('@');
+            String username = staff.getEmail().substring(0, atIndex)
                     + num0 + num1;
             username = username.toLowerCase();
             userStaffRelation.setUsername(username);
@@ -109,7 +112,10 @@ public class StaffService {
                 authority.setAuthority("ROLE_USER_ST");
 
             userService.saveUser(user, authority);
+
+            return username;
         }
+        return null;
     }
 
     public List<StaffRole> findAllRoles() {

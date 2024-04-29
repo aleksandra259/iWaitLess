@@ -52,9 +52,8 @@ public class RestaurantTablesConfigurationView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassNames("tables-grid");
         grid.setWidthFull();
-        grid.setHeightFull();
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT,
-                GridVariant.LUMO_NO_BORDER);
+                GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_COMPACT);
 
         grid.addColumn(RestaurantTable::getTableNo).setHeader("Номер на маса").setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(RestaurantTable::getDescription).setHeader("Описание");
@@ -78,7 +77,7 @@ public class RestaurantTablesConfigurationView extends VerticalLayout {
     }
 
     private HorizontalLayout getToolbar() {
-        filterText.setPlaceholder("Филтриране по описание...");
+        filterText.setPlaceholder("Филтриране...");
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
         filterText.addValueChangeListener(e -> setTablesData());

@@ -9,6 +9,7 @@ import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -57,7 +58,7 @@ public class MenuLoadView extends VerticalLayout
         searchField.setWidthFull();
         if (showSearch && tableExists) {
             Image logo = new Image("images/logo.png", "iWaitLess Logo");
-            logo.setWidth("50%");
+            logo.setWidth("40%");
             menuLayout.add(logo, searchField);
         }
 
@@ -95,10 +96,12 @@ public class MenuLoadView extends VerticalLayout
                 = new MenuItemsPreviewView(menuItem, categorySorted,
                                            searchField.getValue(),
                                            table, showVegetarian, showVegan);
-        if (!tableExists || showSearch) {
-            itemsPreview.addClassName("menu-categories-page");
+        if (!tableExists) {
             menuLayout.addClassName("fixed-menu-bar");
-            add(menuLayout);
+            add(new H1("^"), new H1("^"), menuLayout);
+        } if (showSearch) {
+            menuLayout.addClassName("fixed-menu-bar");
+            add(new H1("^"),menuLayout);
         }
 
         add(itemsPreview);

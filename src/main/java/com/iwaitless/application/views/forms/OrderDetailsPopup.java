@@ -151,7 +151,7 @@ public class OrderDetailsPopup extends FormLayout {
     }
 
     void configureLayout() {
-        Paragraph description = new Paragraph("за маса: "
+        Span description = new Span("за маса: "
                 + order.getTableRelation().getTable().getTableNo()
                 + " (" + order.getTableRelation().getTable().getDescription() + ")");
         description.addClassNames(LumoUtility.FontSize.LARGE);
@@ -160,11 +160,11 @@ public class OrderDetailsPopup extends FormLayout {
         gridDetails.setItems(orderDetails);
 
         gridDetails.setWidthFull();
-        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT,
-                GridVariant.LUMO_NO_BORDER);
+        gridDetails.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT,
+                GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_COMPACT);
 
         gridDetails.addColumn(Renderers.createOrderDetailRenderer()).setHeader("Артикул");
-        gridDetails.addColumn(e -> "Qty: " + e.getQuantity()).setHeader("Количество")
+        gridDetails.addColumn(e -> "бр: " + e.getQuantity()).setHeader("Количество")
                 .setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
         gridDetails.addColumn(e -> String.format("%.2f", e.getItem().getPrice())
                         + " " + e.getItem().getCurrency()).setHeader("Цена")

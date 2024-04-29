@@ -9,6 +9,7 @@ create table users(
 );
 
 create table authorities (
+    id int AUTO_INCREMENT primary key,
 	username varchar(50) not null,
 	authority varchar(50) not null,
 	constraint fk_authorities_users foreign key(username) references users(username)
@@ -18,27 +19,33 @@ create unique index ix_auth_username on authorities (username,authority);
 create table HT_MENU_CATEGORY (
 id varchar(50) not null,
 order_no int,
-name varchar(100) not null
+name varchar(100) not null,
+constraint fk_ht_menu_category primary key(id)
 );
 create table HT_NOTIFICATION_STATUS (
 id varchar(50) not null,
-name varchar(100) not null
+name varchar(100) not null,
+constraint fk_ht_notification_status primary key(id)
 );
 create table HT_NOTIFICATION_TYPE (
 id varchar(50) not null,
-name varchar(100) not null
+name varchar(100) not null,
+constraint fk_ht_notification_type primary key(id)
 );
 create table HT_ORDER_STATUS (
 id varchar(50) not null,
-name varchar(100) not null
+name varchar(100) not null,
+constraint fk_order_status primary key(id)
 );
 create table HT_PAYMENT_WAY (
 id varchar(50) not null,
-name varchar(100) not null
+name varchar(100) not null,
+constraint fk_ht_payment_way primary key(id)
 );
 create table HT_STAFF_ROLE (
 id varchar(50) not null,
-name varchar(100) not null
+name varchar(100) not null,
+constraint fk_ht_staff_role primary key(id)
 );
 
 CREATE TABLE MENU_ITEM (
@@ -49,7 +56,7 @@ CREATE TABLE MENU_ITEM (
   price double,
   currency VARCHAR(3),
   size double,
-  time_to_process int,
+  time_to_process double,
   available boolean DEFAULT true,
   vegetarian boolean DEFAULT false,
   vegan boolean DEFAULT false,
@@ -64,9 +71,9 @@ CREATE TABLE STAFF (
   phone varchar(20),
   address varchar(250),
   birthdate Date,
-  role varchar(50),
+  role_id varchar(50),
   username varchar(50),
-  constraint fk_staff_role foreign key(role) references ht_staff_role(item_id)
+  constraint fk_staff_role foreign key(role_id) references ht_staff_role(id)
 );
 
 CREATE TABLE USER_STAFF_RELATION (
@@ -120,6 +127,7 @@ CREATE TABLE NOTIFICATIONS (
   status varchar(50),
   table_id int,
   order_no int,
+  registration_date datetime,
   constraint fk_employee_notification foreign key(employee_id) references staff(employee_id),
   constraint fk_notification_table foreign key(table_id) references restaurant_table(table_id),
   constraint fk_notification_order foreign key(order_no) references orders(order_no),

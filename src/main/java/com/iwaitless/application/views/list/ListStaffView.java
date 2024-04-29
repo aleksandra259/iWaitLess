@@ -52,12 +52,12 @@ public class ListStaffView extends VerticalLayout {
         grid.setWidthFull();
         grid.setHeightFull();
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT,
-                GridVariant.LUMO_NO_BORDER);
+                GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_COMPACT);
 
         grid.addColumn(Renderers.createEmployeeRenderer())
                 .setComparator(Staff::getFirstName).setHeader("Служител");
         grid.addColumn(Staff::getEmail).setComparator(Staff::getEmail)
-                .setHeader("Имейл").setAutoWidth(true).setFlexGrow(0);
+                .setHeader("Имейл").setAutoWidth(true);
         grid.addColumn(Staff::getPhone).setHeader("Телефонен номер").setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(Staff::getAddress).setHeader("Адрес").setAutoWidth(true).setFlexGrow(0);
         grid.addColumn(employee -> {

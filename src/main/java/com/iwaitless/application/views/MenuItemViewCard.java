@@ -19,29 +19,24 @@ public class MenuItemViewCard extends ListItem {
         Div div = new Div();
         div.addClassNames(Display.FLEX, AlignItems.CENTER,
                 JustifyContent.CENTER, Overflow.HIDDEN);
-        div.addClassName("menu-item-card");
+        div.addClassNames("menu-item-card");
 
         Image image = MenuItemsView.returnImage(item);
         image.addClassName("menu-item-image");
 
         div.add(image);
 
-        Span header = new Span();
+        Span header = new Span(item.getName());
         header.addClassNames(FontSize.MEDIUM, FontWeight.SEMIBOLD);
-        header.setText(item.getName());
 
-        Paragraph description = new Paragraph(item.getDescription());
-        description.addClassNames(FontSize.SMALL, Margin.Top.NONE, Padding.NONE);
-
-        final HorizontalLayout horizontalLayout = getPriceSizeLayout(item);
-        add(div, header, description, horizontalLayout);
-
+        add(div, header, getPriceSizeLayout(item));
         addClickListener(e -> new MenuItemPopup(item, table));
     }
 
     private static HorizontalLayout getPriceSizeLayout(MenuItems item) {
         Span size = new Span();
-        size.setText(item.getSize() + " гр.");
+        if (item.getSize() != null && item.getSize() != 0.0d)
+            size.setText(String.format("%.0f", item.getSize()) + " гр.");
         size.addClassName("menu-item-card");
 
         Span price = new Span();

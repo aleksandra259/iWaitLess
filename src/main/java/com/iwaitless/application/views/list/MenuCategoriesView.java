@@ -99,12 +99,9 @@ public class MenuCategoriesView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassNames("menu-category-grid");
         grid.setWidthFull();
-        grid.setHeightFull();
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT,
-                GridVariant.LUMO_NO_BORDER);
+                GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_COMPACT);
 
-        Grid.Column<MenuCategory> orderNo = grid.addColumn(MenuCategory::getOrderNo).setSortProperty();
-        orderNo.setVisible(false);
         grid.addColumn(MenuCategory::getName);
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, category) -> {
@@ -122,6 +119,8 @@ public class MenuCategoriesView extends VerticalLayout {
                 button.addClickListener(e -> deleteMenuCategory(category));
             })).setAutoWidth(true).setFlexGrow(0).setTextAlign(ColumnTextAlign.END);
 
+        Grid.Column<MenuCategory> orderNo = grid.addColumn(MenuCategory::getOrderNo).setSortProperty();
+        orderNo.setVisible(false);
         GridSortOrder<MenuCategory> order = new GridSortOrder<>(orderNo, SortDirection.ASCENDING);
         grid.sort(List.of(order));
     }

@@ -8,6 +8,7 @@ import com.iwaitless.application.services.OrderDetailsService;
 import com.iwaitless.application.services.RestaurantTableService;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasStyle;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.OrderedList;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -23,7 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 @Route("menu-preview-popular")
-@PageTitle("iWaitLess | Преглед на меню")
+@PageTitle("iWaitLess | Популярни")
 @AnonymousAllowed
 public class PopularMenuItemsView extends VerticalLayout
         implements HasComponents, HasStyle {
@@ -54,11 +55,11 @@ public class PopularMenuItemsView extends VerticalLayout
         menuLayout.setWidthFull();
         menuLayout.addClassName("fixed-menu-bar");
 
-        popularItems.addClassNames("image-gallery-view", "popular-items-page");
+        popularItems.addClassNames("image-gallery-view");
         popularItems.addClassNames(LumoUtility.MaxWidth.SCREEN_LARGE, LumoUtility.Margin.Horizontal.AUTO,
                 LumoUtility.Margin.Bottom.LARGE, LumoUtility.Padding.Horizontal.SMALL);
 
-        add(menuLayout, popularItems, new MenuPreviewLayout(menuCategory, menuItem, table));
+        add(menuLayout, new H2("^"), popularItems, new MenuPreviewLayout(menuCategory, menuItem, table));
         popularItemsData();
     }
 
