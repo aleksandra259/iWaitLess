@@ -11,18 +11,17 @@ import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.iwaitless.application.views.MenuPreviewView.createAnchorLink;
 
@@ -51,6 +50,7 @@ public class MenuPreviewLayout extends AppLayout {
     private HorizontalLayout getNavigation() {
         DrawerToggle subMenu = new DrawerToggle();
         navigation.setClassName("main-drawer");
+        navigation.setWidthFull();
 
         navigation.add(subMenu,
                 createLink(VaadinIcon.HOME, "Home"),
@@ -105,7 +105,14 @@ public class MenuPreviewLayout extends AppLayout {
         RouterLink personalize = new RouterLink("Персонализиране", PersonalizedMenuView.class);
         personalize.addClassName("order-status-link-button");
 
-        categories.add(orderHeader, orderStatus, personalizeHeader,
+
+        Select<String> language = new Select<>();
+        language.setItems("Български", "English", "Ελληνική");
+        language.setValue("Български");
+        Button languageButton = new Button(new Icon(VaadinIcon.GLOBE_WIRE));
+
+        categories.add(new HorizontalLayout(languageButton, language),
+                orderHeader, orderStatus, personalizeHeader,
                 personalize, categoriesHeader, mostPopular);
 
         List<MenuCategory> categorySorted = menuCategory.findAllCategories();

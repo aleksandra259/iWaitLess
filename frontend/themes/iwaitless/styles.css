@@ -1,6 +1,6 @@
 @media (min-width: 801px) {
    .image-gallery-view ol {
-     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+     grid-template-columns: repeat(auto-fill, minmax(200px, 2fr));
    }
    .menu-item-card {
      font-size: 12pt;
@@ -60,13 +60,12 @@ vaadin-app-layout::part(drawer) {
 .logo {
   flex-grow: 5px;
   width: 15%;
-  margin-right: 70%;
+  margin-right: 60%;
   border: 0px;
 }
 .notifications-popup {
-  top: -34.1%;
-  right: -67.5%;
-  width: 25rem;
+  top: -13%;
+  right: -51%;
 }
 vaadin-side-nav-item::part(link) {
   color: #21272D;
@@ -245,4 +244,11 @@ vaadin-login-overlay-wrapper::part(brand) {
 
 .menu-category-grid, .menu-item-grid {
   font-size: 14px;
+}
+
+
+
+
+vaadin-dev-tools {
+  display:none
 }

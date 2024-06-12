@@ -8,6 +8,7 @@ import com.iwaitless.application.views.utility.NotificationButton;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -95,7 +96,16 @@ public class MainLayout extends AppLayout {
             header.add(bellBtn);
         }
 
-        header.add(logout);
+        ContextMenu menu = new ContextMenu();
+        menu.addItem("Български", event -> {});
+        menu.addItem("English", event -> {});
+        menu.addItem("Ελληνική", event -> {});
+
+        Button languageButton = new Button(new Icon(VaadinIcon.GLOBE_WIRE));
+        menu.setTarget(languageButton);
+        menu.setOpenOnClick(true);
+
+        header.add(logout, languageButton);
         addToNavbar(header);
     }
 

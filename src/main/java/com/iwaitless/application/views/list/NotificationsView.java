@@ -45,7 +45,7 @@ public class NotificationsView extends Dialog {
         this.orderDetailService = orderDetailService;
         this.statusService = statusService;
 
-        setWidth("22rem");
+        setWidth("24.5rem");
         setCloseOnEsc(true);
         setCloseOnOutsideClick(true);
 

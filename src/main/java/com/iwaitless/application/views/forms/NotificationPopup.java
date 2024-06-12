@@ -34,7 +34,7 @@ public class NotificationPopup extends FormLayout {
                     + notification.getTable().getTableNo()
                     + " има нужда от съдействие.");
         } else {
-            description = new Paragraph("Table #"
+            description = new Paragraph("Маса #"
                     + notification.getTable().getTableNo()
                     + " иска сметката.");
         }

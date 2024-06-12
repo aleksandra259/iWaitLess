@@ -86,7 +86,7 @@ public class MenuItemEditPopup extends FormLayout {
         add(itemNameField, description, available, sizeAndTime, priceAndCurrency);
         addFormItem(priceAndCurrency, "Цена");
         addFormItem(available, "Наличност");
-        addFormItem(image, "Изображение");
+        addFormItem(image, "Изображения");
         getStyle().set("width", "25rem").set("max-width", "100%");
 
         dialog.add(this);

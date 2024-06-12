@@ -22,7 +22,7 @@ public class LoginView extends VerticalLayout {
 
         LoginI18n i18n = LoginI18n.createDefault();
         Image logo = new Image("images/logo.png", "iWaitLess Logo");
-        logo.setWidth("19.1%");
+        logo.setWidth("23.9%");
 
         LoginI18n.Form login = i18n.getForm();
         login.setTitle("Вход в системата");
