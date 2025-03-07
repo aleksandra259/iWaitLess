@@ -1,6 +1,7 @@
 package com.iwaitless.application.views.utility;
 
 import com.iwaitless.application.persistence.entity.MenuItems;
+import com.iwaitless.application.services.MenuItemService;
 import com.iwaitless.application.views.list.MenuItemsView;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
@@ -15,13 +16,18 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.iwaitless.application.views.list.MenuItemsView.STATIC_MENU_DIRECTORY;
+
 public class UploadImage extends VerticalLayout {
 
     private File folder;
     private final MenuItems item;
+    private final MenuItemService menuItemService;
     private final Div output = new Div();
 
-    public UploadImage(MenuItems item) {
+    public UploadImage(MenuItems item,
+                       MenuItemService menuItemService) {
+        this.menuItemService = menuItemService;
         this.item = item;
         this.folder = getUploadFolder();
         setSizeFull();
@@ -53,7 +59,7 @@ public class UploadImage extends VerticalLayout {
     private File getUploadFolder() {
         if (item.getCategory().getId() != null
                 && item.getItemId() != null) {
-            folder = new File("D:/iwaitless/menu-items/"
+            folder = new File(menuItemService.menuDirectory
                     + item.getCategory().getId()
                     + "/"
                     + item.getItemId());
@@ -75,7 +81,7 @@ public class UploadImage extends VerticalLayout {
             if (listOfFiles != null)
                 for (File currentFile : listOfFiles)
                     if (currentFile.isFile())
-                        imageUrls.add("D:\\iwaitless\\menu-items\\" + item.getCategory().getId()
+                        imageUrls.add(menuItemService.menuDirectory + item.getCategory().getId()
                                         + "\\"
                                         + item.getItemId()
                                         + "\\"
@@ -92,7 +98,7 @@ public class UploadImage extends VerticalLayout {
         int counter = 0;
         if (item.getCategory().getId() != null
                 && item.getItemId() != null) {
-            File folder = new File("D:/iwaitless/menu-items/"
+            File folder = new File(STATIC_MENU_DIRECTORY
                     + item.getCategory().getId()
                     + "/"
                     + item.getItemId());
@@ -104,7 +110,7 @@ public class UploadImage extends VerticalLayout {
             if (listOfFiles != null)
                 for (File currentFile : listOfFiles)
                     if (currentFile.isFile())
-                        imageUrls.add("D:\\iwaitless\\menu-items\\" + item.getCategory().getId()
+                        imageUrls.add(STATIC_MENU_DIRECTORY + item.getCategory().getId()
                                 + "\\"
                                 + item.getItemId()
                                 + "\\"

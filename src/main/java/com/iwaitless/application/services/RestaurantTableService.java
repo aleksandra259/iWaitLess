@@ -2,12 +2,18 @@ package com.iwaitless.application.services;
 
 import com.iwaitless.application.persistence.entity.RestaurantTable;
 import com.iwaitless.application.persistence.repository.RestaurantTableRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class RestaurantTableService {
+
+    @Value("${iwaitless.constant.qr.url}")
+    public String qrUrl;
+    @Value("${iwaitless.constant.qr.directory}")
+    public String qrDirectory;
 
     private final RestaurantTableRepository restaurantTableRepository;
 

@@ -3,6 +3,7 @@ package com.iwaitless.application.services;
 import com.iwaitless.application.persistence.entity.MenuItems;
 import com.iwaitless.application.persistence.entity.nomenclatures.MenuCategory;
 import com.iwaitless.application.persistence.repository.MenuItemRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,8 @@ public class MenuItemService {
 
     private final MenuItemRepository menuItemRepository;
 
+    @Value("${iwaitless.constant.images.directory}")
+    public String menuDirectory;
 
     public MenuItemService(MenuItemRepository menuItemRepository) {
         this.menuItemRepository = menuItemRepository;

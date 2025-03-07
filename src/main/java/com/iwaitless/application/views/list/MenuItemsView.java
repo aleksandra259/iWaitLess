@@ -38,9 +38,12 @@ public class MenuItemsView extends VerticalLayout {
     MenuCategory category;
     MenuItemEditPopup form;
 
+    public static String STATIC_MENU_DIRECTORY;
+
 
     public MenuItemsView(MenuItemService menuItem) {
         this.menuItem = menuItem;
+        STATIC_MENU_DIRECTORY = menuItem.menuDirectory;
         this.category = new MenuCategory();
 
         addClassName("items-view");
@@ -142,7 +145,7 @@ public class MenuItemsView extends VerticalLayout {
     }
 
     private void createMenuItem (MenuItems item) {
-        form = new MenuItemEditPopup(item);
+        form = new MenuItemEditPopup(item, menuItem);
         form.addSaveListener(this::saveMenuItem);
         form.addCloseListener(e -> closeEditor());
 
@@ -161,7 +164,7 @@ public class MenuItemsView extends VerticalLayout {
     }
 
     public static Image returnImage (MenuItems item) {
-        File folder = new File("D:/iwaitless/menu-items/"
+        File folder = new File(STATIC_MENU_DIRECTORY
                 + item.getCategory().getId()
                 + "/"
                 + item.getItemId());
@@ -181,7 +184,7 @@ public class MenuItemsView extends VerticalLayout {
     private static Image getImage(MenuItems item, File currentFile) {
         StreamResource imageResource = new StreamResource(currentFile.getName(), () -> {
             try {
-                return new FileInputStream("D:\\iwaitless\\menu-items\\" + item.getCategory().getId()
+                return new FileInputStream(STATIC_MENU_DIRECTORY + item.getCategory().getId()
                         + "\\"
                         + item.getItemId()
                         + "\\"

@@ -1,6 +1,7 @@
 package com.iwaitless.application.views.forms;
 
 import com.iwaitless.application.persistence.entity.MenuItems;
+import com.iwaitless.application.services.MenuItemService;
 import com.iwaitless.application.views.utility.UploadImage;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -41,8 +42,8 @@ public class MenuItemEditPopup extends FormLayout {
     Button cancel = new Button("Отказ");
     Button close = new Button(new Icon(VaadinIcon.CLOSE));
 
-
-    public MenuItemEditPopup(MenuItems item) {
+    public MenuItemEditPopup(MenuItems item,
+                             MenuItemService menuItemService) {
         addClassName("menu-item-form");
 
         String header = item.getName();
@@ -59,7 +60,7 @@ public class MenuItemEditPopup extends FormLayout {
         size.setSuffixComponent(new Span("гр."));
         available.setLabel("Наличен ли е артикулът?");
         timeToProcess.setSuffixComponent(new Span("мин."));
-        image = new UploadImage(item);
+        image = new UploadImage(item, menuItemService);
 
         currency.setItems(Currency.getInstance("BGN"),
                 Currency.getInstance("EUR"));

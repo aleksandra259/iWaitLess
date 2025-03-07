@@ -1,6 +1,7 @@
 package com.iwaitless.application.views.forms;
 
 import com.google.zxing.WriterException;
+import com.iwaitless.application.services.RestaurantTableService;
 import com.iwaitless.application.views.utility.CreateQR;
 import com.iwaitless.application.persistence.entity.RestaurantTable;
 import com.vaadin.flow.component.ComponentEvent;
@@ -40,14 +41,18 @@ public class TablesPopup extends FormLayout {
     Button close = new Button(new Icon(VaadinIcon.CLOSE));
     Button generateQR = new Button("Генериране на QR код");
 
+    private static String STATIC_QR_DIRECTORY;
 
-    public TablesPopup(RestaurantTable table) {
+    public TablesPopup(RestaurantTable table,
+                       RestaurantTableService restaurantTableService) {
+        STATIC_QR_DIRECTORY = restaurantTableService.qrDirectory;
+
         String header = String.valueOf(table.getTableId());
-        if (header == null || header.trim().isEmpty())
+        if (header == null || header.trim().isEmpty()) {
             dialog.setHeaderTitle("Създаване на нова таблица");
-        else
+        } else {
             dialog.setHeaderTitle("Редактиране на маса " + header);
-
+        }
 
         binder.bind(tableNo, RestaurantTable::getTableNo, RestaurantTable::setTableNo);
         binder.bind(description, RestaurantTable::getDescription, RestaurantTable::setDescription);
@@ -68,8 +73,8 @@ public class TablesPopup extends FormLayout {
             String tableId = String.valueOf(table.getTableId());
             if (tableId != null && !tableId.trim().isEmpty()
                 && !tableId.equals("null")) {
-                CreateQR qr = new CreateQR("http://localhost:8080/menu-preview?table=" + table.getTableId(),
-                        "D:\\iwaitless\\QRCodes\\"
+                CreateQR qr = new CreateQR(restaurantTableService.qrUrl + table.getTableId(),
+                        restaurantTableService.qrDirectory
                                 + "table_" + table.getTableId()
                                 + ".png");
                 try {
@@ -138,11 +143,11 @@ public class TablesPopup extends FormLayout {
     }
 
     public static Image getImage(RestaurantTable table) {
-        File file = new File("D:/iwaitless/QRcodes/"
+        File file = new File(STATIC_QR_DIRECTORY
                 + "table_" + table.getTableId() + ".png");
         StreamResource imageResource = new StreamResource(file.getName(), () -> {
             try {
-                return new FileInputStream("D:\\iwaitless\\QRcodes\\"
+                return new FileInputStream(STATIC_QR_DIRECTORY
                         + "table_" + table.getTableId() + ".png");
             } catch (final FileNotFoundException e) {
                 return null;

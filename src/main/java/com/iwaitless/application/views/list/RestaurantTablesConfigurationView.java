@@ -95,7 +95,7 @@ public class RestaurantTablesConfigurationView extends VerticalLayout {
     }
 
     private void createTable(RestaurantTable table) {
-        form = new TablesPopup(table);
+        form = new TablesPopup(table, restaurantTable);
         form.addSaveListener(this::saveTable);
         form.addCloseListener(e -> closeEditor());
 
