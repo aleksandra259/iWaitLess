@@ -26,8 +26,7 @@ public class UserService {
 
     public void saveUser(Users user, Authorities authorities) {
         if (user == null) {
-            System.err.println("User is null.");
-            return;
+            throw new IllegalArgumentException("Cannot save a null user.");
         }
         userRepository.save(user);
         authorityRepository.save(authorities);

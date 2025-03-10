@@ -14,7 +14,6 @@ public class OrdersService {
 
     private final OrdersRepository ordersRepository;
 
-
     public OrdersService(OrdersRepository ordersRepository) {
         this.ordersRepository = ordersRepository;
     }
@@ -24,13 +23,15 @@ public class OrdersService {
     }
 
     public Orders findOrderByOrderNo(Long orderNo) {
+        if (orderNo == null) {
+            throw new IllegalArgumentException("Order number cannot be null.");
+        }
         return ordersRepository.findById(orderNo).orElse(null);
     }
 
     public void saveOrder(Orders order) {
         if (order == null) {
-            System.err.println("Order save failed");
-            return;
+            throw new IllegalArgumentException("Cannot save a null order.");
         }
         ordersRepository.save(order);
 

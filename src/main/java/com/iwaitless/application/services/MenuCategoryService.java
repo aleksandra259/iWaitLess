@@ -11,7 +11,6 @@ public class MenuCategoryService {
 
     private final MenuCategoryRepository menuCategoryRepository;
 
-
     public MenuCategoryService(MenuCategoryRepository menuCategoryRepository) {
         this.menuCategoryRepository = menuCategoryRepository;
     }
@@ -21,13 +20,15 @@ public class MenuCategoryService {
     }
 
     public void deleteCategory(MenuCategory category) {
+        if (category == null) {
+            throw new IllegalArgumentException("Cannot delete a null category.");
+        }
         menuCategoryRepository.delete(category);
     }
 
     public void saveCategory(MenuCategory category) {
         if (category == null) {
-            System.err.println("Category save failed");
-            return;
+            throw new IllegalArgumentException("Cannot save a null category.");
         }
         menuCategoryRepository.save(category);
     }

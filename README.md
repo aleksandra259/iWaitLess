@@ -63,6 +63,7 @@ spring.datasource.password=your_password
 
 Edit the directories to which files will be sent:
 ```
+iwaitless.constant.qr.url=http://localhost:8080/menu-preview?table=
 iwaitless.constant.qr.directory=D:/iwaitless/QRCodes/
 iwaitless.constant.images.directory=D:/iwaitless/menu-items/
 ```

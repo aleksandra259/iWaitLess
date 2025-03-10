@@ -2,6 +2,7 @@ package com.iwaitless.application.authentication;
 
 import com.iwaitless.application.views.LoginView;
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,6 +18,13 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig extends VaadinWebSecurity {
+
+    @Value("${spring.datasource.url}")
+    public String databaseUrl;
+    @Value("${spring.datasource.username}")
+    public String databaseUsername;
+    @Value("${spring.datasource.password}")
+    public String databasePass;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -34,9 +42,9 @@ public class SecurityConfig extends VaadinWebSecurity {
     DataSource dataSource() {
         DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
 
-        driverManagerDataSource.setUrl("jdbc:mysql://localhost:3306/iwaitless");
-        driverManagerDataSource.setUsername("root");
-        driverManagerDataSource.setPassword("hiAl!25:)");
+        driverManagerDataSource.setUrl(databaseUrl);
+        driverManagerDataSource.setUsername(databaseUsername);
+        driverManagerDataSource.setPassword(databasePass);
         driverManagerDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
 
         return driverManagerDataSource;

@@ -58,8 +58,7 @@ public class TableEmployeeRelationService {
 
     public void assignTable(TableEmployeeRelation table) {
         if (table == null) {
-            System.err.println("Table save failed");
-            return;
+            throw new IllegalArgumentException("Cannot save a null table relation.");
         }
         tableEmployeeRelationRepository.save(table);
     }

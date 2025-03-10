@@ -17,7 +17,6 @@ public class RestaurantTableService {
 
     private final RestaurantTableRepository restaurantTableRepository;
 
-
     public RestaurantTableService(RestaurantTableRepository restaurantTableRepository) {
         this.restaurantTableRepository = restaurantTableRepository;
     }
@@ -31,18 +30,22 @@ public class RestaurantTableService {
     }
 
     public RestaurantTable findTableByTableNo(String tableNo) {
-        return restaurantTableRepository
-                .findByTableNo(tableNo);
+        if (tableNo == null || tableNo.isEmpty()) {
+            throw new IllegalArgumentException("Table number cannot be null or empty.");
+        }
+        return restaurantTableRepository.findByTableNo(tableNo);
     }
 
     public void deleteTable(RestaurantTable table) {
+        if (table == null) {
+            throw new IllegalArgumentException("Cannot delete a null table.");
+        }
         restaurantTableRepository.delete(table);
     }
 
     public void saveTable(RestaurantTable table) {
         if (table == null) {
-            System.err.println("Table save failed");
-            return;
+            throw new IllegalArgumentException("Cannot save a null table.");
         }
         restaurantTableRepository.save(table);
     }

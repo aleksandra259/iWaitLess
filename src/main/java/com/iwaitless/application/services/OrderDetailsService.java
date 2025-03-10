@@ -16,16 +16,15 @@ public class OrderDetailsService {
 
     private final OrderDetailsRepository orderDetailsRepository;
 
-
     public OrderDetailsService(OrderDetailsRepository orderDetailsRepository) {
         this.orderDetailsRepository = orderDetailsRepository;
     }
 
-    public List<OrderDetails> findAll() {
-        return orderDetailsRepository.findAll();
-    }
-
     public List<MenuItems> findCommonOrderedItems(MenuItems item) {
+        if (item == null) {
+            throw new IllegalArgumentException("Item cannot be null.");
+        }
+
         List<OrderDetails> orderDetailsList = orderDetailsRepository.findAll();
         List<MenuItems> commonItems = new ArrayList<>();
 
@@ -52,14 +51,19 @@ public class OrderDetailsService {
             List<OrderDetails> orderItems =
                     this.findOrderDetailsByOrderNo(orderDetails.getOrder().getOrderNo());
 
-            for (OrderDetails orderItem : orderItems)
+            for (OrderDetails orderItem : orderItems) {
                 menuItems.add(orderItem.getItem());
+            }
         }
 
         return menuItems;
     }
 
-    public String getPriceByOrder (Long orderNo) {
+    public String getPriceByOrder(Long orderNo) {
+        if (orderNo == null) {
+            throw new IllegalArgumentException("Order number cannot be null.");
+        }
+
         BigDecimal sum = BigDecimal.ZERO;
         String currency = "EUR";
         List<OrderDetails> orderDetails = orderDetailsRepository.findByOrder_OrderNo(orderNo);
@@ -72,16 +76,21 @@ public class OrderDetailsService {
             sum = sum.add(subtotal);
             currency = orderDetail.getItem().getCurrency().getCurrencyCode();
         }
-        
+
         return String.format("%.2f", sum) + " " + currency;
     }
 
     public List<OrderDetails> findOrderDetailsByOrderNo(Long orderNo) {
+        if (orderNo == null) {
+            throw new IllegalArgumentException("Order number cannot be null.");
+        }
         return orderDetailsRepository.findByOrder_OrderNo(orderNo);
     }
 
     public void saveOrderDetail(OrderDetails orderDetail) {
+        if (orderDetail == null) {
+            throw new IllegalArgumentException("Order detail cannot be null.");
+        }
         orderDetailsRepository.save(orderDetail);
     }
 }
-

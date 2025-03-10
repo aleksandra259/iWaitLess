@@ -52,21 +52,20 @@ public class StaffService {
                 .stream()
                 .filter(rel -> rel.getEmployee().getEmployeeId().equals(staff.getEmployeeId()))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new IllegalArgumentException("User relation not found."));
         userStaffRepository.delete(Objects.requireNonNull(userStaffRelation));
         staffRepository.delete(staff);
     }
 
-    public void saveEmployee(Staff contact) {
-        if (contact == null) {
-            System.err.println("Employee is null. Are you sure you have connected your form to the application?");
-            return;
+    public void saveEmployee(Staff employee) {
+        if (employee == null) {
+            throw new IllegalArgumentException("Cannot save a null employee.");
         }
-        staffRepository.save(contact);
+        staffRepository.save(employee);
 
-        contact.setUsername(saveUserRelation(contact));
-        if (contact.getUsername() != null)
-            staffRepository.save(contact);
+        employee.setUsername(saveUserRelation(employee));
+        if (employee.getUsername() != null)
+            staffRepository.save(employee);
     }
 
     private String saveUserRelation(Staff staff) {
@@ -132,6 +131,6 @@ public class StaffService {
                 .filter(user ->
                         user.getEmployee().getEmployeeId().equals(id))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new IllegalArgumentException("User not found for employee ID: " + id));
     }
 }

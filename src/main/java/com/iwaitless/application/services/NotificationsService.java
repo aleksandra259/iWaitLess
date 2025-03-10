@@ -18,34 +18,34 @@ public class NotificationsService {
     }
 
     public List<Notifications> findNotificationsByEmployee(Staff employee) {
+        if (employee == null || employee.getEmployeeId() == null) {
+            throw new IllegalArgumentException("Employee information is required.");
+        }
+
         return notificationsRepository
                 .findAll()
                 .stream()
                 .filter(notification ->
-                         notification
-                                 .getEmployee()
-                                 .getEmployeeId()
-                                 .equals(employee.getEmployeeId())
-                        || notification
-                                 .getEmployee()
-                                 .getEmployeeId() == 999999L)
+                        notification.getEmployee().getEmployeeId().equals(employee.getEmployeeId())
+                                || notification.getEmployee().getEmployeeId() == 999999L)
                 .collect(Collectors.toList());
     }
 
-    public int countUnreadNotificationsByEmployee (Staff employee) {
-        return findNotificationsByEmployee(employee)
+    public int countUnreadNotificationsByEmployee(Staff employee) {
+        if (employee == null || employee.getEmployeeId() == null) {
+            throw new IllegalArgumentException("Employee information is required.");
+        }
+
+        return (int) findNotificationsByEmployee(employee)
                 .stream()
                 .filter(e -> "U".equals(e.getStatus().getId()))
-                .toList()
-                .size();
+                .count();
     }
 
     public void saveNotification(Notifications notification) {
         if (notification == null) {
-            System.err.println("Notification save failed");
-            return;
+            throw new IllegalArgumentException("Cannot save a null notification.");
         }
-
         notificationsRepository.save(notification);
     }
 }
