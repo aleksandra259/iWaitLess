@@ -2,13 +2,20 @@ package com.iwaitless.application.views;
 
 import com.iwaitless.application.authentication.SecurityService;
 import com.iwaitless.application.persistence.entity.Staff;
-import com.iwaitless.application.services.*;
-import com.iwaitless.application.views.list.*;
+import com.iwaitless.application.services.NotificationsService;
+import com.iwaitless.application.services.OrderDetailsService;
+import com.iwaitless.application.services.OrderStatusService;
+import com.iwaitless.application.services.OrdersService;
+import com.iwaitless.application.services.StaffService;
+import com.iwaitless.application.views.list.ListStaffView;
+import com.iwaitless.application.views.list.NotificationsView;
+import com.iwaitless.application.views.list.OrdersView;
+import com.iwaitless.application.views.list.RestaurantTablesAssignView;
+import com.iwaitless.application.views.list.RestaurantTablesConfigurationView;
 import com.iwaitless.application.views.utility.NotificationButton;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -96,16 +103,7 @@ public class MainLayout extends AppLayout {
             header.add(bellBtn);
         }
 
-        ContextMenu menu = new ContextMenu();
-        menu.addItem("Български", event -> {});
-        menu.addItem("English", event -> {});
-        menu.addItem("Ελληνική", event -> {});
-
-        Button languageButton = new Button(new Icon(VaadinIcon.GLOBE_WIRE));
-        menu.setTarget(languageButton);
-        menu.setOpenOnClick(true);
-
-        header.add(logout, languageButton);
+        header.add(logout);
         addToNavbar(header);
     }
 

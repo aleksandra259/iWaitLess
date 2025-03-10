@@ -8,7 +8,6 @@ import com.iwaitless.application.persistence.entity.nomenclatures.StaffRole;
 import com.iwaitless.application.persistence.repository.StaffRepository;
 import com.iwaitless.application.persistence.repository.UserStaffRelationRepository;
 import com.iwaitless.application.persistence.repository.nomenclatures.StaffRoleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,16 +21,17 @@ public class StaffService {
     private final StaffRepository staffRepository;
     private final StaffRoleRepository staffRoleRepository;
     private final UserStaffRelationRepository userStaffRepository;
+    private final UserService userService;
 
-    @Autowired
-    private UserService userService;
 
     public StaffService(StaffRepository staffRepository,
                         StaffRoleRepository staffRoleRepository,
-                        UserStaffRelationRepository userStaffRepository) {
+                        UserStaffRelationRepository userStaffRepository,
+                        UserService userService) {
         this.staffRepository = staffRepository;
         this.staffRoleRepository = staffRoleRepository;
         this.userStaffRepository = userStaffRepository;
+        this.userService = userService;
     }
 
     public List<Staff> findAllEmployees(String stringFilter) {
@@ -131,6 +131,6 @@ public class StaffService {
                 .filter(user ->
                         user.getEmployee().getEmployeeId().equals(id))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("User not found for employee ID: " + id));
+                .orElse(null);
     }
 }

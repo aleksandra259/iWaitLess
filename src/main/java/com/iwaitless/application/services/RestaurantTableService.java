@@ -22,11 +22,7 @@ public class RestaurantTableService {
     }
 
     public List<RestaurantTable> findAllTables(String stringFilter) {
-        if (stringFilter == null || stringFilter.isEmpty()) {
-            return restaurantTableRepository.findAll();
-        } else {
-            return restaurantTableRepository.search(stringFilter);
-        }
+        return restaurantTableRepository.search(stringFilter);
     }
 
     public RestaurantTable findTableByTableNo(String tableNo) {
